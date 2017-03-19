@@ -1,0 +1,47 @@
+.login-form {
+    float:right;
+}
+.third-party-login{
+
+}
+
+.third-party-login ul {
+    list-style: none;
+}
+.add-address-div {
+    margin-top:50px;
+}
+
+.add-address-form{
+    width: 300px;
+}
+
+
+.add-address-form-input{
+    width: 200px;
+}
+
+.upload-file-div{
+    margin:0 auto;
+
+}
+
+.upload-file-div form{
+    margin:0 auto;
+    margin-top:20px;
+    width: 600px;
+}
+
+.upload-file-div form div{
+    margin:0 auto;
+    margin-top:20px;
+    width: 600px;
+}
+
+.upload-file-div form div div{
+    display: inline;
+}
+
+.postcard-gallery div img{
+
+}

@@ -1,0 +1,22 @@
+{% extends "foundation.html" %}
+
+{% block headinfo %}
+ <link href="{{STATIC_URL}}styles/profile.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div>
+
+<p>{{card.card_name}} has arrived {{card.has_arrived}}</p>
+
+<p>From: {{card.fromsender.profileuser.username}} at {{card.get_sent_datetime}}</p>
+
+<p>To: {{card.torecipient.profileuser.username}} at {{card.get_arrived_datetime}}</p>
+
+ {% if cardphoto %}
+    <img src="{{}}">
+
+ {% endif %}
+
+</div>
+{% endblock %}

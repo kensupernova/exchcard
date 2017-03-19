@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block headinfo %}
+ <title>登录</title>
+ <!-- weibo第三方登录-->
+ <!--<meta property="wb:webmaster" content="07bcead354aa5096" />-->
+ <!--<script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js?appkey=2492818772&debug=1" type="text/javascript" charset="utf-8"></script>-->
+
+ <link href="{{STATIC_URL}}styles/login.css" rel="stylesheet">
+
+{% endblock %}
+
+{% block content%}
+    <div class="col-md-12 login">
+        <div id="lzform" name="loginform" class="login-form col-md-4">
+            <form action="" method="post">{% csrf_token %}</form>
+            <fieldset>
+                <legend>登录</legend>
+                <div class="item item-account">
+                    <input type="text" name="form_email" id="form_email" class="inp" placeholder="邮箱" tabindex="1">
+                </div>
+                <div class="item item-passwd">
+                    <input name="form_password" placeholder="密码" id="form_password" class="inp" type="password" tabindex="2">
+                    <div class="opt">
+                        <a href="/accounts/resetpassword">找回密码？</a>
+                    </div>
+                </div>
+                <div class="item item-submit">
+                    <button class="btn-login-submit" tabindex="4">登录</button>
+                    <button class="btn-register"><a href="/account/register/" target="_blank">注册</a></button>
+                </div>
+
+                <!--<div class="third-party-login">-->
+                    <!--<ul class="col-md-6 row">-->
+                    <!--<li><wb:login-button type="3,2" onlogin="login" onlogout="logout">微博登录</wb:login-button></li> -->
+                    <!--</ul>-->
+                    <!---->
+                <!--</div>-->
+                
+            </fieldset>
+        </div>
+        
+    </div>
+
+   
+
+    <!--<div class="col-md-12 postcard-gallery">-->
+    <!--Postcard Gallery-->
+    <!--<div class="col-md-4">-->
+        <!--<picture>-->
+            <!--<source media="min-width:1500px" srcset="{{STATIC_URL}}images/mainpage/1-large.jpg"/>-->
+            <!--<source media="max-width:500px" srcset="{{STATIC_URL}}images/mainpage/1-small.jpg"/>-->
+            <!--<img src="{{STATIC_URL}}images/mainpage/1.jpg"/>-->
+        <!--</picture>-->
+    <!--</div>-->
+    <!--</div>-->
+
+
+{% endblock %}
+
+{% block jscontainer %}
+    <script type="text/javascript" src="{{STATIC_URL}}javascripts/login.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}javascripts/validator.js" ></script>
+{% endblock %}

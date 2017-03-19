@@ -1,0 +1,41 @@
+#form-password {
+  display: block;
+}
+
+#form-password-2 {
+  display: block;
+}
+
+#form-address {
+  width: 25em;
+}
+
+#btn-register-submit {
+  margin-top: 1em;
+  background: white;
+  color: black;
+  border: black 1px solid;
+  display: inline-flex;
+  padding-left: 1em;
+  padding-right: 1em;
+  min-width: 5em;
+}
+
+#btn-register-submit:hover{
+  background: red;
+  color:white;
+}
+
+#btn-register-submit:active{
+  background: red;
+  color:white;
+  box-shadow: red 2px 2px 2px;
+}
+
+.input-error {
+  margin-left: 5px;
+  color: red;
+}
+.hide {
+  display: none;
+}

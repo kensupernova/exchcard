@@ -1,0 +1,44 @@
+{% extends "foundation.html" %}
+
+{% block headinfo %}
+{% endblock %}
+
+{% block content %}
+<div ng-app="myApp", ng-controller="myCtrl">
+  <div class="promise-container">
+      <div>
+          <div><lable>注意事项</lable></div>
+          <ul>
+              <li>你会得到一个地址, 请确定地址正确书写。</li>
+              <li>你会得到一个Postcard Id, <b>请Id号码写在明信片上面</b>, 接受者需要注册, 才算成功寄送明信片。</li>
+
+          </ul>
+      </div>
+
+    <div id="sendForm">
+      {% csrf_token %}
+      <input type="checkbox" name="send_postcard" value="" id="send_postcard">
+      <label for="send_postcard">
+        I've read the notes above and want to receive an address to where I'll send a postcard.
+      </label><br>
+      <button id="sendButton" name="sendButton" class="button" ng-click="confirmSendCard()">Request address
+      </button>
+    </div>
+      <!--<form action="/card/send/confirm" method="post" name="send" id="sendForm">-->
+        <!--{% csrf_token %}-->
+       <!--<input type="checkbox" name="send_postcard" value="" id="send_postcard">-->
+       <!--<label for="send_postcard">-->
+           <!--I've read the notes above and want to receive an address to where I'll send a postcard.-->
+       <!--</label><br>-->
+       <!--<button type="submit" id="sendButton" name="sendButton" class="button">Request address-->
+       <!--</button>-->
+      <!--</form>-->
+  </div>
+
+ <div>寄送一张明信片</div>
+</div>
+{% endblock %}
+
+{% block jscontainer %}
+<script type="text/javascript" src="{{STATIC_URL}}javascripts/send-card-page.js"></script>
+{% endblock %}

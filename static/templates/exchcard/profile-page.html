@@ -1,0 +1,68 @@
+{% extends "foundation.html" %}
+
+{% block headinfo %}
+<link href="{{STATIC_URL}}styles/profile.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="main" ng-app="myApp" ng-controller="myCtrl">
+ <div class="info-box" >
+  <div class="upper">
+   <div class="left">
+    <div class="profile-image">
+     <div><img src="{{STATIC_URL}}images/profile-icon.jpg"></div>
+    </div>
+    <div class="info-summary">
+
+     <div><a href="/profile/{{profile.id}}/cards/">成功发送了{[{sent_cards_arrived}]}张</a></div>
+     <div><a href="/profile/{{profile.id}}/cards/">成功接收了{[{receive_cards_arrived}]}张</a></div>
+     <div><a href="/profile/{{profile.id}}/cards/">有{[{sent_cards_travelling}]}张明信片在飞向别人</a></div>
+     <div><a href="/profile/{{profile.id}}/cards/">有{[{receive_cards_travelling}]}张明信片正在飞向你</a></div>
+    </div>
+
+
+
+   </div>
+   <div class="right">
+
+
+    <div class="btns">
+     <div class="btn-send-card">
+      <a href="/card/send">寄送明信片</a>
+     </div>
+     <div class="btn-register-card">
+      <a href="/card/register">注册明信片</a>
+     </div>
+    </div>
+   </div>
+
+  </div>
+
+
+ </div>
+
+
+
+ <div class="news-box">
+
+  <div><h3>What is happening now?</h3></div>
+  <div id="liveEvents">
+   <p id="event-94573570" style="opacity: 1;"><a href="/country/RU"><i class="flag flag-RU"></i></a> <a href="/user/hsiangniwu">hsiangniwu</a> sent a postcard to <a href="/country/RU"><i class="flag flag-RU"></i></a> <a>
+   </a>
+   </p>
+   <p>profile id = {{profile.id}}</p>
+  </div>
+
+ </div>
+
+
+</div>
+
+{% endblock %}
+
+{% block jscontainer %}
+
+
+<script type="text/javascript" src="{{STATIC_URL}}javascripts/profile-page.js"></script>
+
+{% endblock %}

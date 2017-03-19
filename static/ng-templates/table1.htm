@@ -1,0 +1,23 @@
+<table class = "sent-arrived"  ng-controller='sentArrivedCtrl'>
+  <tr>
+    <th>post id</th>
+    <th>from</th>
+    <th>address</th>
+    <th>sent time</th>
+    <th>to</th>
+    <th>address</th>
+    <th>arrived time</th>
+  </tr>
+
+  <tr ng-repeat="card in sent_arrived">
+    <td>{[{card.card_name}]}</td>
+    <td>{[{card.fromsender}]}</td>
+    <td>{[{card.fromaddress}]}</td>
+    <td>{[{card.sent_date}]}</td>
+
+    <td>{[{card.torecipient}]}</td>
+    <td>{[{card.toaddress}]}</td>
+    <td>{[{card.arrived_date}]}</td>
+  </tr>
+
+</table>

@@ -1,0 +1,172 @@
+* {
+  padding: 0px 0;
+  font-size:12px;
+  background-color:#ffffff;
+}
+
+div {
+  font: inherit;
+  font-size: 100%;
+  padding: 0;
+  margin: 0.5px;
+  border: red 0.5px solid;
+}
+
+body {
+  font-size: 16px;
+  font-family: 'Tahoma', 'Helvetica', 'Arial', sans-serif;
+}
+
+
+.container {
+  background-color: #ffffff;
+  border: orangered 1px solid;
+}
+
+.spanner {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+
+header{
+  width: 100%;
+}
+
+.main {
+  margin-top: 1px;
+}
+.clear {
+  clear: both;
+}
+
+header div{
+  text-align: center;
+}
+
+.spanner {
+  min-height: 5em;
+}
+
+header .spanner .logo-container {
+  display: inline-block;
+}
+
+
+header .spanner .profile-setting {
+  display: inline-block;
+  float:right;
+  margin-right: 3em;
+  line-height: 3em;
+  min-height: 3em;
+}
+
+.profile-setting div {
+  width: 5em;
+  display: inline-block;
+}
+
+.profile-setting div:hover {
+  background: red;
+  color: white;
+  cursor: pointer;
+}
+
+
+.nav {
+  background-color:white;
+}
+.nav ul {
+  padding: 0px;
+  position: relative;
+  margin: 0;
+}
+
+.nav ul li{
+  display: inline-block;
+  width:calc(20% - 5px);
+  border:red 1px solid;
+}
+
+.nav ul li a {
+  background: transparent;
+  text-decoration: none;
+  color: #323232;
+  font-size: 18px;
+  padding: 8px 8px 8px 8px;
+  outline: none;
+  display: block;
+}
+
+
+.nav ul li a:hover {
+  background-color: red;
+  color: white;
+
+}
+
+.nav ul li a:active, .nav ul li a.active {
+  background-color: red;
+  color: white;
+  box-shadow: red 2px 2px 2px;
+}
+
+.nav ul li.dropdown {
+  position: relative;
+}
+.nav ul li.dropdown a:hover{
+  background: red;
+}
+
+.nav ul li.dropdown a:hover .arr, .nav ul li a.active .arr{
+  background: red;
+}
+.nav ul li.dropdown a .arr {
+  margin-left: 5px;
+  font-family: "Lucida Grande",Helvetica,Arial,sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 12px;
+  position: relative;
+  right:0;
+
+}
+
+.nav ul li.dropdown ul.collapsed{
+  display: none;
+  min-width: 200px;
+  position: absolute;
+  top: calc(100% - 2px);
+  padding-top: 2px;
+  left: 0;
+  z-index: 30;
+  border: 2px solid #ecebe9;
+
+}
+
+.nav ul li.dropdown:hover ul.collapsed {
+  display: block;
+}
+
+.nav ul li.dropdown ul.collapsed li{
+  float:none;
+  width:100%;
+  margin:0;
+}
+
+.nav ul li form {
+  background: transparent;
+  display: inline-block;
+}
+
+
+footer p {
+  margin: 0 auto;
+  width: 60%;
+  padding: 10px;
+}
+
+.copyright{
+  margin: 0 auto;
+}

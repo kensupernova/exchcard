@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>用户注册</title>
+{% endblock %}
+
+{% block headinfo %}
+ <link href="{{STATIC_URL}}styles/register.css" rel="stylesheet" type="text/css">
+
+
+{% endblock %}
+
+{% block content%}
+<div class="section-register">
+	<div id="registerform" name="registerform" class="register-form col-md-4">
+    <fieldset>
+      <!--为了得到csrf token-->
+      <form action="" method="post">{% csrf_token %}</form>
+      <legend>注册</legend>
+      <div class="item item-account">
+          <input type="text" name="form-email" id="form-email" class="inp" placeholder="邮箱" tabindex="1">
+          <label id="email-error" class="input-error"></label>
+      </div>
+      <div class="item item-passwd">
+        <input name="form-password" placeholder="密码" id="form-password" class="inp" type="password" tabindex="3">
+        <label id="password-error" class="input-error"></label>
+        <input name="form-password-2" placeholder="重新输入密码" id="form-password-2" class="inp" type="password" tabindex="4">
+
+      </div>
+      <div>收件信息</div>
+      <div class="item item-name">
+        <input name="form-name" placeholder="姓名" id="form-name" class="inp" type="text" tabindex="2"/>
+        <label id="name-error" class="input-error"></label>
+      </div>
+      <div class="item item-address">
+          <textarea name="form-address" placeholder="地址" id="form-address" class="inp" type="text" tabindex="2"></textarea>
+        <label id="address-error" class="input-error"></label>
+      </div>
+      <div class="item item-postcode">
+        <input name="form-postcode" placeholder="邮编" id="form-postcode" class="inp" type="text" tabindex="2"/>
+        <label id="postcode-error" class="input-error"></label>
+      </div>
+
+      <div class="item item-submit">
+          <div id="btn-register-submit" tabindex="4">提交</div>
+      </div>
+
+    </fieldset>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block jscontainer %}
+<script type="text/javascript" src="{{STATIC_URL}}javascripts/validator.js" ></script>
+<script src="{{STATIC_URL}}javascripts/register.js" type="text/javascript"></script>
+{% endblock %}

@@ -1,0 +1,118 @@
+.main {
+  background-color: #ffffff;
+  padding: 10px;
+  min-height:30em;
+
+  border: red 1px solid;
+}
+
+.info-box .upper {
+  text-align: center;
+}
+
+.info-box .upper .left {
+  width: calc(50% - 10px);
+  vertical-align: top;
+  overflow: hidden;
+  display: inline-block;
+
+}
+
+.upper .left  .profile-image {
+  width: calc(40% - 5px);
+  display: inline-block;
+  vertical-align: middle;
+  overflow: hidden;
+  max-height: 100%;
+  border:red 0.5px solid;
+}
+
+.upper .left  .profile-image img {
+  height: 10em;
+  width: 10em;
+  overflow: hidden;
+}
+
+.upper .left .info-summary {
+  width: calc(60% - 5px);
+  display: inline-block;
+  vertical-align: top;
+  overflow: hidden;
+}
+
+.upper .left .info-summary div {
+  height:2em;
+  border:red 0.5px solid;
+}
+
+.upper .left .info-summary div a{
+  display: inline-block;
+  width: 100%;
+}
+
+.upper .left .info-summary div a:hover{
+  background: red;
+  color: white;
+}
+
+.upper .right {
+  width: calc(50% - 5px);
+  display: inline-block;
+  vertical-align: middle;
+  overflow: hidden;
+  height:12em;
+  line-height: 12em;
+  border:red 0.5px solid;
+}
+
+
+.upper .right .btns {
+  margin-top: 2px;
+}
+.upper .right .btns div {
+  text-align: center;
+  height: 100%;
+  border:red 0.5px solid;
+  width: calc(50% - 5px);
+  display: inline-block;
+  vertical-align: top;
+  overflow: hidden;
+
+}
+
+.upper .right .btns div:hover {
+  background: red;
+  color: white;
+  cursor: pointer;
+}
+
+.upper .right .btns div:active {
+  background: red;
+  color: white;
+  cursor: hand;
+}
+
+.upper .right .btns .btn-send-card {
+
+
+}
+
+.upper .right .btns .btn-register-card {
+
+}
+
+.news-box {
+  min-height: 20em;
+}
+
+.news-box div {
+  text-align: center;
+}
+
+.news-box div h3{
+  border:red 0.5px solid;
+}
+
+.news-box div p{
+  border:red 0.5px solid;
+}

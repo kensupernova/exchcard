@@ -1,0 +1,21 @@
+{% extends "foundation.html" %}
+
+{% block headinfo %}
+{% endblock %}
+
+{% block content %}
+<div>
+    <p>Postcard Id</p>
+    <p>{{card_name}}</p>
+    <p>Recipient Username</p>
+    <p>{{recipient_user.username}}</p>
+    <p>Recipient Address</p>
+    <p>{{recipient_address.name}}</p>
+    <p>{{recipient_address.address}}</p>
+    <p>{{recipient_address.postcode}}</p>
+</div>
+{% endblock %}
+
+{% block jscontainer %}
+<script type="text/javascript" src="{{STATIC_URL}}javascripts/send-card-page.js"></script>
+{% endblock %}

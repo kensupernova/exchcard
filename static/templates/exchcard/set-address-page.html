@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block headinfo %}
+ <title>Add Address Page</title>
+{% endblock %}
+
+{% block content%}
+    <form action="api/profile/address/register" method="post">
+        地址:<br>
+    <input type="text" name="name">
+    <input type="submit" value="Submit" />
+    </form>
+{% endblock %}

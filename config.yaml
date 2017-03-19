@@ -1,0 +1,13 @@
+name: exchangecard2
+version: 2
+
+libraries:
+- name: "django"
+  version: "1.8"
+
+- name: "pytz"
+  version: "2015.7"
+
+handlers:
+- url: /static
+  static_dir: static

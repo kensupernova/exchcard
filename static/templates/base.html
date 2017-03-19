@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:wb="http://open.weibo.com/wb">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+    <!--css and js-->
+    <link href="{{STATIC_URL}}styles/base.css" rel="stylesheet">
+    
+    {% block title %}<title>明信片收藏家 Exchange Postcard</title>{% endblock %}
+
+    {% block headinfo %} {% endblock %}
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <div><h2>明信片收藏家</h2></div>
+        
+    </header>
+
+    <main class="main">
+        {% block content %}
+         <p>This is content block </p>
+        {% endblock %}
+    </main>
+
+    {% block footerinfo %} {% endblock %}
+    <footer class="footer">
+        <p class ="copyright">&copy GUANGHUIZ 2016.</p>
+    </footer>
+</div>
+
+<!-- jquery is before any other libraries since many are dependent on it. -->
+<script type="text/javascript" src="{{STATIC_URL}}lib/jquery-2.1.0.min.js"></script>
+<!--cookie-->
+<script type="text/javascript" src="{{STATIC_URL}}lib/js.cookie.js"></script>
+<link rel="stylesheet" href="{{STATIC_URL}}lib/bootstrap/bootstrap.min.css">
+<script type="text/javascript" src="{{STATIC_URL}}lib/bootstrap/bootstrap.min.js"></script>
+
+<!--<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">-->
+<!--<link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.2.0/css/font-awesome.min.css">-->
+<!--<script src="https://cdn.bootcss.com/angular.js/1.4.8/angular.min.js"></script>-->
+<!--<script src="https://cdn.bootcss.com/angular.js/1.4.8/angular-route.min.js"></script>-->
+{% block jscontainer %} {% endblock %}
+</body>
+
+</html>

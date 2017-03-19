@@ -1,0 +1,22 @@
+a:active{
+  text-decoration: none;
+}
+table tr td{
+  margin-right: 10px;
+  padding-right: 10px;
+}
+table tr th{
+  margin-right: 10px;
+  padding-right: 10px;
+}
+
+.tab-btn-container {}
+
+.tab-btn {
+  display: inline-block;
+  width:10%;
+}
+
+a.tab-btn.active{
+  background: red;
+}

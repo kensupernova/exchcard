@@ -1,0 +1,59 @@
+{% extends "foundation.html" %}
+
+{% block headinfo %}
+{% endblock %}
+
+{% block content %}
+<div>
+
+  <div id="register-card-container">
+    {% csrf_token %}
+    <div><label>Postcard Id<input type="text" name="card_name" id="card_name" placeholder="postcard id"></label></div>
+    <div><label>Postcard Photo<input type="file" name="card_photo" id="card_photo" placeholder="postcard photo"></label></div>
+    <div><button id="submit">Submit</button></div>
+    {% if errors %}
+    <p style="color: red;">
+      Please correct the error{{ errors|pluralize }} below.
+    </p>
+    {% endif %}
+  </div>
+
+  <!--<form method="POST" enctype="multipart/form-data" id="register-card-form">-->
+    <!--{% csrf_token %}-->
+    <!--<div><label>Postcard Id<input type="text" name="card_name" id="card_name" placeholder="postcard id"></label></div>-->
+    <!--<div><label>Postcard Photo<input type="file" name="card_photo" id="card_photo" placeholder="postcard photo"></label></div>-->
+    <!--<div><button id="submit">Submit</button></div>-->
+    <!--{% if errors %}-->
+    <!--<p style="color: red;">-->
+    <!--Please correct the error{{ errors|pluralize }} below.-->
+    <!--</p>-->
+    <!--{% endif %}-->
+  <!--</form>-->
+
+  <!--<form enctype="multipart/form-data" action="/" method="post">-->
+    <!--{% csrf_token %}-->
+    <!--{% if form.errors %}-->
+    <!--<p style="color: red;">-->
+      <!--Please correct the error{{ form.errors|pluralize }} below.-->
+    <!--</p>-->
+    <!--{% endif %}-->
+    <!--{% for field in form.visible_fields %}-->
+      <!--<div class="fieldWrapper">-->
+        <!--<div>-->
+          <!--{{ field.label_tag }} {{ field }}-->
+        <!--</div>-->
+      <!--</div>-->
+
+    <!--{% endfor %}-->
+    <!--<input type="submit" value="Submit" />-->
+  <!--</form>-->
+
+</div>
+
+{% endblock %}
+
+{% block jscontainer %}
+
+<script src="{{STATIC_URL}}javascripts/receive-card-page.js"></script>
+
+{% endblock %}
