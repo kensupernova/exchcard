@@ -1,0 +1,10 @@
+startEnv.sh
+test/
+.idea/
+.gitignore
+manage_dev.py
+mysite/settings_dev.py
+media/card_photos/
+*.pyc
+__pycache__/
+exchcard/__pycache__/
