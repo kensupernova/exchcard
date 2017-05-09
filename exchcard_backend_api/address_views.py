@@ -3,6 +3,7 @@
 from exchcard.models import Address
 from exchcard.models import Profile
 from exchcard_backend_api.serializers import AddressSerializer
+
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
@@ -17,6 +18,7 @@ class GetAllAddressListView(generics.ListAPIView):
         permissions.IsAuthenticated,
     ]
 
+
 class GetOneAddressView(generics.RetrieveAPIView):
     ## queryset = Address.objects.all()
     serializer_class = AddressSerializer
@@ -28,8 +30,8 @@ class GetOneAddressView(generics.RetrieveAPIView):
     def get_object(self):
         ## get one randomly
         obj = Address.objects.order_by("?").first()
-        ## obj = Address.objects.get(pk=somenumber)
-        print AddressSerializer(obj).data
+
+        ## print AddressSerializer(obj).data
 
         return obj
 
@@ -56,8 +58,10 @@ class GetAddressViewWithName(generics.ListAPIView):
 
     def get_queryset(self):
         name= self.kwargs['name'] # parameters in url path
-        ## query params are obtained in this way
-        # sortby = self.request.query_params.get('sortby', None) ## ?sortby=
+
+        # query params are like ?sortby=some_parameter
+        # sortby = self.request.query_params.get('sortby', None) ## query是?sortby=
+
         return Address.objects.filter(name=name)
 
 class GetAddressViewWithNameQuery(generics.ListAPIView):
@@ -68,9 +72,10 @@ class GetAddressViewWithNameQuery(generics.ListAPIView):
     ]
 
     def get_queryset(self):
-        ## query paramater ?name=zhang
+        ## query paramater like  ?name=zhang
         name = self.request.query_params.get('name', None)
         return Address.objects.filter(name=name)
+
 
 class RegisterAddressView(generics.CreateAPIView):
     serializer_class = AddressSerializer
@@ -79,17 +84,24 @@ class RegisterAddressView(generics.CreateAPIView):
         permissions.IsAuthenticated
     ]
 
+
 @api_view(["PUT",])
 @permission_classes([permissions.IsAuthenticated, ])
 def api_update_address_with_profile_id(request, pk, format=None):
-    ""
+    """
+    更新某个Profile的地址
+    :param request:
+    :param pk: profile id
+    :param format:
+    :return: 更新后的地址
+    """
     if request.method == "PUT":
-        profile_from_user = Profile.objects.get(profileuser
+        profile_from_request = Profile.objects.get(profileuser
                                                    =request.user)
-        if not int(pk) == int(profile_from_user.id):
-            return Response({"details": "request user != profileuser",
+        if not int(pk) == int(profile_from_request.id):
+            return Response({"details": "request user != user with profile id in url",
                              "id_url": pk,
-                             "id_request:": profile_from_user.id},
+                             "id_request:": profile_from_request.id},
                             status=status.HTTP_403_FORBIDDEN)
 
 

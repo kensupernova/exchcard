@@ -2,22 +2,29 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 
-from exchcard.models import Card, Profile, Address, AvatarPhoto, DianZan, CardPhoto
 from rest_framework import serializers
+
+from exchcard.models import Card, Profile, Address, AvatarPhoto, DianZan, CardPhoto
+
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    用户序列化类
+    """
     class Meta:
         model = User
         fields =('url', 'username', "email")
+
 
 class GetUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields=("username", "email") ### password can not be read
 
+
 class RegisterUserSerializer1(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True) ## write only, can not be read
+    password = serializers.CharField(write_only=True) ## 密码write only, can not be read
 
     class Meta:
         model = get_user_model()
@@ -28,7 +35,7 @@ class RegisterUserSerializer1(serializers.ModelSerializer):
             username=validated_data['username'],
             email=validated_data['email'],
         )
-        user.set_password(validated_data['password'])
+        user.set_password(validated_data['password']) ## 密码只能这样创建
         user.save()
 
         return user
@@ -38,8 +45,9 @@ class RegisterUserSerializer2(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'password', 'email')
+        read_only_fields = ('id',)  ## read only, can not be written
         write_only_fields = ('password',) ## write only, can not be read
-        read_only_fields = ('id',) ## read only, can not be written
+
 
     def create(self, validated_data):
         user = User.objects.create(
@@ -52,8 +60,31 @@ class RegisterUserSerializer2(serializers.ModelSerializer):
 
         return user
 
-###################################################################################
 
+
+class RegisterUserAddressProfileSerializer(serializers.ModelSerializer):
+    """
+    注册新的Profile, 会创建一个User, 一个Address, 一个Profile
+    """
+    username = serializers.CharField(source="profileuser.username")
+    password = serializers.CharField(source="profileuser.password")
+    email = serializers.CharField(source="profileuser.email")
+
+    name = serializers.CharField(source="profileaddress.name")
+    address = serializers.CharField(source="profileaddress.address")
+    postcode = serializers.CharField(source="profileaddress.postcode")
+
+    class Meta:
+        model = Profile
+        fields = ("id", "username", "password", "email",
+                  "name", "address", "postcode")
+
+
+
+###################################################################################
+"""
+明信片序列化类
+"""
 class CardSerializer(serializers.ModelSerializer):
     fromsender = serializers.CharField(source='fromsender.profileuser.username')
     fromaddress = serializers.CharField(source='fromsender.profileaddress.address')
@@ -73,6 +104,7 @@ class CardSerializer(serializers.ModelSerializer):
                   "torecipient_id", "torecipient", "toaddress", "topostcode",
                   "sent_time", "arrived_time",
                   "sent_date", "arrived_date", "has_arrived")
+
 
 class CreateCardSerializer(serializers.ModelSerializer):
     fromsender_id = serializers.IntegerField(source='fromsender.id')
@@ -103,13 +135,21 @@ class CreateCardSerializer(serializers.ModelSerializer):
         return card
 
 
+
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields = ("name", "address", "postcode")
 
 
+
+
+
+
 ###################################################################################
+"""
+创建Profile序列化类
+"""
 class CreateProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
@@ -126,6 +166,8 @@ class CreateProfileSerializer(serializers.ModelSerializer):
         profile.save()
 
         return profile
+
+
 
 class CreateProfileSerializerWithIds(serializers.ModelSerializer):
     class Meta:
@@ -144,7 +186,12 @@ class CreateProfileSerializerWithIds(serializers.ModelSerializer):
 
         return profile
 
+
+
 class GetProfileSerializer(serializers.ModelSerializer):
+    """
+    Get Profile序列化
+    """
     profileuser = serializers.CharField(source="profileuser.username")
     profileaddress_name = serializers.CharField(source="profileaddress.name")
     profileaddress_address = serializers.CharField(source="profileaddress.address")
@@ -155,6 +202,8 @@ class GetProfileSerializer(serializers.ModelSerializer):
         fields=("id", "url", "profileuser", "profileaddress_name", "profileaddress_address",
                 "profileaddress_postcode")
         related_fields = ["user", "address"]
+
+
 
 class GetProfileWithCardSerializer(serializers.HyperlinkedModelSerializer):
     profileuser_username = serializers.CharField(source="profileuser.username")
@@ -179,19 +228,6 @@ class GetProfileWithCardSerializer(serializers.HyperlinkedModelSerializer):
                 "sent_cards", "receive_cards")
         related_fields = ["user", "address"]
 
-
-
-class RegisterUserAddressProfileSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source="profileuser.username")
-    password = serializers.CharField(source="profileuser.password")
-    name = serializers.CharField(source="profileaddress.name")
-    address = serializers.CharField(source="profileaddress.address")
-    postcode = serializers.CharField(source="profileaddress.postcode")
-
-    class Meta:
-        model = Profile
-        fields = ("id", "username", "password",
-                  "name","address", "postcode")
 
 
 class GetUserAddressProfileSerializer(serializers.ModelSerializer):

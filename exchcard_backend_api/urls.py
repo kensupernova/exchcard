@@ -4,17 +4,18 @@ from django.conf.urls import url, include
 
 from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
-from exchcard_backend_api import card_views, profile_views, address_views, account_views, upload_views
+from exchcard_backend_api import card_views, profile_views, address_views, account_views, upload_views, views
 
 urlpatterns = format_suffix_patterns([
-    url(r"^$", card_views.api_root),
-    ## authentication
+    url(r"^$", views.api_root),
+
+    ## authentication and registeration
     url(r"^auth/", "exchcard_backend_api.account_views.user_auth", name="auth"),
     url(r"^login/", "exchcard_backend_api.account_views.user_login", name="login"),
     url(r"^logout/", "exchcard_backend_api.account_views.user_logout", name="logout"),
     url(r"^register/$", "exchcard_backend_api.profile_views.api_register_user_address_profile",
         name="exchcard_backend_api-user-address-register"),
-    url(r"^account/register2/$", profile_views.RegisterUserAddressProfileView.as_view(),
+    url(r"^register2/$", profile_views.RegisterUserAddressProfileView.as_view(),
         name="exchcard_backend_api-user-address-register2"),
 
     ## users
@@ -65,26 +66,32 @@ urlpatterns = format_suffix_patterns([
         upload_views.AvatarPhotoDetail.as_view(),
         name="avatarphoto-detail"),
 
-    url(r"^profiles/(?P<pk>[0-9]+)/cards/count/$", "exchcard_backend_api.profile_views.api_profile_get_cards_count",
+    ## 查看总的各状态的明信片
+    url(r"^profiles/(?P<pk>[0-9]+)/cards/allstatus/$", "exchcard_backend_api.profile_views.api_profile_get_cards_all_status",
         name="profile-get-cards-count"),
+
+    ## 查看各个状态的明信片
     url(r"^profiles/(?P<pk>[0-9]+)/cards/total/$", "exchcard_backend_api.profile_views.api_profile_get_cards_total",
         name="profile-get-cards-total"),
+
+    #### 接受之所有用receive, 是因为包括发出去未到的，和已经到达的两种
     url(r"^profiles/(?P<pk>[0-9]+)/cards/sent/total/$", "exchcard_backend_api.profile_views.api_profile_get_cards_sent_total",
         name="profile-get-cards-sent"),
     url(r"^profiles/(?P<pk>[0-9]+)/cards/receive/total/$", "exchcard_backend_api.profile_views.api_profile_get_cards_receive_total",
         name="profile-get-cards-receive"),
+
     url(r"^profiles/(?P<pk>[0-9]+)/cards/sent/travelling/$", "exchcard_backend_api.profile_views.api_profile_get_cards_sent_travelling",
         name="profile-get-cards-sent-travelling"),
     url(r"^profiles/(?P<pk>[0-9]+)/cards/receive/travelling/$", "exchcard_backend_api.profile_views.api_profile_get_cards_receive_travelling",
         name="profile-get-cards-receive-travelling"),
+
     url(r"^profiles/(?P<pk>[0-9]+)/cards/sent/arrived/$", "exchcard_backend_api.profile_views.api_profile_get_cards_sent_arrived",
         name="profile-get-cards-sent-arrived"),
     url(r"^profiles/(?P<pk>[0-9]+)/cards/receive/arrived/$", "exchcard_backend_api.profile_views.api_profile_get_cards_receive_arrived",
         name="profile-get-cards-receive-arrived"),
 
 
-    ##
-## cards
+    ## cards
     url(r"^cards/$", card_views.CardList.as_view(),
         name="card-list"),
     url(r"^cards/(?P<pk>[0-9]+)/$", card_views.CardDetail.as_view(),

@@ -5,9 +5,9 @@ from django.shortcuts import Http404
 
 from exchcard.models import AvatarPhoto, CardPhoto, Card
 from exchcard.models import Profile
-from exchcard_backend_api import utils
 from exchcard_backend_api.permissions import IsOwnerOrReadOnly
 from exchcard_backend_api.serializers import AvatarPhotoSerializer, CreateAvatarPhotoSerializer, CardPhotoSerializer
+from exchcard_backend_api.util import utils
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, parser_classes

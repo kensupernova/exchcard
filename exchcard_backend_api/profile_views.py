@@ -3,8 +3,17 @@
 from django.contrib.auth.models import User
 from django.db.models import Q
 
+from multiple_model.views import MultipleModelAPIView
+
+from rest_framework import generics
+from rest_framework import permissions
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+
 from exchcard.models import Address, Card
 from exchcard.models import Profile
+
 from exchcard_backend_api.permissions import IsProfileUserOrStaffUser
 from exchcard_backend_api.serializers import AddressSerializer
 from exchcard_backend_api.serializers import CreateProfileSerializer
@@ -12,22 +21,21 @@ from exchcard_backend_api.serializers import GetProfileWithCardSerializer
 from exchcard_backend_api.serializers import GetUserAddressProfileSerializer
 from exchcard_backend_api.serializers import RegisterUserAddressProfileSerializer
 from exchcard_backend_api.serializers import UserSerializer, CardSerializer
-from exchcard_backend_api.utils import count_arrive_travel
-from multiple_model.views import MultipleModelAPIView
-from rest_framework import generics
-from rest_framework import permissions
-from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
+from exchcard_backend_api.util.utils import count_arrive_travel
 
-## get a profile with cards list
+
 class GetProfileListView(generics.ListAPIView):
+    """
+    get a profile with cards list
+    """
     serializer_class = GetProfileWithCardSerializer
     queryset = Profile.objects.all()
 
     permission_classes = [
         permissions.IsAuthenticated
     ]
+
+
 
 class GetProfileDetailView(generics.RetrieveAPIView):
     serializer_class = GetProfileWithCardSerializer
@@ -38,7 +46,8 @@ class GetProfileDetailView(generics.RetrieveAPIView):
         IsProfileUserOrStaffUser
     ]
 
-## add profile
+
+
 class RegisterProfileView(generics.CreateAPIView):
     """
     Add Profile View and Update View
@@ -55,7 +64,7 @@ class RegisterProfileView(generics.CreateAPIView):
 # ## permission limit access to admin users
 class RegisterUserAddressProfileView(MultipleModelAPIView):
     """
-    User and Address serializer information
+    User and Address serializer, Multiple Model API View
     """
     queryList = [
         (User.objects.all(), UserSerializer),
@@ -71,16 +80,19 @@ class RegisterUserAddressProfileView(MultipleModelAPIView):
 @permission_classes([permissions.AllowAny, ])
 def api_register_user_address_profile(request, format=None):
     """
-    first time register with username, password, address
-    :param request: user, password, email, address, postcode, etc.
+    First time registeration
+    需要的参数：user, password, email, address, postcode
+    :param request:
     :param format:
     :return:
+    created by guanghui
     """
     if request.method == "POST":
         try:
-            ## the requst data in json or other format
+            ## the request data in json or other format from put, post, patch methods
             dict_data = request.data
             # print dict_data
+
             if "username" not in dict_data.keys():
                 return Response({"detail":"Dict Key Error"},
                         status==status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -109,24 +121,30 @@ def api_register_user_address_profile(request, format=None):
                     status=status.HTTP_400_BAD_REQUEST)
 
         except Profile.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({"detail": "Server internal error!"},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         serializer = RegisterUserAddressProfileSerializer(profile)
+        ## 打印到服务器
+        print serializer.data
+        ## 返回给客服端
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     if request.method == "GET":
-        return Response({"detail":"Get method is not allowed"}, status= status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response({"detail":"Get method is not allowed"},
+                        status= status.HTTP_405_METHOD_NOT_ALLOWED)
 
-## admin user or staff user can create exchcard_backend_api with user_id and profile_id
+
 @api_view(["POST"])
 @permission_classes([permissions.IsAdminUser, ])
 def api_register_new_profile_with_ids(request, format=None):
     """
-    create a new user
+    create a new profile with user id and address id
+    limited to: admin user or staff user can create exchcard_backend_api with user_id and profile_id
     """
     if request.method == "POST":
         print "------------------------------"
-        print "adding new profile"
+        print "adding a new profile"
         data = request.data
         print data
         p = Profile.objects.create_profile_with_ids(
@@ -144,12 +162,12 @@ def api_register_new_profile_with_ids(request, format=None):
 
         return Response(dict_data, status=status.HTTP_201_CREATED)
 
-##
+
 @api_view(["GET","PUT"])
 @permission_classes([IsProfileUserOrStaffUser, ])
-def api_update_profile(request, format=None):
+def api_update_profile_with_ids(request, format=None):
     """
-    update profile
+    update profile with user id and address id
     :param: userid, addressid
     """
     if request.method == "GET":
@@ -164,17 +182,15 @@ def api_update_profile(request, format=None):
     if request.method == "PUT":
         ### check whether profileuser is the currentuser
         print "------------------------------"
-        print "update exchcard_backend_api"
+        print "update profile"
         # serializer = AddProfileSerializerWithIds(exchcard_backend_api, data=request.data)
         # if serializer.is_valid():
         #     serializer.save()
         #     return Response(serializer.data)
         # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-
         data = request.data
-        print data
+
         p = Profile.objects.update_profile_address_with_ids(
                 userid=data['userid'],
                 addressid=data['addressid']
@@ -183,7 +199,7 @@ def api_update_profile(request, format=None):
         print p
 
         p.save()
-        return Response(CreateProfileSerializer(p).data, status=status.HTTP_200_OK)
+        return Response(CreateProfileSerializer(p).data, status=status.HTTP_205_RESET_CONTENT)
 
 
 
@@ -191,7 +207,7 @@ def api_update_profile(request, format=None):
 @permission_classes([permissions.IsAuthenticated])
 def api_get_random_profile(request, format=None):
     """
-    get one exchcard_backend_api for sending card, randomly, later, use algorithm to match
+    get one profile for sending card, randomly, later, use algorithm to match
     :param Request:
     :return:
     """
@@ -200,20 +216,22 @@ def api_get_random_profile(request, format=None):
             profile = Profile.objects.order_by("?").first()
 
         except Profile.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({"detail": "404 NOT FOUND"}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = GetUserAddressProfileSerializer(profile)
 
         data = serializer.data
-        ### search the sender exchcard_backend_api id at the same time
+        ### Get the sender profile id at the same time
         data["sender_profile_id"] = request.user.profile.id
-        return Response(data)
+
+        return Response(data, status=status.HTTP_200_OK)
+
 
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
-def api_profile_get_cards_count(request, pk, format=None):
+def api_profile_get_cards_all_status(request, pk, format=None):
     """
-    register with user information and address information
+    得到某个Profile的各个状态的明信片总信息
     :param request:
     :param pk:
     :param format:
@@ -233,6 +251,7 @@ def api_profile_get_cards_count(request, pk, format=None):
         serializer = GetProfileWithCardSerializer(profile, context={'request': request})
         # `HyperlinkedIdentityField` requires the request in the serializer context.
         # Add `context={'request': request}` when instantiating the serializer.
+
     except Profile.DoesNotExist:
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
@@ -257,29 +276,39 @@ def api_profile_get_cards_count(request, pk, format=None):
         return Response(response_data, status= status.HTTP_200_OK)
 
 
-
+"""
+用户明信片根据各个状态分别处理
+"""
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
 def api_profile_get_cards_total(request, pk, format=None):
     try:
         profile = Profile.objects.get(pk=pk)
-        profile_from_user = Profile.objects.get(profileuser
+        profile_of_request_user = Profile.objects.get(profileuser
                                                 =request.user)
-        if not int(profile.id) == int(profile_from_user.id):
+        if not int(profile.id) == int(profile_of_request_user.id):
             return Response({"details": "request user != profileuser",
                              "id_url": profile.id,
-                             "id_request:": profile_from_user.id},
+                             "id_request:": profile_of_request_user.id},
+                            status=status.HTTP_403_FORBIDDEN)
+
+        profile_from_request = Profile.objects.get(profileuser
+                                                   =request.user)
+        if not int(pk) == int(profile_from_request.id):
+            return Response({"details": "request user != user with profile id in url",
+                             "id_url": pk,
+                             "id_request:": profile_from_request.id},
                             status=status.HTTP_403_FORBIDDEN)
 
     except Profile.DoesNotExist:
         return Response({"details": "user does not exit"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == "GET":
-        cards_receive_travel = Card.objects.filter(Q(torecipient=profile_from_user) & Q(has_arrived=False))
-        cards_receive_arrive = Card.objects.filter(Q(torecipient=profile_from_user) & Q(has_arrived=True))
+        cards_receive_travel = Card.objects.filter(Q(torecipient=profile_of_request_user) & Q(has_arrived=False))
+        cards_receive_arrive = Card.objects.filter(Q(torecipient=profile_of_request_user) & Q(has_arrived=True))
 
-        cards_sent_travel = Card.objects.filter(Q(fromsender=profile_from_user) & Q(has_arrived=False))
-        cards_sent_arrive = Card.objects.filter(Q(fromsender=profile_from_user) & Q(has_arrived=True))
+        cards_sent_travel = Card.objects.filter(Q(fromsender=profile_of_request_user) & Q(has_arrived=False))
+        cards_sent_arrive = Card.objects.filter(Q(fromsender=profile_of_request_user) & Q(has_arrived=True))
 
 
         return Response({"sent_arrived": CardSerializer(cards_sent_arrive,
@@ -299,19 +328,19 @@ def api_profile_get_cards_total(request, pk, format=None):
 def api_profile_get_cards_sent_total(request, pk, format=None):
     try:
         profile = Profile.objects.get(pk=pk)
-        profile_from_user = Profile.objects.get(profileuser
+        profile_of_request_user = Profile.objects.get(profileuser
                                                 =request.user)
-        if not int(profile.id) == int(profile_from_user.id):
+        if not int(profile.id) == int(profile_of_request_user.id):
             return Response({"details": "request user != profileuser",
                              "id_url": profile.id,
-                             "id_request:": profile_from_user.id},
+                             "id_request:": profile_of_request_user.id},
                             status=status.HTTP_403_FORBIDDEN)
 
     except Profile.DoesNotExist:
         return Response({"details":"Profile object does not exit"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == "GET":
-        cards = Card.objects.filter(fromsender = profile_from_user)
+        cards = Card.objects.filter(fromsender = profile_of_request_user)
         serializer = CardSerializer(cards, many=True, context={'request': request})
 
         return Response(serializer.data, status= status.HTTP_200_OK)
@@ -322,19 +351,19 @@ def api_profile_get_cards_sent_total(request, pk, format=None):
 def api_profile_get_cards_receive_total(request, pk, format=None):
     try:
         profile = Profile.objects.get(pk=pk)
-        profile_from_user = Profile.objects.get(profileuser
+        profile_of_request_user = Profile.objects.get(profileuser
                                                 =request.user)
-        if not int(profile.id) == int(profile_from_user.id):
-            return Response({"details": "request user != profileuser",
+        if not int(profile.id) == int(profile_of_request_user.id):
+            return Response({"details": "request user != user from profile id in url",
                              "id_url": profile.id,
-                             "id_request:": profile_from_user.id},
+                             "id_request:": profile_of_request_user.id},
                             status=status.HTTP_403_FORBIDDEN)
 
     except Profile.DoesNotExist:
         return Response({"details":"Profile object does not exit"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == "GET":
-        cards = Card.objects.filter(torecipient=profile_from_user)
+        cards = Card.objects.filter(torecipient=profile_of_request_user)
         serializer = CardSerializer(cards, many=True, context={'request': request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -345,19 +374,19 @@ def api_profile_get_cards_receive_total(request, pk, format=None):
 def api_profile_get_cards_sent_travelling(request, pk, format=None):
     try:
         profile = Profile.objects.get(pk=pk)
-        profile_from_user = Profile.objects.get(profileuser
+        profile_of_request_user = Profile.objects.get(profileuser
                                                 =request.user)
-        if not int(profile.id) == int(profile_from_user.id):
+        if not int(profile.id) == int(profile_of_request_user.id):
             return Response({"details": "request user != profileuser",
                              "id_url": profile.id,
-                             "id_request:": profile_from_user.id},
+                             "id_request:": profile_of_request_user.id},
                             status=status.HTTP_403_FORBIDDEN)
 
     except Profile.DoesNotExist:
         return Response({"details":"Profile object does not exit"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == "GET":
-        cards = Card.objects.filter(Q(fromsender=profile_from_user ) & Q(has_arrived=False))
+        cards = Card.objects.filter(Q(fromsender=profile_of_request_user ) & Q(has_arrived=False))
 
         serializer = CardSerializer(cards, many=True, context={'request': request})
 
@@ -370,19 +399,19 @@ def api_profile_get_cards_sent_travelling(request, pk, format=None):
 def api_profile_get_cards_receive_travelling(request, pk, format=None):
     try:
         profile = Profile.objects.get(pk=pk)
-        profile_from_user = Profile.objects.get(profileuser
+        profile_of_request_user = Profile.objects.get(profileuser
                                                 =request.user)
-        if not int(profile.id) == int(profile_from_user.id):
+        if not int(profile.id) == int(profile_of_request_user.id):
             return Response({"details": "request user != profileuser",
                              "id_url": profile.id,
-                             "id_request:": profile_from_user.id},
+                             "id_request:": profile_of_request_user.id},
                             status=status.HTTP_403_FORBIDDEN)
 
     except Profile.DoesNotExist:
         return Response({"details":"Profile object does not exit"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == "GET":
-        cards = Card.objects.filter(Q(torecipient=profile_from_user ) & Q(has_arrived=False))
+        cards = Card.objects.filter(Q(torecipient=profile_of_request_user ) & Q(has_arrived=False))
 
         serializer = CardSerializer(cards, many=True, context={'request': request})
 
@@ -394,19 +423,19 @@ def api_profile_get_cards_receive_travelling(request, pk, format=None):
 def api_profile_get_cards_sent_arrived(request, pk, format=None):
     try:
         profile = Profile.objects.get(pk=pk)
-        profile_from_user = Profile.objects.get(profileuser
+        profile_of_request_user = Profile.objects.get(profileuser
                                                 =request.user)
-        if not int(profile.id) == int(profile_from_user.id):
+        if not int(profile.id) == int(profile_of_request_user.id):
             return Response({"details": "request user != profileuser",
                              "id_url": profile.id,
-                             "id_request:": profile_from_user.id},
+                             "id_request:": profile_of_request_user.id},
                             status=status.HTTP_403_FORBIDDEN)
 
     except Profile.DoesNotExist:
         return Response({"details":"Profile object does not exit"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == "GET":
-        cards = Card.objects.filter(Q(fromsender=profile_from_user ) & Q(has_arrived=True))
+        cards = Card.objects.filter(Q(fromsender=profile_of_request_user ) & Q(has_arrived=True))
 
         serializer = CardSerializer(cards, many=True, context={'request': request})
 
@@ -419,19 +448,19 @@ def api_profile_get_cards_sent_arrived(request, pk, format=None):
 def api_profile_get_cards_receive_arrived(request, pk, format=None):
     try:
         profile = Profile.objects.get(pk=pk)
-        profile_from_user = Profile.objects.get(profileuser
+        profile_of_request_user = Profile.objects.get(profileuser
                                                 =request.user)
-        if not int(profile.id) == int(profile_from_user.id):
+        if not int(profile.id) == int(profile_of_request_user.id):
             return Response({"details": "request user != profileuser",
                              "id_url": profile.id,
-                             "id_request:": profile_from_user.id},
+                             "id_request:": profile_of_request_user.id},
                             status=status.HTTP_403_FORBIDDEN)
 
     except Profile.DoesNotExist:
         return Response({"details":"Profile object does not exit"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == "GET":
-        cards = Card.objects.filter(Q(torecipient=profile_from_user ) & Q(has_arrived=True))
+        cards = Card.objects.filter(Q(torecipient=profile_of_request_user ) & Q(has_arrived=True))
 
         serializer = CardSerializer(cards, many=True, context={'request': request})
 

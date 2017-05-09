@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.http import Http404
 
 from exchcard_backend_api.serializers import UserSerializer, RegisterUserSerializer2
-from exchcard_backend_api.utils import generateToken
+from exchcard_backend_api.util.utils import generateToken
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
