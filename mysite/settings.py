@@ -159,7 +159,7 @@ INSTALLED_APPS = (
     # django rest framework
     'rest_framework',
     'mysite',
-    'exchcard',
+    'exchcard_backend_api',
     'oneverse',
 )
 
@@ -226,7 +226,7 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760
 ## this one overide the MEDIA_ROOT
 DEFAULT_FILE_STORAGE = 'sae.ext.django.storage.backend.Storage'
 # 使用media这个bucket
-STORAGE_BUCKET_NAME = 'exchcard-bucket'
+STORAGE_BUCKET_NAME = 'exchcard_backend_api-bucket'
 # ref: https://docs.djangoproject.com/en/dev/topics/files/
 
 
