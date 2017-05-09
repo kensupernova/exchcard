@@ -1,6 +1,6 @@
 from django.db import models
 
-from oneverse_api.manage import VerseManager, GcmRegisterManager, SecretManager
+from oneverse.manage import VerseManager, GcmRegisterManager, SecretManager
 
 
 class Verse(models.Model):
