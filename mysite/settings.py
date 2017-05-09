@@ -256,7 +256,7 @@ DATABASES = {
         # use mysql database
         'ENGINE':'django.db.backends.mysql',
         'NAME':'exchcard',
-        'USER':'root',
+        'USER':'zgh',
         'PASSWORD':'zgh123456',
         'HOST':'',
         'PORT':'',
