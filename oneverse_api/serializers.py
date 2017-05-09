@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from oneverse.models import Verse
+from oneverse_api.models import Verse
 
 class CreateVerseSerializer(serializers.ModelSerializer):
 

@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('oneverse', '0005_auto_20160324_0932'),
+        ('oneverse_api', '0005_auto_20160324_0932'),
     ]
 
     operations = [

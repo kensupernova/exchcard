@@ -7,12 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('oneverse', '0007_serect'),
+        ('oneverse_api', '0003_verse_push_date'),
     ]
 
     operations = [
-        migrations.RenameModel(
-            old_name='Serect',
-            new_name='Secret',
+        migrations.AlterField(
+            model_name='verse',
+            name='push_date',
+            field=models.DateField(default=None, null=True),
         ),
     ]

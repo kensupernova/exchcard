@@ -7,8 +7,8 @@ from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import permissions
 
-from oneverse.models import Verse
-from oneverse.serializers import VerseSerializer, CreateVerseSerializer
+from oneverse_api.models import Verse
+from oneverse_api.serializers import VerseSerializer, CreateVerseSerializer
 
 
 

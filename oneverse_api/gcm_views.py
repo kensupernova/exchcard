@@ -4,7 +4,7 @@ from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
 from serializers import CreateVerseSerializer
-from oneverse.models import GcmRegister
+from oneverse_api.models import GcmRegister
 from gcm import GCM
 from models import Secret
 
