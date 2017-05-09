@@ -155,6 +155,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
 
 }]);
 
+////////////////
 app.run(function($rootScope, $http) {
   var csrftoken = Cookies.get('csrftoken');
   $http({
@@ -172,55 +173,53 @@ app.run(function($rootScope, $http) {
     $rootScope.receive_travelling = response.data['receive_travelling'];
 
 
+    // console.log(JSON.stringify(response.data['sent_arrived'].length));
+    // console.log(JSON.stringify(response.data['receive_arrived'].length));
+    // console.log(JSON.stringify(response.data['sent_travelling'].length));
+    // console.log(JSON.stringify(response.data['receive_travelling'].length));
 
-    console.log(JSON.stringify(response.data['sent_arrived'].length));
-    console.log(JSON.stringify(response.data['receive_arrived'].length));
-    console.log(JSON.stringify(response.data['sent_travelling'].length));
-    console.log(JSON.stringify(response.data['receive_travelling'].length));
-
-    //点击第一个tab
+    // 点击第一个tab
     $('#tab-sent-arrived').click();
 
   }, function myError(response) {
-
+    // console.log("fail to get cards data!");
   });
 });
 
 
 app.controller('sentArrivedCtrl',  function($scope, $rootScope) {
-  console.log("rendering page! sent arrive");
   $scope.sent_arrived = $rootScope.sent_arrived;
+  console.log("rendering sent arrived");
 });
 
 app.controller('receiveArrivedCtrl', function($scope, $rootScope) {
   $scope.receive_arrived = $rootScope.receive_arrived;
 
-  console.log("rendering page! receive arrive");
+  console.log("rendering receive arrived");
 });
 
-
 app.controller('sentTravellingCtrl', function($scope, $rootScope) {
-    $scope.sent_travelling = $rootScope.sent_travelling;
-  console.log("render sent travelling!");
+  $scope.sent_travelling = $rootScope.sent_travelling;
+  console.log("rendering sent travelling");
 });
 
 app.controller('receiveTravellingCtrl', function($scope, $rootScope) {
-    $scope.receive_travelling = $rootScope.receive_travelling;
+  $scope.receive_travelling = $rootScope.receive_travelling;
   console.log("rendering receive travelling");
 });
 
-
-app.controller('myCtrl', ['$scope', '$rootScope', function($scope, $rootScope) {
-
-  $scope.sent_arrived = $rootScope.sent_arrived;
-
-
-  $scope.receive_arrived = $rootScope.receive_arrived;
-
-  $scope.sent_travelling = $rootScope.sent_travelling;
-
-  $scope.receive_travelling = $rootScope.receive_travelling;
-}]);
+// myController是外层的
+// app.controller('myCtrl', ['$scope', '$rootScope', function($scope, $rootScope) {
+//
+//   $scope.sent_arrived = $rootScope.sent_arrived;
+//
+//   $scope.receive_arrived = $rootScope.receive_arrived;
+//
+//   $scope.sent_travelling = $rootScope.sent_travelling;
+//
+//   $scope.receive_travelling = $rootScope.receive_travelling;
+//
+// }]);
 
 $(document).ready(function(){
 

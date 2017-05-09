@@ -27,19 +27,16 @@ import sys
 # # This application object is used by any WSGI server configured to use this
 # # file. This includes Django's development server, if the WSGI_APPLICATION
 # # setting points here.
-# from django.core.wsgi import get_wsgi_application
-# application = get_wsgi_application()
 
-# Apply WSGI middleware here.
-# from helloworld.wsgi import HelloWorldApplication
-# application = HelloWorldApplication(application)
 
+# 添加系统中没有的依赖包
 # site_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'mysite-packages'),
 # sys.path.insert(0, site_path)
 
+# 设置系统环境
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
-
 # os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings_dev")
 
+# WSGI application
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()

@@ -7,7 +7,7 @@ function regexTest(value, regex){
 }
 
 function validate_username(username){
-  // console.log("validating... email");
+  // console.log("validating... username");
   var value = username;
   if(!value ||value == null ||value == undefined || value.length==0){
     return false;
@@ -29,7 +29,9 @@ function validate_email(email){
   return re.test(email);
 }
 
-
+/**
+ * 密码要求： 6-16位, 数字, 大小写字母, 已经特殊字符!@#$%^&*, 至少一个数字, 至少一个字母
+*/
 function validate_password(password){
   // console.log("validating... pw");
   var str = password;
@@ -51,10 +53,7 @@ function validate_password(password){
 
 }
 
-// console.log(validate_password("1111111a"));
-// console.log(validate_password("1111111a"));
-// console.log(validate_password("zgh4@126"));
-
+/* 真实姓名要求：2到10位汉字,可以包括点号, 至少两位汉字； 3-30位, 可以包括空格,点号 */
 function validate_name(name) {
   // console.log("validating... ");
   var str = name;
@@ -70,14 +69,7 @@ function validate_name(name) {
   return re.test(name);
 }
 
-// console.log(validate_name("zghfafafa"))
-// console.log(validate_name("  "));
-// console.log(validate_name("aaaaaaa1"));
-// console.log(validate_name(".."));
-// console.log(validate_name("张."));
-// console.log(validate_name("张.张"));
-// console.log(validate_name("a.a"));
-// console.log(validate_name("a a"));
+
 
 function validate_address(address) {
   // console.log("validating... add");
@@ -93,8 +85,6 @@ function validate_address(address) {
   return re.test(address);
 }
 
-// console.log(validate_address("."))
-// console.log(validate_address("10000"))
 
 function validate_postcode(postcode) {
   // console.log("validating... add");

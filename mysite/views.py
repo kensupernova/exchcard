@@ -6,7 +6,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, render_to_response
 from django.contrib.auth.decorators import login_required
 
-from exchcard.models import Card, CardPhoto, Profile
+from exchcard_backend_api.models import Card, CardPhoto, Profile
 
 from mysite.forms import RegisterCardForm
 
@@ -17,21 +17,21 @@ def user_login(request):
     return render(request, 'login.html')
 
 def user_register(request):
-    return render(request, 'exchcard/user-address-register-page.html')
+    return render(request, 'exchcard_backend_api/user-address-register-page.html')
 
 ## 注入验证
 @login_required
 def profile(request):
     profile_from_request = Profile.objects.get(profileuser=request.user)
     context = {'profile': profile_from_request}
-    return render(request, 'exchcard/profile-page.html', context)
+    return render(request, 'exchcard_backend_api/profile-page.html', context)
 
 @login_required
 def card_send(request):
     profile_from_request = Profile.objects.get(profileuser=request.user)
     context = {'profile': profile_from_request}
 
-    return render(request, 'exchcard/send-card-page.html', context)
+    return render(request, 'exchcard_backend_api/send-card-page.html', context)
 
 @login_required
 def card_send_confirm(request):
@@ -43,7 +43,7 @@ def card_send_confirm(request):
     if request.data["send_postcard"]:
         context['profile']= profile_from_request
 
-    return render(request, 'exchcard/send-card-page.html', context)
+    return render(request, 'exchcard_backend_api/send-card-page.html', context)
 
 @login_required
 def card_register(request):
@@ -68,13 +68,13 @@ def card_register(request):
     #     if card.torecipient.id == profile_request.id:
     #         card.mark_arrived()
     #
-    #         return render(request, 'exchcard/view-card-page.html', {'card': card, 'profile': profile_from_request})
+    #         return render(request, 'exchcard_backend_api/view-card-page.html', {'card': card, 'profile': profile_from_request})
     #
     #     else:
     #         return HttpResponse({"details errors: request user id != card recipient id"})
 
     if request.method == "GET":
-        return render(request, 'exchcard/receive-card-page.html', context)
+        return render(request, 'exchcard_backend_api/receive-card-page.html', context)
 
 @login_required
 def card_travelling(request, cardname):
@@ -91,7 +91,7 @@ def card_travelling(request, cardname):
                }
     context['profile'] = Profile.objects.get(profileuser=request.user)
 
-    return render(request, 'exchcard/travelling-card-page.html', context)
+    return render(request, 'exchcard_backend_api/travelling-card-page.html', context)
 
 @login_required
 def view_single_card(request, cardname):
@@ -114,7 +114,7 @@ def view_single_card(request, cardname):
         context["url"] = cardphoto.card_photo.url
     except:
         ''
-    return render(request, 'exchcard/travelling-card-page.html', context)
+    return render(request, 'exchcard_backend_api/travelling-card-page.html', context)
 
 @login_required
 def view_cards_list(request, id):
@@ -123,7 +123,7 @@ def view_cards_list(request, id):
 
     context = {'profile': profile_from_request}
 
-    return render(request, 'exchcard/view-cards-page.html', context)
+    return render(request, 'exchcard_backend_api/view-cards-page.html', context)
 
 @login_required
 def view_shao_you_quan(request):
@@ -137,4 +137,4 @@ def view_shao_you_quan(request):
 
     context = {'profile': profile_from_request}
 
-    return render(request, 'exchcard/moments-page.html', context=context)
+    return render(request, 'exchcard_backend_api/moments-page.html', context=context)

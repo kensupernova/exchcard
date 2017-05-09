@@ -29,11 +29,11 @@
 
     {% csrf_token %}
     <div class="row spanner">
-      <div class="logo-container"><h1>明信片收藏家</h1></div>
+      <div class="logo-container"><div><a href="/profile">明信片收藏家</a></div></div>
       <div class="profile-setting">
         <img src=""/>
         {% if profile%}
-          <div >{{profile.profileuser.name}}</div>
+          <div >{{profile.profileuser.email}}</div>
         {%endif%}
         <div id="setting">设置</div>
         <div id="logout">退出</div>
@@ -52,11 +52,10 @@
             <li class=""><a href="/card/register">注册明信片</a></li>
           </ul>
         </li>
-        <li><a href="/moments" id="moments">烧友圈</a></li>
-        <li><a href="" id="stats">统计数据</a></li>
+        <!--<li><a href="/moments" id="moments">烧友圈</a></li>-->
+        <!--<li><a href="" id="stats">统计数据</a></li>-->
 
         <li><a href="" id="about">关于</a></li>
-        <li><a>联系</a></li>
       </ul>
     </div>
 

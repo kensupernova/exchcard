@@ -23,10 +23,10 @@ urlpatterns = [
     url(r'^moments/$', 'mysite.views.view_shao_you_quan'),
 
     url(r'^search/$', 'mysite.views_search.search'),
-    url(r"^storage/s3/$", "exchcard.upload_views.s3_storage"),
+    url(r"^storage/s3/$", "exchcard_backend_api.upload_views.s3_storage"),
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^exchcard/api/', include('exchcard.urls')),
+    url(r'^exchcard_backend_api/api/', include('exchcard_backend_api.urls')),
     url(r'^oneverse/api/', include('oneverse.urls')),
 
 ]

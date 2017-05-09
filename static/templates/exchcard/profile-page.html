@@ -1,7 +1,7 @@
 {% extends "foundation.html" %}
 
 {% block headinfo %}
-<link href="{{STATIC_URL}}styles/profile.css" rel="stylesheet">
+<link href="{{STATIC_URL}}styles/profile-page.css" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -45,9 +45,10 @@
 
  <div class="news-box">
 
-  <div><h3>What is happening now?</h3></div>
+  <div><h3>实时动态?</h3></div>
   <div id="liveEvents">
-   <p id="event-94573570" style="opacity: 1;"><a href="/country/RU"><i class="flag flag-RU"></i></a> <a href="/user/hsiangniwu">hsiangniwu</a> sent a postcard to <a href="/country/RU"><i class="flag flag-RU"></i></a> <a>
+   <p id="event-94573570" style="opacity: 1;"><a href="/country/RU"><i class="flag flag-RU"></i></a> <a href="/user/hsiangniwu">hsiangniwu</a> sent a postcard to
+    <a href="/country/RU"><i class="flag flag-RU"></i></a> <a>
    </a>
    </p>
    <p>profile id = {{profile.id}}</p>

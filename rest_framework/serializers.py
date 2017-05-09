@@ -695,20 +695,20 @@ def raise_errors_on_nested_writes(method_name, serializer, validated_data):
     We don't *automatically* support these sorts of nested writes because
     there are too many ambiguities to define a default behavior.
 
-    Eg. Suppose we have a `UserSerializer` with a nested exchcard. How should
-    we handle the case of an update, where the `exchcard` relationship does
+    Eg. Suppose we have a `UserSerializer` with a nested exchcard_backend_api. How should
+    we handle the case of an update, where the `exchcard_backend_api` relationship does
     not exist? Any of the following might be valid:
 
     * Raise an application error.
     * Silently ignore the nested part of the update.
-    * Automatically create a exchcard instance.
+    * Automatically create a exchcard_backend_api instance.
     """
 
     # Ensure we don't have a writable nested field. For example:
     #
     # class UserSerializer(ModelSerializer):
     #     ...
-    #     exchcard = ProfileSerializer()
+    #     exchcard_backend_api = ProfileSerializer()
     assert not any(
         isinstance(field, BaseSerializer) and
         (key in validated_data) and
@@ -729,7 +729,7 @@ def raise_errors_on_nested_writes(method_name, serializer, validated_data):
     #
     # class UserSerializer(ModelSerializer):
     #     ...
-    #     address = serializer.CharField('exchcard.address')
+    #     address = serializer.CharField('exchcard_backend_api.address')
     assert not any(
         '.' in field.source and
         (key in validated_data) and

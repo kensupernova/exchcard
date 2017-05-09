@@ -67,12 +67,12 @@ def parse_html_dict(dictionary, prefix=''):
     Used to support dictionary values in HTML forms.
 
     {
-        'exchcard.username': 'example',
-        'exchcard.email': 'example@example.com',
+        'exchcard_backend_api.username': 'example',
+        'exchcard_backend_api.email': 'example@example.com',
     }
         -->
     {
-        'exchcard': {
+        'exchcard_backend_api': {
             'username': 'example',
             'email': 'example@example.com'
         }

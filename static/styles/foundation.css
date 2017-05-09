@@ -61,6 +61,15 @@ header .spanner .profile-setting {
   min-height: 3em;
 }
 
+.logo-container {
+
+}
+
+.logo-container div a {
+  width: 100%;
+  display: inline-block;
+  font-size: 4em;
+}
 .profile-setting div {
   width: 5em;
   display: inline-block;
@@ -84,7 +93,7 @@ header .spanner .profile-setting {
 
 .nav ul li{
   display: inline-block;
-  width:calc(20% - 5px);
+  width:calc(50% - 5px);
   border:red 1px solid;
 }
 

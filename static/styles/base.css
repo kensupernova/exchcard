@@ -32,6 +32,11 @@ header div{
     text-align: center;
 }
 
+header div div a{
+    text-align: center;
+  display: inline-block;
+    font-size: 3em;
+}
 
 main {
 	margin-top: 10px;

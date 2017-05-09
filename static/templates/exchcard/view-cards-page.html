@@ -6,19 +6,14 @@
 
 {% block content %}
 
-<div ng-app="myApp" ng-controller="myCtrl" class="tab-container">
-
+<!--<div ng-app="myApp" ng-controller="myCtrl" class="tab-container">-->
+<div ng-app="myApp" class="tab-container">
   <div class="tab-btn-container ">
 
-    <a ui-sref="sentArrived" ui-sref-active="active" id="tab-sent-arrived" class="tab-btn">TAB 1</a>
-    <a ui-sref="receiveArrived" ui-sref-active="active" class="tab-btn">TAB 2</a>
-    <a ui-sref="sentTravelling" ui-sref-active="active" class="tab-btn">TAB 3</a>
-    <a ui-sref="receiveTravelling" ui-sref-active="active" class="tab-btn">TAB 4</a>
-
-    <!--<a ui-sref="sentArrived" ui-sref-active="active" id="tab-sent-arrived" class="tab-btn">成功寄送的明信片</a>-->
-    <!--<a ui-sref="receiveArrived" ui-sref-active="active" class="tab-btn">已接收到的明信片</a>-->
-    <!--<a ui-sref="sentTravelling" ui-sref-active="active" class="tab-btn">未寄送到的明信片</a>-->
-    <!--<a ui-sref="receiveTravelling" ui-sref-active="active" class="tab-btn">将要接收的明信片</a>-->
+    <a ui-sref="sentArrived" ui-sref-active="active" id="tab-sent-arrived" class="tab-btn">成功寄送</a>
+    <a ui-sref="receiveArrived" ui-sref-active="active" class="tab-btn">已接收到</a>
+    <a ui-sref="sentTravelling" ui-sref-active="active" class="tab-btn">未寄送到</a>
+    <a ui-sref="receiveTravelling" ui-sref-active="active" class="tab-btn">还未接收</a>
 
   </div>
   <ui-view></ui-view>

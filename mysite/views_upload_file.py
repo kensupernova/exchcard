@@ -4,8 +4,8 @@ from django.shortcuts import render
 from mysite.forms import UploadFileForm
 from mysite import settings
 
-from exchcard import utils
-from exchcard.models import Profile, AvatarPhoto
+from exchcard_backend_api import utils
+from exchcard_backend_api.models import Profile, AvatarPhoto
 
 def uploadFile(request):
     if request.method == "POST":
@@ -28,7 +28,7 @@ def uploadFile(request):
 
             return HttpResponse('image upload success')
             ## or redirect to succuess url
-            # return HttpResponseRedirect("/api/exchcard/profiles/")
+            # return HttpResponseRedirect("/api/exchcard_backend_api/profiles/")
 
         else:
             print "form is invalid"
