@@ -1,22 +1,20 @@
 #coding:utf-8
 import datetime
+
 from django.shortcuts import Http404
+
+from exchcard.models import AvatarPhoto, CardPhoto, Card
+from exchcard.models import Profile
+from exchcard_backend_api import utils
+from exchcard_backend_api.permissions import IsOwnerOrReadOnly
+from exchcard_backend_api.serializers import AvatarPhotoSerializer, CreateAvatarPhotoSerializer, CardPhotoSerializer
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.parsers import MultiPartParser, FormParser,FileUploadParser, DataAndFiles
 
-
-from mysite import settings
-from exchcard_backend_api.models import Profile
-from exchcard_backend_api.permissions import IsProfileUserOrStaffUser
-from exchcard_backend_api import utils
-
-from exchcard_backend_api.permissions import IsOwnerOrReadOnly
-from exchcard_backend_api.models import AvatarPhoto, CardPhoto, Card
-from exchcard_backend_api.serializers import AvatarPhotoSerializer, CreateAvatarPhotoSerializer, CardPhotoSerializer
 
 #
 ## post and get files from sae storage

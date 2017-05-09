@@ -11,9 +11,9 @@ config.yaml ： 配置部署在新浪云上面
 
 ### 本地运营
 运营环境python2.7
-依赖包:   
-     - Django
-     - django-rest-framework
+依赖包:
+    - Django
+    - django-rest-framework
 
 
 

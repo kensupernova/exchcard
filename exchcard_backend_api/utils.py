@@ -1,10 +1,10 @@
 #coding: utf-8
 
 import random
-import datetime
-from exchcard_backend_api.models import Card
 
-from mysite import settings
+from exchcard import settings
+from exchcard.models import Card
+
 
 def generateToken(username):
     return "I am a token"
@@ -49,7 +49,7 @@ def count_arrive_travel(cards):
 def get_bucket():
     # from sae.storage import Bucket
     from sae.storage import Connection
-    from mysite import settings
+    from exchcard import settings
     connection = Connection(accesskey=settings.MYSQL_USER,
                                     secretkey=settings.MYSQL_PASS,
                                     account="exchcard2", retries=3)

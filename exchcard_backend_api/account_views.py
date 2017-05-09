@@ -1,26 +1,20 @@
 # -*- coding: utf-8 -*-
-import json
 
+import django.contrib.auth as auth
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import get_user_model # If used custom user mode
 from django.contrib.auth.models import User
 from django.http import Http404
-from django.contrib.auth import get_user_model # If used custom user mode
-from django.contrib.auth import authenticate, login, logout
 
-
+from exchcard_backend_api.serializers import UserSerializer, RegisterUserSerializer2
+from exchcard_backend_api.utils import generateToken
 from rest_framework import generics
 from rest_framework import permissions
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 
-from rest_framework import status
-
-from exchcard_backend_api.models import Profile
-
-from exchcard_backend_api.serializers import UserSerializer, CardSerializer, RegisterUserSerializer2
-
-from exchcard_backend_api.utils import generateToken
-import django.contrib.auth as auth
 
 ### list all users
 class UserList(generics.ListAPIView):

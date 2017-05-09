@@ -1,14 +1,12 @@
 import datetime
 
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework import status
-from rest_framework.generics import get_object_or_404
-from rest_framework.response import Response
+from oneverse.models import Verse
+from oneverse_api.serializers import VerseSerializer, CreateVerseSerializer
 from rest_framework import generics
 from rest_framework import permissions
-
-from oneverse_api.models import Verse
-from oneverse_api.serializers import VerseSerializer, CreateVerseSerializer
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
 
 
 

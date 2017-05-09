@@ -9,12 +9,12 @@ $(document).ready(function() {
 
   $("#btn-register-submit").click(function () {
     // get the input values for email and password
-    var email = $("#form-email").val()|| "zgh1@126.com";
+    var email = $("#form-email").val()|| "zgh2@126.com";
     var password = $("#form-password").val() ||"z111111";
     var username = email; // or randomly generated on server, turn email to hashcode
 
     var name = $("#form-name").val()|| "zgh";
-    var address = $("#form-address").val() || "iamaddress";
+    var address = $("#form-address").val() || "iamaddress2";
     var postcode = $("#form-postcode").val() || "123445";
 
 
@@ -78,7 +78,8 @@ $(document).ready(function() {
       }
     ).done(function(data){
     }).fail(function(data){
-      console.log(data);
+      console.log(JSON.stringify(data));
+      // console.log(JSON.stringify(data['responseText']));
       console.log("failed!");
     });
   });

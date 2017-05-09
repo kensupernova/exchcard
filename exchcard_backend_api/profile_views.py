@@ -1,36 +1,24 @@
 # -*- coding: utf-8 -*-
-import json
 
 from django.contrib.auth.models import User
+from django.db.models import Q
 
+from exchcard.models import Address, Card
+from exchcard.models import Profile
+from exchcard_backend_api.permissions import IsProfileUserOrStaffUser
+from exchcard_backend_api.serializers import AddressSerializer
+from exchcard_backend_api.serializers import CreateProfileSerializer
+from exchcard_backend_api.serializers import GetProfileWithCardSerializer
+from exchcard_backend_api.serializers import GetUserAddressProfileSerializer
+from exchcard_backend_api.serializers import RegisterUserAddressProfileSerializer
+from exchcard_backend_api.serializers import UserSerializer, CardSerializer
+from exchcard_backend_api.utils import count_arrive_travel
+from multiple_model.views import MultipleModelAPIView
 from rest_framework import generics
 from rest_framework import permissions
-from rest_framework.decorators import api_view, permission_classes
-
-from rest_framework.response import Response
-
 from rest_framework import status
-
-from exchcard_backend_api.models import Profile
-from exchcard_backend_api.models import Address, Card, DianZan, CardPhoto
-
-from exchcard_backend_api.permissions import IsOwnerOrReadOnly, IsProfileUserOrStaffUser, IsProfileUser
-
-from exchcard_backend_api.serializers import UserSerializer, CardSerializer, RegisterUserSerializer2
-
-from exchcard_backend_api.serializers import GetProfileSerializer, CreateProfileSerializer
-from exchcard_backend_api.serializers import GetProfileWithCardSerializer
-from exchcard_backend_api.serializers import AddressSerializer
-
-from exchcard_backend_api.serializers import RegisterUserAddressProfileSerializer
-from exchcard_backend_api.serializers import GetUserAddressProfileSerializer
-
-
-from exchcard_backend_api.utils import generateToken
-from exchcard_backend_api.utils import count_arrive_travel
-
-from multiple_model.views import MultipleModelAPIView
-from django.db.models import Q
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
 
 ## get a profile with cards list
 class GetProfileListView(generics.ListAPIView):

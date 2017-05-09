@@ -1,27 +1,13 @@
 # -*- coding: utf-8 -*-
-import json
 
-from django.contrib.auth.models import User
-from django.http import Http404
-from django.http import JsonResponse
-from django.shortcuts import render
-from django.contrib.auth import get_user_model # If used custom user mode
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.db.models import Manager
-from django.shortcuts import get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
-
+from exchcard.models import Address
+from exchcard.models import Profile
+from exchcard_backend_api.serializers import AddressSerializer
 from rest_framework import generics
 from rest_framework import permissions
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework import status
-
-from exchcard_backend_api.models import Profile
-from exchcard_backend_api.models import Address
-
-from exchcard_backend_api.serializers import AddressSerializer
 
 
 class GetAllAddressListView(generics.ListAPIView):

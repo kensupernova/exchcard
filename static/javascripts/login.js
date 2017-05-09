@@ -32,7 +32,7 @@ $(document).ready(function(){
 		// get the input values for email and password
 		var email = $("#form_email").val()|| "zgh1@126.com";
 		var password = $("#form_password").val()||"z111111";
-        var username= email;
+		var username= email;
 
     // console.log("username: " + username);
     // console.log("password: " + password);

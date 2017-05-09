@@ -1,9 +1,9 @@
 #coding: utf-8
-from rest_framework import serializers
-from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 
-from exchcard_backend_api.models import Card, Profile, Address, AvatarPhoto, DianZan, CardPhoto
+from exchcard.models import Card, Profile, Address, AvatarPhoto, DianZan, CardPhoto
+from rest_framework import serializers
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):

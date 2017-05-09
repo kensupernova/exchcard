@@ -1,32 +1,21 @@
 # -*- coding: utf-8 -*-
-import json
 
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
-from rest_framework import generics
-from rest_framework import permissions
-from rest_framework.decorators import api_view, permission_classes, parser_classes
-from rest_framework.generics import CreateAPIView
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
-from rest_framework import status
-from rest_framework import viewsets
-from rest_framework.permissions import AllowAny
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
-
-from exchcard_backend_api.models import Profile
-from exchcard_backend_api.models import Address, Card, DianZan, CardPhoto
-
-from exchcard_backend_api.permissions import IsOwnerOrReadOnly, IsProfileUserOrStaffUser, IsProfileUser
-from exchcard_backend_api.permissions import IsSenderOrReadOnly, IsSenderStaffOrReadOnly
-
+import utils
+from exchcard.models import Card, DianZan, CardPhoto
+from exchcard.models import Profile
+from exchcard_backend_api.permissions import IsSenderStaffOrReadOnly
 from exchcard_backend_api.serializers import CreateCardSerializer, CardSerializer
 from exchcard_backend_api.serializers import DianZanSerializer
-
-import time
-import utils
+from rest_framework import generics
+from rest_framework import permissions
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes, parser_classes
+from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
 
 exchcard_api_endpoint = "http://exchcard_backend_api.applinzi.com/exchcard_backend_api/"
 @permission_classes([permissions.AllowAny, ])
