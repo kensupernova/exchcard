@@ -14,24 +14,21 @@
     </div>
     <div class="info-summary">
 
-     <div><a href="/profile/{{profile.id}}/cards/">成功发送了{[{sent_cards_arrived}]}张</a></div>
-     <div><a href="/profile/{{profile.id}}/cards/">成功接收了{[{receive_cards_arrived}]}张</a></div>
-     <div><a href="/profile/{{profile.id}}/cards/">有{[{sent_cards_travelling}]}张明信片在飞向别人</a></div>
-     <div><a href="/profile/{{profile.id}}/cards/">有{[{receive_cards_travelling}]}张明信片正在飞向你</a></div>
+     <div><a href="/profile/{{profile.id}}/cards/#!/sentArrived">成功发送了{[{sent_cards_arrived}]}张</a></div>
+     <div><a href="/profile/{{profile.id}}/cards/#!/receiveArrived">成功接收了{[{receive_cards_arrived}]}张</a></div>
+     <div><a href="/profile/{{profile.id}}/cards/#!/sentTravelling">有{[{sent_cards_travelling}]}张明信片在飞向别人</a></div>
+     <div><a href="/profile/{{profile.id}}/cards/#!/receiveTravelling">有{[{receive_cards_travelling}]}张明信片正在飞向我</a></div>
     </div>
-
-
 
    </div>
    <div class="right">
 
-
     <div class="btns">
      <div class="btn-send-card">
-      <a href="/card/send">寄送明信片</a>
+      <a href="/card/send/">寄送明信片</a>
      </div>
      <div class="btn-register-card">
-      <a href="/card/register">注册明信片</a>
+      <a href="/card/receive/">注册明信片</a>
      </div>
     </div>
    </div>

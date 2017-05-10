@@ -4,10 +4,10 @@ from rest_framework import permissions
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
 
-exchcard_api_endpoint = "http://exchcard_backend_api.applinzi.com/exchcard_backend_api/api/"
+exchcard_api_endpoint = "http://exchcard_backend_api.applinzi.com/exchcard/api/"
 @permission_classes([permissions.AllowAny, ])
 @api_view(["GET",])
-def api_root(request, format=None):
+def root(request, format=None):
     return Response({
         "auth": reverse("auth", request=request, format=format),
         "login": reverse("login", request=request, format=format),

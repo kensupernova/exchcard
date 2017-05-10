@@ -16,7 +16,7 @@ def generatePostCardName():
     if Card.objects.filter(card_name=card_name).exists():
         generatePostCardName()
     else:
-        print 'card %s' % card_name
+        print 'new card name : %s' % card_name
         return card_name
 
 

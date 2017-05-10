@@ -47,9 +47,9 @@
         <li class="dropdown">
           <a href="/profile/" id="cards">明信片 <span class="arr" >▼</span></a>
           <ul class="collapsed">
-            <li class=""><a href="/profile/{{profile.id}}/cards">我的明信片</a></li>
+            <li class=""><a href="/profile/{{profile.id}}/cards">明信片统计</a></li>
             <li class=""><a href="/card/send">寄送明信片</a></li>
-            <li class=""><a href="/card/register">注册明信片</a></li>
+            <li class=""><a href="/card/receive">注册明信片</a></li>
           </ul>
         </li>
         <!--<li><a href="/moments" id="moments">烧友圈</a></li>-->
@@ -63,8 +63,8 @@
   </header>
 
   <div class="clear"></div>
-  {% block content %} {% endblock %}
 
+  {% block content %} {% endblock %}
 
   <footer class="footer">
     <p class ="copyright">&copy GUANGHUIZ 2017.</p>
@@ -72,7 +72,7 @@
 </div>
 
 
-<script type="text/javascript" src="{{STATIC_URL}}lib/js.cookie.js"></script>
+
 <!-- jquery is before any other libraries since many are dependent on it. -->
 <script type="text/javascript" src="{{STATIC_URL}}lib/jquery-2.1.0.min.js"></script>
 
@@ -80,8 +80,9 @@
 <script type="text/javascript" src="{{STATIC_URL}}lib/bootstrap/bootstrap.min.js"></script>
 
 <script type="text/javascript" src="{{STATIC_URL}}lib/angular.js"></script>
-
-
+<!--cookie-->
+<script type="text/javascript" src="{{STATIC_URL}}lib/js.cookie.js"></script>
+<!--csrf when send form thru ajax-->
 <script type="text/javascript" src="{{STATIC_URL}}javascripts/csrf-helper.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}javascripts/foundation.js"></script>
 {% block jscontainer %} {% endblock %}

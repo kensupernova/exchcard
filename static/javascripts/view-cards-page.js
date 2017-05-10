@@ -1,14 +1,13 @@
 console.log("view cards ... ")
 'use strict';
 var profile_id =$('#profile-id-holder').text().trim();
-var getSentTotal = '/exchcard/api/profiles/'+profile_id+'/cards/sent/total/';
-var getReceivedTotal = '/exchcard/api/profiles/'+profile_id+'/cards/received/total/';
 
 var getTotal = '/exchcard/api/profiles/'+profile_id+'/cards/total/';
 
+// 使用angular-ui-router实现TAB功能
 var app = angular.module('myApp', ['ui.router']);
 
-//修改tag
+// 修改tag
 app.config(function($interpolateProvider) {
   $interpolateProvider.startSymbol('{[{');
   $interpolateProvider.endSymbol('}]}');
@@ -19,31 +18,33 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
 
   $urlRouterProvider.otherwise('/');
 
-   var defaultState = {
-     url:'',
-     name:'default',
-      template:
+  var defaultState = {
+    url:'',
+    name:'default',
+    template:
       '<table class = ""  ng-controller="sentArrivedCtrl">'+
       '<tr>'+
       '<th>post id</th>'+
-      '<th>from</th>'+
-      '<th>address</th>'+
       '<th>sent time</th>'+
-      '<th>to</th>'+
-      '<th>address</th>'+
+      '<th>from user</th>'+
+      '<th>from address</th>'+
+      '<th>to user</th>'+
+      '<th>to address</th>'+
       '<th>arrived time</th>'+
+      '<th>arrived or not</th>'+
       '</tr>'+
       '<tr ng-repeat="card in sent_arrived">'+
       '<td>{[{card.card_name}]}</td>'+
-      '<td>{[{card.fromsender}]}</td>'+
-      '<td>{[{card.fromaddress}]}</td>'+
       '<td>{[{card.sent_date}]}</td>'+
-      '<td>{[{card.torecipient}]}</td>'+
-      '<td>{[{card.toaddress}]}</td>'+
+      '<td>{[{card.fromsender_email}]}</td>'+
+      '<td>{[{card.from_address}]}</td>'+
+      '<td>{[{card.torecipient_email}]}</td>'+
+      '<td>{[{card.to_address}]}</td>'+
       '<td>{[{card.arrived_date}]}</td>'+
+      '<td>{[{card.has_arrived}]}</td>'+
       '</tr>'+
       '</table>'
-    }
+  }
 
   var sentArrivedState = {
     url:'/sentArrived',
@@ -52,21 +53,23 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
     '<table class = ""  ng-controller="sentArrivedCtrl">'+
     '<tr>'+
     '<th>post id</th>'+
-    '<th>from</th>'+
-    '<th>address</th>'+
     '<th>sent time</th>'+
-    '<th>to</th>'+
-    '<th>address</th>'+
+    '<th>from user</th>'+
+    '<th>from address</th>'+
+    '<th>to user</th>'+
+    '<th>to address</th>'+
     '<th>arrived time</th>'+
+    '<th>arrived or not</th>'+
     '</tr>'+
     '<tr ng-repeat="card in sent_arrived">'+
     '<td>{[{card.card_name}]}</td>'+
-    '<td>{[{card.fromsender}]}</td>'+
-    '<td>{[{card.fromaddress}]}</td>'+
     '<td>{[{card.sent_date}]}</td>'+
-    '<td>{[{card.torecipient}]}</td>'+
-    '<td>{[{card.toaddress}]}</td>'+
+    '<td>{[{card.fromsender_email}]}</td>'+
+    '<td>{[{card.from_address}]}</td>'+
+    '<td>{[{card.torecipient_email}]}</td>'+
+    '<td>{[{card.to_address}]}</td>'+
     '<td>{[{card.arrived_date}]}</td>'+
+    '<td>{[{card.has_arrived}]}</td>'+
     '</tr>'+
     '</table>'
   }
@@ -78,21 +81,23 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
         '<table class = "receive-arrived"  ng-controller="receiveArrivedCtrl">'+
         '<tr>'+
         '<th>post id</th>'+
-        '<th>from</th>'+
-        '<th>address</th>'+
         '<th>sent time</th>'+
-        '<th>to</th>'+
-        '<th>address</th>'+
+        '<th>from user</th>'+
+        '<th>from address</th>'+
+        '<th>to user</th>'+
+        '<th>to address</th>'+
         '<th>arrived time</th>'+
+        '<th>arrived or not</th>'+
         '</tr>'+
         '<tr ng-repeat="card in receive_arrived">'+
         '<td>{[{card.card_name}]}</td>'+
-        '<td>{[{card.fromsender}]}</td>'+
-        '<td>{[{card.fromaddress}]}</td>'+
         '<td>{[{card.sent_date}]}</td>'+
-        '<td>{[{card.torecipient}]}</td>'+
-        '<td>{[{card.toaddress}]}</td>'+
+        '<td>{[{card.fromsender_email}]}</td>'+
+        '<td>{[{card.from_address}]}</td>'+
+        '<td>{[{card.torecipient_email}]}</td>'+
+        '<td>{[{card.to_address}]}</td>'+
         '<td>{[{card.arrived_date}]}</td>'+
+        '<td>{[{card.has_arrived}]}</td>'+
         '</tr>'+
         '</table>'
   }
@@ -104,19 +109,23 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
     '<table  ng-controller="sentTravellingCtrl">'+
     '<tr>'+
     '<th>post id</th>'+
-    '<th>from</th>'+
-    '<th>address</th>'+
     '<th>sent time</th>'+
-    '<th>to</th>'+
-    '<th>address</th>'+
+    '<th>from user</th>'+
+    '<th>from address</th>'+
+    '<th>to user</th>'+
+    '<th>to address</th>'+
+    '<th>arrived time</th>'+
+    '<th>arrived or not</th>'+
     '</tr>'+
     '<tr ng-repeat="card in sent_travelling">'+
     '<td>{[{card.card_name}]}</td>'+
-    '<td>{[{card.fromsender}]}</td>'+
-    '<td>{[{card.fromaddress}]}</td>'+
     '<td>{[{card.sent_date}]}</td>'+
-    '<td>{[{card.torecipient}]}</td>'+
-    '<td>{[{card.toaddress}]}</td>'+
+    '<td>{[{card.fromsender_email}]}</td>'+
+    '<td>{[{card.from_address}]}</td>'+
+    '<td>{[{card.torecipient_email}]}</td>'+
+    '<td>{[{card.to_address}]}</td>'+
+    '<td>{[{card.arrived_date}]}</td>'+
+    '<td>{[{card.has_arrived}]}</td>'+
     '</tr>'+
     '</table>'
   }
@@ -128,25 +137,30 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
     '<table  ng-controller="receiveTravellingCtrl">'+
     '<tr>'+
     '<th>post id</th>'+
-    '<th>from</th>'+
-    '<th>address</th>'+
     '<th>sent time</th>'+
-    '<th>to</th>'+
-    '<th>address</th>'+
+    '<th>from user</th>'+
+    '<th>from address</th>'+
+    '<th>to user</th>'+
+    '<th>to address</th>'+
+    '<th>arrived time</th>'+
+    '<th>arrived or not</th>'+
     '</tr>'+
     '<tr ng-repeat="card in receive_travelling">'+
     '<td>{[{card.card_name}]}</td>'+
-    '<td>{[{card.fromsender}]}</td>'+
-    '<td>{[{card.fromaddress}]}</td>'+
     '<td>{[{card.sent_date}]}</td>'+
-    '<td>{[{card.torecipient}]}</td>'+
-    '<td>{[{card.toaddress}]}</td>'+
+    '<td>{[{card.fromsender_email}]}</td>'+
+    '<td>{[{card.from_address}]}</td>'+
+    '<td>{[{card.torecipient_email}]}</td>'+
+    '<td>{[{card.to_address}]}</td>'+
+    '<td>{[{card.arrived_date}]}</td>'+
+    '<td>{[{card.has_arrived}]}</td>'+
     '</tr>'+
     '</table>'
   }
 
-
+  // 注册各个状态
   $stateProvider.state(defaultState);
+
   $stateProvider.state(sentArrivedState);
   $stateProvider.state(receiveArrivedState);
   $stateProvider.state(sentTravellingState);
@@ -189,37 +203,29 @@ app.run(function($rootScope, $http) {
 
 app.controller('sentArrivedCtrl',  function($scope, $rootScope) {
   $scope.sent_arrived = $rootScope.sent_arrived;
-  console.log("rendering sent arrived");
+
+  // console.log("rendering sent arrived");
 });
 
 app.controller('receiveArrivedCtrl', function($scope, $rootScope) {
   $scope.receive_arrived = $rootScope.receive_arrived;
 
-  console.log("rendering receive arrived");
+  // console.log("rendering receive arrived");
 });
 
 app.controller('sentTravellingCtrl', function($scope, $rootScope) {
   $scope.sent_travelling = $rootScope.sent_travelling;
-  console.log("rendering sent travelling");
+
+  // console.log("rendering sent travelling");
 });
 
 app.controller('receiveTravellingCtrl', function($scope, $rootScope) {
   $scope.receive_travelling = $rootScope.receive_travelling;
-  console.log("rendering receive travelling");
+
+  // console.log("rendering receive travelling");
 });
 
-// myController是外层的
-// app.controller('myCtrl', ['$scope', '$rootScope', function($scope, $rootScope) {
-//
-//   $scope.sent_arrived = $rootScope.sent_arrived;
-//
-//   $scope.receive_arrived = $rootScope.receive_arrived;
-//
-//   $scope.sent_travelling = $rootScope.sent_travelling;
-//
-//   $scope.receive_travelling = $rootScope.receive_travelling;
-//
-// }]);
+
 
 $(document).ready(function(){
 

@@ -11,8 +11,8 @@
   <div class="tab-btn-container ">
 
     <a ui-sref="sentArrived" ui-sref-active="active" id="tab-sent-arrived" class="tab-btn">成功寄送</a>
-    <a ui-sref="receiveArrived" ui-sref-active="active" class="tab-btn">已接收到</a>
     <a ui-sref="sentTravelling" ui-sref-active="active" class="tab-btn">未寄送到</a>
+    <a ui-sref="receiveArrived" ui-sref-active="active" class="tab-btn">已接收到</a>
     <a ui-sref="receiveTravelling" ui-sref-active="active" class="tab-btn">还未接收</a>
 
   </div>
@@ -24,6 +24,5 @@
 {% block jscontainer %}
 <script src="{{STATIC_URL}}lib/angular-ui-router.min.js"></script>
 <script src="{{STATIC_URL}}javascripts/view-cards-page.js"></script>
-
 
 {% endblock %}

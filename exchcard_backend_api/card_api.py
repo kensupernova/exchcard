@@ -80,31 +80,37 @@ class DianzanRUDView(generics.RetrieveUpdateDestroyAPIView):
 
 ################################################ API VIEWS
 
-
-
 @api_view(["GET", "POST"])
 @permission_classes([permissions.IsAuthenticated, ])
-def api_add_new_card(request):
+def add_new_card(request):
+    """
+    Create a new card, initiated when user request a mailing address.
+    :param request:
+    :return:
+    """
     if request.method == "POST":
         ## the sender_id must be the current log in user exchcard_backend_api
-        profile_from_request_user = Profile.objects.get(profileuser = request.user)
+        profile_of_request_user = Profile.objects.get(profileuser = request.user)
 
         randomProfile = Profile.objects.order_by("?").first()
 
         data = {}
         data["card_name"] = utils.generatePostCardName()
         data["torecipient_id"] = int(randomProfile.id)
-        data["fromsender_id"] = int(profile_from_request_user.id)
+        data["fromsender_id"] = int(profile_of_request_user.id)
 
-        print data
+
+
         serializer = CreateCardSerializer(data = data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save() ## 创建了新明信片
+
             data['torecipient'] = {}
             data['torecipient']['name'] = randomProfile.profileaddress.name
             data['torecipient']['address'] = randomProfile.profileaddress.address
             data['torecipient']['postcode'] = randomProfile.profileaddress.postcode
-            print data
+
+            print "new card information is {0}".format(data)
 
             return Response(data, status=status.HTTP_201_CREATED)
 
@@ -114,7 +120,7 @@ def api_add_new_card(request):
 @csrf_exempt
 @api_view(["POST", ])
 @permission_classes([permissions.IsAuthenticated, ])
-def api_receive_a_card(request):
+def receive_a_card(request):
     """
     recevie a card from others
     :param request:
@@ -162,7 +168,7 @@ def api_receive_a_card(request):
 
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated, ])
-def api_card_check_isarrived(request, pk):
+def card_check_isarrived(request, pk):
     """
     Check whether a card has registered or not
     :param request:
@@ -185,7 +191,7 @@ def api_card_check_isarrived(request, pk):
 @api_view(["POST", ])
 @permission_classes([permissions.IsAuthenticated, ])
 @parser_classes([MultiPartParser, FormParser])
-def api_receive_a_card_with_photo(request):
+def receive_a_card_with_photo(request):
     """
     recevie a card from others
     :param request:
@@ -256,7 +262,7 @@ def api_receive_a_card_with_photo(request):
 
 @api_view(["GET","PUT", "DELETE", ])
 @permission_classes([permissions.IsAuthenticated, IsSenderStaffOrReadOnly])
-def api_update_destrory_card(request, pk, format=None):
+def update_destrory_card(request, pk, format=None):
     try:
         card = Card.objects.get(pk)
         origin = CreateCardSerializer(card)
@@ -296,7 +302,7 @@ def api_update_destrory_card(request, pk, format=None):
 ### add dianzan to a card
 @api_view(["GET","PUT", "DELETE", "POST", ])
 @permission_classes([permissions.IsAuthenticated,])
-def api_card_dianzan(request, pk):
+def card_dianzan(request, pk):
     profile_from_user = Profile.objects.get(profileuser=request.user)
     try:
         card = Card.objects.get(id=int(pk))
@@ -329,7 +335,7 @@ def api_card_dianzan(request, pk):
 
 @api_view(["GET", ])
 @permission_classes([permissions.IsAuthenticated,])
-def api_card_dianzans(request, pk):
+def card_dianzans(request, pk):
     pk = int(pk)
     try:
         card = Card.objects.get(id=pk)
@@ -346,7 +352,7 @@ def api_card_dianzans(request, pk):
 
 @api_view(["GET", ])
 @permission_classes([permissions.IsAuthenticated,])
-def api_cardsfeed(request):
+def cards_feed(request):
     ""
     # get news feed when user refresh page
     if request.method == "GET":

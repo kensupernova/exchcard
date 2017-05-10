@@ -4,6 +4,7 @@
 {% endblock %}
 
 {% block content %}
+<div>寄送一张明信片</div>
 <div ng-app="myApp", ng-controller="myCtrl">
   <div class="promise-container">
       <div>
@@ -24,19 +25,11 @@
       <button id="sendButton" name="sendButton" class="button" ng-click="confirmSendCard()">Request address
       </button>
     </div>
-      <!--<form action="/card/send/confirm" method="post" name="send" id="sendForm">-->
-        <!--{% csrf_token %}-->
-       <!--<input type="checkbox" name="send_postcard" value="" id="send_postcard">-->
-       <!--<label for="send_postcard">-->
-           <!--I've read the notes above and want to receive an address to where I'll send a postcard.-->
-       <!--</label><br>-->
-       <!--<button type="submit" id="sendButton" name="sendButton" class="button">Request address-->
-       <!--</button>-->
-      <!--</form>-->
+
   </div>
 
- <div>寄送一张明信片</div>
 </div>
+
 {% endblock %}
 
 {% block jscontainer %}

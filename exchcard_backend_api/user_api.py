@@ -4,10 +4,10 @@ import django.contrib.auth as auth
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import get_user_model # If used custom user mode
 from django.contrib.auth.models import User
-from django.http import Http404
 
 from exchcard_backend_api.serializers import UserSerializer, RegisterUserSerializer2
 from exchcard_backend_api.util.utils import generateToken
+
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
@@ -47,7 +47,7 @@ class RegisterUserView(CreateAPIView):
 ## method 1: create new user, need superuser or staffuser auth
 ## super user permission
 @api_view(["POST"])
-def api_register_new_user(request):
+def register_new_user(request):
     """
     create a new user with email, username, passwd
     """
@@ -87,8 +87,8 @@ def user_login(request):
     if request.method == "POST":
         username = request.data['username']
         password = request.data['password']
-        # print username
-        # print password
+        print "login with {0}: {1}".format(username, password)
+
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
@@ -101,10 +101,10 @@ def user_login(request):
                 # Redirect to a success page.
             else:
                 # Return a 'disabled account' error message
-                return Http404
+                return Response(status=status.HTTP_404_NOT_FOUND)
         else:
             # Return an 'invalid login' error message.
-            return Http404
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(["POST", "GET"])
 @permission_classes([permissions.AllowAny])

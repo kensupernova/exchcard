@@ -87,7 +87,7 @@ class RegisterAddressView(generics.CreateAPIView):
 
 @api_view(["PUT",])
 @permission_classes([permissions.IsAuthenticated, ])
-def api_update_address_with_profile_id(request, pk, format=None):
+def update_address_with_profile_id(request, pk, format=None):
     """
     更新某个Profile的地址
     :param request:

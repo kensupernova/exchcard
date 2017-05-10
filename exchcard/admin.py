@@ -1,5 +1,4 @@
 #coding: utf-8
-
 from django.contrib.admin import AdminSite
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy
@@ -7,6 +6,10 @@ from django.utils.translation import ugettext_lazy
 from exchcard.models import Address, Card, Profile
 
 
+
+"""
+后台管理的个性化定制
+"""
 class MyAdminSite(AdminSite):
     # Text to put at the end of each page's <title>.
     site_title = ugettext_lazy('Exchange Postcard Administration Site')
@@ -22,6 +25,9 @@ class MyAdminSite(AdminSite):
 admin_site = MyAdminSite()
 
 
+"""
+exchcard的后台管理
+"""
 # a class to customize admin the models
 class AddressAdmin(admin.ModelAdmin):
     # field display on change list in admin exchcard
@@ -46,4 +52,6 @@ class ProfileAdmin(admin.ModelAdmin):
 admin.site.register(Address, AddressAdmin)
 admin.site.register(Card, CardAdmin)
 admin.site.register(Profile, ProfileAdmin)
+
+
 

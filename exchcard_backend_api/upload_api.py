@@ -175,7 +175,7 @@ class AvatarPhotoDetail(APIView):
 @api_view(["POST"])
 @permission_classes([permissions.IsAuthenticated, ])
 @parser_classes([MultiPartParser, FormParser])
-def api_upload_card_photo(request, pk, format=None):
+def upload_card_photo(request, pk, format=None):
     if request.method == "POST":
         try:
             profile_from_request = Profile.objects.get(profileuser=request.user)

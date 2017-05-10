@@ -4,117 +4,128 @@ from django.conf.urls import url, include
 
 from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
-from exchcard_backend_api import card_views, profile_views, address_views, account_views, upload_views, views
+from exchcard_backend_api import card_api, profile_api, address_api, user_api, upload_api, apis
 
 urlpatterns = format_suffix_patterns([
-    url(r"^$", views.api_root),
+    url(r"^$", apis.root),
 
     ## authentication and registeration
-    url(r"^auth/", "exchcard_backend_api.account_views.user_auth", name="auth"),
-    url(r"^login/", "exchcard_backend_api.account_views.user_login", name="login"),
-    url(r"^logout/", "exchcard_backend_api.account_views.user_logout", name="logout"),
-    url(r"^register/$", "exchcard_backend_api.profile_views.api_register_user_address_profile",
+    url(r"^auth/", "exchcard_backend_api.user_api.user_auth", name="auth"),
+    url(r"^login/", "exchcard_backend_api.user_api.user_login", name="login"),
+    url(r"^logout/", "exchcard_backend_api.user_api.user_logout", name="logout"),
+    url(r"^register/$", "exchcard_backend_api.profile_api.register_user_address_profile",
         name="exchcard_backend_api-user-address-register"),
-    url(r"^register2/$", profile_views.RegisterUserAddressProfileView.as_view(),
+    url(r"^register2/$", profile_api.RegisterUserAddressProfileView.as_view(),
         name="exchcard_backend_api-user-address-register2"),
 
     ## users
-    url(r"^users/$", account_views.UserList.as_view(),
+    url(r"^users/$", user_api.UserList.as_view(),
         name="user-list"),
-    url(r"^users/register/", account_views.RegisterUserView.as_view(),
+    url(r"^users/register/", user_api.RegisterUserView.as_view(),
         name="user-register"),
-    url(r"^users/(?P<pk>[0-9]+)/$", account_views.UserDetail.as_view(),
+    url(r"^users/(?P<pk>[0-9]+)/$", user_api.UserDetail.as_view(),
         name="user-detail"),
 
     ## addresss
-    url(r'^address/$', address_views.GetAllAddressListView.as_view(),
+    url(r'^address/$', address_api.GetAllAddressListView.as_view(),
         name="address-list"),
-    url(r'^address/register/$', address_views.RegisterAddressView.as_view(),
+    url(r'^address/register/$', address_api.RegisterAddressView.as_view(),
         name="address-register"),
-    url(r'^address/getrandom/$', address_views.GetOneAddressView.as_view(),
+    url(r'^address/getrandom/$', address_api.GetOneAddressView.as_view(),
         name="address-random"),
-    url(r'^address/get/id/(?P<pk>[0-9]+)/$', address_views.GetAddressView.as_view(),
+    url(r'^address/get/id/(?P<pk>[0-9]+)/$', address_api.GetAddressView.as_view(),
         name="address-get-id"),
-    url(r'^address/get/name/(?P<name>.+)/$', address_views.GetAddressViewWithName.as_view(),
+    url(r'^address/get/name/(?P<name>.+)/$', address_api.GetAddressViewWithName.as_view(),
         name="address-get-name"),
-     url(r'^address/update/(?P<pk>[0-9]+)/$', "exchcard_backend_api.address_views.api_update_address_with_profile_id",
+     url(r'^address/update/(?P<pk>[0-9]+)/$', "exchcard_backend_api.address_api.update_address_with_profile_id",
         name="address-update-with-profile-id"),
 
     ## profiles
-    url(r"^profiles/$", profile_views.GetProfileListView.as_view(),
+    url(r"^profiles/$", profile_api.GetProfileListView.as_view(),
         name="profile-list"),
-    url(r"^profiles/(?P<pk>[0-9]+)/$",  profile_views.GetProfileDetailView.as_view(),
+    url(r"^profiles/(?P<pk>[0-9]+)/$", profile_api.GetProfileDetailView.as_view(),
         name="profile-detail"),
-    url(r"^profiles/register/$", profile_views.RegisterProfileView.as_view(),
+    url(r"^profiles/register/$", profile_api.RegisterProfileView.as_view(),
         name="profile-register"),
-    url(r"^profiles/register/ids/$", "exchcard_backend_api.profile_views.api_register_new_profile_with_ids",
+    url(r"^profiles/register/ids/$", "exchcard_backend_api.profile_api.register_new_profile_with_ids",
         name="profile-register-with-ids"),
-    url(r"^profiles/update/$", "exchcard_backend_api.profile_views.api_update_profile",
-        name="profile-update"),
-    url(r"^profiles/getrandom/$", "exchcard_backend_api.profile_views.api_get_random_profile",
+    url(r"^profiles/update/$", "exchcard_backend_api.profile_api.update_profile_with_ids",
+        name="profile-update-with-ids"),
+    url(r"^profiles/getrandom/$", "exchcard_backend_api.profile_api.get_random_profile",
         name="profile-getrandom-for-card"),
 
-    url(r'^profiles/(?P<pk>[0-9]+)/avatar/$', "exchcard_backend_api.upload_views.upload_avatar",
+    ## 头像图片
+    url(r'^profiles/(?P<pk>[0-9]+)/avatar/$', "exchcard_backend_api.upload_api.upload_avatar",
         name="profile-avatarphoto-upload"),
-    url(r'^profiles/(?P<pk>[0-9]+)/avatarf/$', upload_views.AvatarUploadView.as_view(),
+    url(r'^profiles/(?P<pk>[0-9]+)/avatarf/$', upload_api.AvatarUploadView.as_view(),
         name="profile-avatarphoto-uploadf"),
 
     url(r"^profiles/photos/$",
-        upload_views.AvatarPhotoList.as_view(),
+        upload_api.AvatarPhotoList.as_view(),
         name="avatarphoto-list"),
     url(r"^profiles/photos/(?P<pk>[0-9]+)/$",
-        upload_views.AvatarPhotoDetail.as_view(),
+        upload_api.AvatarPhotoDetail.as_view(),
         name="avatarphoto-detail"),
 
     ## 查看总的各状态的明信片
-    url(r"^profiles/(?P<pk>[0-9]+)/cards/allstatus/$", "exchcard_backend_api.profile_views.api_profile_get_cards_all_status",
-        name="profile-get-cards-count"),
+    url(r"^profiles/(?P<pk>[0-9]+)/cards/allstate/count/$", "exchcard_backend_api.profile_api.profile_get_cards_all_state_count",
+        name="profile-get-cards-allstate-count"),
 
     ## 查看各个状态的明信片
-    url(r"^profiles/(?P<pk>[0-9]+)/cards/total/$", "exchcard_backend_api.profile_views.api_profile_get_cards_total",
+    url(r"^profiles/(?P<pk>[0-9]+)/cards/total/$", "exchcard_backend_api.profile_api.profile_get_cards_total",
         name="profile-get-cards-total"),
 
-    #### 接受之所有用receive, 是因为包括发出去未到的，和已经到达的两种
-    url(r"^profiles/(?P<pk>[0-9]+)/cards/sent/total/$", "exchcard_backend_api.profile_views.api_profile_get_cards_sent_total",
+    #### 接受之所以用receive, 是因为包括发出去未到的，和已经到达的两种
+    url(r"^profiles/(?P<pk>[0-9]+)/cards/sent/total/$", "exchcard_backend_api.profile_api.profile_get_cards_sent_total",
         name="profile-get-cards-sent"),
-    url(r"^profiles/(?P<pk>[0-9]+)/cards/receive/total/$", "exchcard_backend_api.profile_views.api_profile_get_cards_receive_total",
+    url(r"^profiles/(?P<pk>[0-9]+)/cards/receive/total/$", "exchcard_backend_api.profile_api.profile_get_cards_receive_total",
         name="profile-get-cards-receive"),
 
-    url(r"^profiles/(?P<pk>[0-9]+)/cards/sent/travelling/$", "exchcard_backend_api.profile_views.api_profile_get_cards_sent_travelling",
+    url(r"^profiles/(?P<pk>[0-9]+)/cards/sent/travelling/$", "exchcard_backend_api.profile_api.profile_get_cards_sent_travelling",
         name="profile-get-cards-sent-travelling"),
-    url(r"^profiles/(?P<pk>[0-9]+)/cards/receive/travelling/$", "exchcard_backend_api.profile_views.api_profile_get_cards_receive_travelling",
+    url(r"^profiles/(?P<pk>[0-9]+)/cards/receive/travelling/$", "exchcard_backend_api.profile_api.profile_get_cards_receive_travelling",
         name="profile-get-cards-receive-travelling"),
 
-    url(r"^profiles/(?P<pk>[0-9]+)/cards/sent/arrived/$", "exchcard_backend_api.profile_views.api_profile_get_cards_sent_arrived",
+    url(r"^profiles/(?P<pk>[0-9]+)/cards/sent/arrived/$", "exchcard_backend_api.profile_api.profile_get_cards_sent_arrived",
         name="profile-get-cards-sent-arrived"),
-    url(r"^profiles/(?P<pk>[0-9]+)/cards/receive/arrived/$", "exchcard_backend_api.profile_views.api_profile_get_cards_receive_arrived",
+    url(r"^profiles/(?P<pk>[0-9]+)/cards/receive/arrived/$", "exchcard_backend_api.profile_api.profile_get_cards_receive_arrived",
         name="profile-get-cards-receive-arrived"),
 
 
     ## cards
-    url(r"^cards/$", card_views.CardList.as_view(),
+    url(r"^cards/$", card_api.CardList.as_view(),
         name="card-list"),
-    url(r"^cards/(?P<pk>[0-9]+)/$", card_views.CardDetail.as_view(),
+    url(r"^cards/(?P<pk>[0-9]+)/$", card_api.CardDetail.as_view(),
         name="card-detail"),
-    url(r"^cards/add/$", "exchcard_backend_api.card_views.api_add_new_card",
+    ## 创建新的明信片，当用户申请邮寄地址时创建，并把明信片收信人地址返回
+    url(r"^cards/add/$", "exchcard_backend_api.card_api.add_new_card",
         name="card-add"),
-    url(r"^cards/receive/$", "exchcard_backend_api.card_views.api_receive_a_card",
+
+    ## 当明信片到达，接收方注册
+    url(r"^cards/receive/$", "exchcard_backend_api.card_api.receive_a_card",
         name="card-receive"),
-    url(r"^cards/receive/photo/$", "exchcard_backend_api.card_views.api_receive_a_card_with_photo",
+    ## 注册明信片，带照片
+    url(r"^cards/receive/photo/$", "exchcard_backend_api.card_api.receive_a_card_with_photo",
         name="card-receive-with-photo"),
-    url(r"^cards/(?P<pk>[0-9]+)/update/$", "exchcard_backend_api.card_views.api_update_destrory_card",
+
+    url(r"^cards/(?P<pk>[0-9]+)/update/$", "exchcard_backend_api.card_api.update_destrory_card",
         name="card-update"),
-    url(r"^cards/(?P<pk>[0-9]+)/hasarrived/$", "exchcard_backend_api.card_views.api_card_check_isarrived",
+    url(r"^cards/(?P<pk>[0-9]+)/hasarrived/$", "exchcard_backend_api.card_api.card_check_isarrived",
         name="card-check-arrive"),
-    url(r"^cards/(?P<pk>[0-9]+)/cardphotos/(?P<photoid>[0-9]+)/dianzan/$", "exchcard_backend_api.card_views.api_card_dianzan",
+    url(r"^cards/(?P<pk>[0-9]+)/cardphotos/(?P<photoid>[0-9]+)/dianzan/$", "exchcard_backend_api.card_api.card_dianzan",
         name="card-dianzan"),
-    url(r"^cards/(?P<pk>[0-9]+)/cardphotos/(?P<photoid>[0-9]+)/dianzans/$", "exchcard_backend_api.card_views.api_card_dianzans",
+    url(r"^cards/(?P<pk>[0-9]+)/cardphotos/(?P<photoid>[0-9]+)/dianzans/$", "exchcard_backend_api.card_api.card_dianzans",
         name="card-dianzans"),
-    url(r"^cards/(?P<pk>[0-9]+)/dianzans2/$", card_views.DianzanListView.as_view(),
+    url(r"^cards/(?P<pk>[0-9]+)/dianzans2/$", card_api.DianzanListView.as_view(),
         name="card-dianzans-2"),
-    url(r"^cards/(?P<pk>[0-9]+)/cardphoto/$", 'exchcard_backend_api.upload_views.api_upload_card_photo',
+    url(r"^cards/(?P<pk>[0-9]+)/cardphoto/$", 'exchcard_backend_api.upload_api.upload_card_photo',
         name="card-cardphoto"),
-    url(r"cardsfeed/", "exchcard_backend_api.card_views.api_cardsfeed", name="cards-feed")
+    ## 明信片实时信息
+    url(r"cards/feed/", "exchcard_backend_api.card_api.cards_feed", name="cards-feed"),
+
+    ## 其他
+    url(r"^storage/s3/$", "exchcard_backend_api.upload_api.s3_storage"),
+
 
     ])
 

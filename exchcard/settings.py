@@ -160,6 +160,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'exchcard',
     'exchcard_backend_api',
+    'oneverse',
     'oneverse_api',
 )
 

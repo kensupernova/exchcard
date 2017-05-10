@@ -1,17 +1,27 @@
 #coding: utf-8
+
 import datetime
-import os
 import time
+import os
 
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Manager
 
-import exchcard_backend_api.datetime_helper
+import exchcard_backend_api.util.datetime_helper
+
 from exchcard import settings
 from exchcard.manage import AddressManager
 from exchcard.manage import DetailedAddressManager
 
+
+"""
+customized user model
+"""
+class CustomUser(User):
+    """
+    修改的参数为
+    """
 
 class Address(models.Model):
     name = models.CharField(max_length = 255, default="name")
@@ -23,7 +33,7 @@ class Address(models.Model):
 
     # the full mailling address
     def __str__(self):
-        return u'%s, %s, %s' % (self.name, self.address, self.postcode)
+        return u'%s, %s, %s, %s' % (self.id, self.name, self.address, self.postcode)
 
     def update(self, name, address, postcode, *args, **kwargs):
         self.name = name
@@ -33,6 +43,20 @@ class Address(models.Model):
 
 
     objects = AddressManager()
+
+class DetailedAddress(models.Model):
+    address_first_line = models.CharField(max_length = 255, default=" ")
+    address_second_line = models.CharField(max_length = 255, default=" ")
+    address_third_line = models.CharField(max_length = 255, default=" ")
+    city = models.CharField(max_length = 255, default=" ")
+    state_province = models.CharField(max_length = 255, default=" ")
+    country = models.CharField(max_length = 255, default=" ")
+
+    def __str__(self):
+        return u'%s, %s, %s, %s, %s' % (self.address_first_line, self.address_second_line,
+            self.address_third_line, self.city, self.country)
+
+    objects = DetailedAddressManager()
 
 
 class ProfileManager(Manager):
@@ -49,19 +73,7 @@ class ProfileManager(Manager):
 
         return profile
 
-class DetailedAddress(models.Model):
-    address_first_line = models.CharField(max_length = 255, default=" ")
-    address_second_line = models.CharField(max_length = 255, default=" ")
-    address_third_line = models.CharField(max_length = 255, default=" ")
-    city = models.CharField(max_length = 255, default=" ")
-    state_province = models.CharField(max_length = 255, default=" ")
-    country = models.CharField(max_length = 255, default=" ")
 
-    def __str__(self):
-        return u'%s, %s, %s, %s, %s' % (self.address_first_line, self.address_second_line,
-            self.address_third_line, self.city, self.country)
-
-    objects = DetailedAddressManager()
 
 class Profile(models.Model):
     """
@@ -89,7 +101,7 @@ class Profile(models.Model):
         ordering = ['-created']
 
     def __unicode__(self):
-        return u'%s' % self.profileuser.username
+        return u'%s, %s, %s, %s' % (self.id, self.profileuser.id, self.profileuser.username, self.profileuser.email)
 
     def save(self, *args, **kwargs):
         """
@@ -101,12 +113,11 @@ class Profile(models.Model):
 
 
 
-
 class CardManager(Manager):
-
-    def create_with_profile_time(self, card_name, torecipient_id, fromsender_id):
+    def create_with_profile_ids(self, card_name, torecipient_id, fromsender_id):
         if Profile.objects.filter(id = torecipient_id).exists() and \
                 Profile.objects.filter(id = fromsender_id).exists():
+
             card = self.create(card_name = card_name,
                 torecipient_id = torecipient_id,
                 fromsender_id = fromsender_id,
@@ -115,6 +126,7 @@ class CardManager(Manager):
             return card
 
         return None
+
 
 class Card(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -139,8 +151,14 @@ class Card(models.Model):
         ordering = ('created',)
 
     def __unicode__(self):
-        return u'%s -> %s' % (self.fromsender.profileuser.username,
-                              self.torecipient.profileaddress.address)
+        return u'%s, %s ->%s, %s, %s, %s, %s' % (
+            self.fromsender.id,
+            self.fromsender.profileuser.email,
+            self.torecipient.id,
+            self.torecipient.profileuser.email,
+            self.torecipient.profileaddress.name,
+            self.torecipient.profileaddress.address,
+            self.torecipient.profileaddress.postcode)
 
     def save(self, *args, **kwargs):
         """
@@ -175,20 +193,25 @@ class Card(models.Model):
     def update_date_with_timestamp(self, *args, **kwargs):
         if (not self.arrived_time) and (self.arrived_time != 0) and (self.arrived_time is not None):
             ## print self.arrived_time
-            self.arrived_date = exchcard_backend_api.datetime_helper.mills2datetime(self.arrived_time)
+            self.arrived_date = exchcard_backend_api.util.datetime_helper.mills2datetime(self.arrived_time)
+
         if (not self.sent_time) and (self.sent_time != 0) and (self.sent_time is not None):
             ## print self.sent_time
-            self.sent_date = exchcard_backend_api.datetime_helper.mills2datetime(self.sent_time)
+            self.sent_date = exchcard_backend_api.util.datetime_helper.mills2datetime(self.sent_time)
 
         super(Card, self).save(*args, **kwargs)
 
     def get_sent_datetime(self):
-        return exchcard_backend_api.datetime_helper.mills2datetime(self.sent_time)
+        # return exchcard_backend_api.util.datetime_helper.mills2datetime(self.sent_time)
+        return self.sent_date
 
     def get_arrived_datetime(self):
-        return exchcard_backend_api.datetime_helper.mills2datetime(self.arrived_time)
+        # return exchcard_backend_api.util.datetime_helper.mills2datetime(self.arrived_time)
+        return self.arrived_date
 
     objects = CardManager()
+
+
 
 ## exchcard_backend_api avatar photo
 class AvatarPhoto(models.Model):
@@ -205,6 +228,7 @@ class AvatarPhoto(models.Model):
         return os.path.join(settings.MEDIA_ROOT, self.avatar.name)
 
 
+
 class CardPhoto(models.Model):
     owner = models.ForeignKey("Profile", related_name="cardphotos_of_profile") ## related name is for Profile to use
     card_host = models.ForeignKey('Card', related_name='photos_of_card', default=1)
@@ -213,6 +237,7 @@ class CardPhoto(models.Model):
 
     def get_abs_path(self):
         return os.path.join(settings.MEDIA_ROOT, self.card_photo.name)
+
 
 
 class DianZanManager(Manager):
@@ -225,6 +250,8 @@ class DianZanManager(Manager):
             return dianzan
 
         return None
+
+
 
 class DianZan(models.Model):
     created = models.DateTimeField(auto_now_add=True)

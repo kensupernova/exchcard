@@ -9,18 +9,34 @@ from exchcard.models import Card, CardPhoto, Profile
 def index(request):
     return render(request, 'index.html')
 
+
 def user_login(request):
     return render(request, 'login.html')
+
 
 def user_register(request):
     return render(request, 'exchcard/user-address-register-page.html')
 
-## 注入验证
+
+@login_required
+def account_setting(request):
+    """
+    账户设置
+    :param request:
+    :return:
+    """
+    profile_from_request = Profile.objects.get(profileuser=request.user)
+    context = {'profile': profile_from_request}
+    return render(request, 'exchcard/account-setting-page.html', context)
+
+
+## 注入登录验证
 @login_required
 def profile(request):
     profile_from_request = Profile.objects.get(profileuser=request.user)
     context = {'profile': profile_from_request}
     return render(request, 'exchcard/profile-page.html', context)
+
 
 @login_required
 def card_send(request):
@@ -28,6 +44,7 @@ def card_send(request):
     context = {'profile': profile_from_request}
 
     return render(request, 'exchcard/send-card-page.html', context)
+
 
 @login_required
 def card_send_confirm(request):
@@ -41,14 +58,19 @@ def card_send_confirm(request):
 
     return render(request, 'exchcard/send-card-page.html', context)
 
+
 @login_required
-def card_register(request):
-    profile_from_request = Profile.objects.get(profileuser=request.user)
-    context = {'profile': profile_from_request}
+def card_receive(request):
+    profile_of_request = Profile.objects.get(profileuser=request.user)
+    context = {'profile': profile_of_request}
 
     if request.method == "GET":
         return render(request, 'exchcard/receive-card-page.html', context)
 
+
+"""
+查看某张在路途中的明信片
+"""
 @login_required
 def card_travelling(request, cardname):
     """
@@ -66,6 +88,10 @@ def card_travelling(request, cardname):
 
     return render(request, 'exchcard/travelling-card-page.html', context)
 
+
+"""
+查看某张明信片
+"""
 @login_required
 def view_single_card(request, cardname):
     """
@@ -89,6 +115,10 @@ def view_single_card(request, cardname):
         ''
     return render(request, 'exchcard/travelling-card-page.html', context)
 
+
+"""
+查看明信片列表
+"""
 @login_required
 def view_cards_list(request, id):
     profile_from_request = Profile.objects.get(profileuser
@@ -98,6 +128,21 @@ def view_cards_list(request, id):
 
     return render(request, 'exchcard/view-cards-page.html', context)
 
+
+
+@login_required
+def view_others_public_profile(request, username):
+    """
+    浏览其他用户的主页
+    :param request:
+    :param username:
+    :return:
+    """
+
+
+"""
+明信片发烧友圈子
+"""
 @login_required
 def view_shao_you_quan(request):
     """

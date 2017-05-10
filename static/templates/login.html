@@ -30,6 +30,7 @@
                     <button class="btn-register"><a href="/account/register/" target="_blank">注册</a></button>
                 </div>
 
+                <!--微博登录-->
                 <!--<div class="third-party-login">-->
                     <!--<ul class="col-md-6 row">-->
                     <!--<li><wb:login-button type="3,2" onlogin="login" onlogout="logout">微博登录</wb:login-button></li> -->
@@ -59,6 +60,7 @@
 {% endblock %}
 
 {% block jscontainer %}
+    <script type="text/javascript" src="{{STATIC_URL}}javascripts/hash-sha1-helper.js" ></script>
     <script type="text/javascript" src="{{STATIC_URL}}javascripts/login.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}javascripts/validator.js" ></script>
 {% endblock %}

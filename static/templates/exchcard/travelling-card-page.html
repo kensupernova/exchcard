@@ -4,15 +4,21 @@
 {% endblock %}
 
 {% block content %}
-<div>
-    <p>Postcard Id</p>
-    <p>{{card_name}}</p>
-    <p>Recipient Username</p>
-    <p>{{recipient_user.username}}</p>
-    <p>Recipient Address</p>
-    <p>{{recipient_address.name}}</p>
-    <p>{{recipient_address.address}}</p>
-    <p>{{recipient_address.postcode}}</p>
+<div class="content-container">
+  <div class="spanner title-container">
+    <div><h3>你要寄送的明信片信息</h3></div>
+    <div><p>请记住吧明信片ID一定要写上, 否则接收者无法登记收到, 你不会得到积分。</p></div>
+  </div>
+  <div class="postcard-mail-info">
+      <h3>Postcard Id</h3>
+      <p>{{card_name}}</p>
+      <h3>Recipient Email</h3>
+      <p>{{recipient_user.email}}</p>
+      <h3>Recipient Address</h3>
+      <p>{{recipient_address.name}}</p>
+      <p>{{recipient_address.address}}</p>
+      <p>{{recipient_address.postcode}}</p>
+  </div>
 </div>
 {% endblock %}
 

@@ -1,6 +1,7 @@
 /**
  * Created by Guanghui on 2016/12/17.
  */
+
 function csrfSafeMethod(method) {
   // these HTTP methods do not require CSRF protection
   return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));

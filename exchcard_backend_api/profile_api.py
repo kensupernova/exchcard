@@ -2,6 +2,7 @@
 
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.contrib.auth import authenticate, login
 
 from multiple_model.views import MultipleModelAPIView
 
@@ -19,8 +20,10 @@ from exchcard_backend_api.serializers import AddressSerializer
 from exchcard_backend_api.serializers import CreateProfileSerializer
 from exchcard_backend_api.serializers import GetProfileWithCardSerializer
 from exchcard_backend_api.serializers import GetUserAddressProfileSerializer
-from exchcard_backend_api.serializers import RegisterUserAddressProfileSerializer
+from exchcard_backend_api.serializers import UserAddressProfileSerializer
 from exchcard_backend_api.serializers import UserSerializer, CardSerializer
+from exchcard_backend_api.util.utils import generateToken
+
 from exchcard_backend_api.util.utils import count_arrive_travel
 
 
@@ -78,10 +81,11 @@ class RegisterUserAddressProfileView(MultipleModelAPIView):
 
 @api_view(["POST","GET"])
 @permission_classes([permissions.AllowAny, ])
-def api_register_user_address_profile(request, format=None):
+def register_user_address_profile(request, format=None):
     """
-    First time registeration
-    需要的参数：user, password, email, address, postcode
+    First time registration
+    需要的参数：user, password, email, name, address, postcode
+    得到：一个user，一个address，一个profile
     :param request:
     :param format:
     :return:
@@ -124,10 +128,13 @@ def api_register_user_address_profile(request, format=None):
             return Response({"detail": "Server internal error!"},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        serializer = RegisterUserAddressProfileSerializer(profile)
+
+        ## 序列化数据
+        serializer = UserAddressProfileSerializer(profile)
         ## 打印到服务器
-        print serializer.data
-        ## 返回给客服端
+        print "New user address profile created: {0}".format(serializer.data)
+
+        ## 最后返回给客服端，新的
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     if request.method == "GET":
@@ -137,7 +144,7 @@ def api_register_user_address_profile(request, format=None):
 
 @api_view(["POST"])
 @permission_classes([permissions.IsAdminUser, ])
-def api_register_new_profile_with_ids(request, format=None):
+def register_new_profile_with_ids(request, format=None):
     """
     create a new profile with user id and address id
     limited to: admin user or staff user can create exchcard_backend_api with user_id and profile_id
@@ -165,7 +172,7 @@ def api_register_new_profile_with_ids(request, format=None):
 
 @api_view(["GET","PUT"])
 @permission_classes([IsProfileUserOrStaffUser, ])
-def api_update_profile_with_ids(request, format=None):
+def update_profile_with_ids(request, format=None):
     """
     update profile with user id and address id
     :param: userid, addressid
@@ -205,7 +212,7 @@ def api_update_profile_with_ids(request, format=None):
 
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
-def api_get_random_profile(request, format=None):
+def get_random_profile(request, format=None):
     """
     get one profile for sending card, randomly, later, use algorithm to match
     :param Request:
@@ -229,9 +236,9 @@ def api_get_random_profile(request, format=None):
 
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
-def api_profile_get_cards_all_status(request, pk, format=None):
+def profile_get_cards_all_state_count(request, pk, format=None):
     """
-    得到某个Profile的各个状态的明信片总信息
+    得到某个Profile的各个状态的明信片总信息汇总
     :param request:
     :param pk:
     :param format:
@@ -264,14 +271,15 @@ def api_profile_get_cards_all_status(request, pk, format=None):
         receive_cards_count = count_arrive_travel(receive_cards)
 
         response_data ={}
-        response_data["sent_cards"] = {}
-        response_data["sent_cards"]["total"] = sent_cards_count[0]
-        response_data["sent_cards"]["arrived"] = sent_cards_count[1]
-        response_data["sent_cards"]["travelling"] = sent_cards_count[2]
-        response_data["receive_cards"] = {}
-        response_data["receive_cards"]["total"] = receive_cards_count[0]
-        response_data["receive_cards"]["arrived"] = receive_cards_count[1]
-        response_data["receive_cards"]["travelling"] = receive_cards_count[2]
+        response_data["sent_cards_count"] = {}
+        response_data["sent_cards_count"]["total"] = sent_cards_count[0]
+        response_data["sent_cards_count"]["arrived"] = sent_cards_count[1]
+        response_data["sent_cards_count"]["travelling"] = sent_cards_count[2]
+
+        response_data["receive_cards_count"] = {}
+        response_data["receive_cards_count"]["total"] = receive_cards_count[0]
+        response_data["receive_cards_count"]["arrived"] = receive_cards_count[1]
+        response_data["receive_cards_count"]["travelling"] = receive_cards_count[2]
 
         return Response(response_data, status= status.HTTP_200_OK)
 
@@ -281,51 +289,54 @@ def api_profile_get_cards_all_status(request, pk, format=None):
 """
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
-def api_profile_get_cards_total(request, pk, format=None):
+def profile_get_cards_total(request, pk, format=None):
+    """
+    得到所有的明信片
+    :param request:
+    :param pk:
+    :param format:
+    :return:
+    """
     try:
         profile = Profile.objects.get(pk=pk)
         profile_of_request_user = Profile.objects.get(profileuser
                                                 =request.user)
         if not int(profile.id) == int(profile_of_request_user.id):
-            return Response({"details": "request user != profileuser",
+            return Response({"details": "profile of request user != profile of id in url",
                              "id_url": profile.id,
                              "id_request:": profile_of_request_user.id},
                             status=status.HTTP_403_FORBIDDEN)
 
-        profile_from_request = Profile.objects.get(profileuser
-                                                   =request.user)
-        if not int(pk) == int(profile_from_request.id):
-            return Response({"details": "request user != user with profile id in url",
-                             "id_url": pk,
-                             "id_request:": profile_from_request.id},
-                            status=status.HTTP_403_FORBIDDEN)
-
     except Profile.DoesNotExist:
-        return Response({"details": "user does not exit"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"details": "User does not exit"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == "GET":
-        cards_receive_travel = Card.objects.filter(Q(torecipient=profile_of_request_user) & Q(has_arrived=False))
-        cards_receive_arrive = Card.objects.filter(Q(torecipient=profile_of_request_user) & Q(has_arrived=True))
+        try:
+            cards_receive_travelling = Card.objects.filter(Q(torecipient=profile_of_request_user) & Q(has_arrived=False))
+            cards_receive_arrived = Card.objects.filter(Q(torecipient=profile_of_request_user) & Q(has_arrived=True))
 
-        cards_sent_travel = Card.objects.filter(Q(fromsender=profile_of_request_user) & Q(has_arrived=False))
-        cards_sent_arrive = Card.objects.filter(Q(fromsender=profile_of_request_user) & Q(has_arrived=True))
+            cards_sent_travelling = Card.objects.filter(Q(fromsender=profile_of_request_user) & Q(has_arrived=False))
+            cards_sent_arrived = Card.objects.filter(Q(fromsender=profile_of_request_user) & Q(has_arrived=True))
 
 
-        return Response({"sent_arrived": CardSerializer(cards_sent_arrive,
-                                                        many=True, context={'request': request}).data,
-                         "sent_travelling": CardSerializer(cards_sent_travel,
-                                                        many=True, context={'request': request}).data,
-                         "receive_arrived": CardSerializer(cards_receive_arrive,
-                                                        many=True, context={'request': request}).data,
-                         "receive_travelling": CardSerializer(cards_receive_travel,
-                                                        many=True, context={'request': request}).data,
+            return Response({"sent_arrived": CardSerializer(cards_sent_arrived,
+                                                            many=True, context={'request': request}).data,
+                             "sent_travelling": CardSerializer(cards_sent_travelling,
+                                                            many=True, context={'request': request}).data,
+                             "receive_arrived": CardSerializer(cards_receive_arrived,
+                                                            many=True, context={'request': request}).data,
+                             "receive_travelling": CardSerializer(cards_receive_travelling,
+                                                            many=True, context={'request': request}).data,
 
-        }, status=status.HTTP_200_OK)
+            }, status=status.HTTP_200_OK)
+
+        except Exception:
+            return Response({"detail":"Error when get all cards info"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
-def api_profile_get_cards_sent_total(request, pk, format=None):
+def profile_get_cards_sent_total(request, pk, format=None):
     try:
         profile = Profile.objects.get(pk=pk)
         profile_of_request_user = Profile.objects.get(profileuser
@@ -348,7 +359,7 @@ def api_profile_get_cards_sent_total(request, pk, format=None):
 
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
-def api_profile_get_cards_receive_total(request, pk, format=None):
+def profile_get_cards_receive_total(request, pk, format=None):
     try:
         profile = Profile.objects.get(pk=pk)
         profile_of_request_user = Profile.objects.get(profileuser
@@ -371,7 +382,7 @@ def api_profile_get_cards_receive_total(request, pk, format=None):
 
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
-def api_profile_get_cards_sent_travelling(request, pk, format=None):
+def profile_get_cards_sent_travelling(request, pk, format=None):
     try:
         profile = Profile.objects.get(pk=pk)
         profile_of_request_user = Profile.objects.get(profileuser
@@ -396,7 +407,7 @@ def api_profile_get_cards_sent_travelling(request, pk, format=None):
 
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
-def api_profile_get_cards_receive_travelling(request, pk, format=None):
+def profile_get_cards_receive_travelling(request, pk, format=None):
     try:
         profile = Profile.objects.get(pk=pk)
         profile_of_request_user = Profile.objects.get(profileuser
@@ -420,7 +431,7 @@ def api_profile_get_cards_receive_travelling(request, pk, format=None):
 
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
-def api_profile_get_cards_sent_arrived(request, pk, format=None):
+def profile_get_cards_sent_arrived(request, pk, format=None):
     try:
         profile = Profile.objects.get(pk=pk)
         profile_of_request_user = Profile.objects.get(profileuser
@@ -435,7 +446,7 @@ def api_profile_get_cards_sent_arrived(request, pk, format=None):
         return Response({"details":"Profile object does not exit"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == "GET":
-        cards = Card.objects.filter(Q(fromsender=profile_of_request_user ) & Q(has_arrived=True))
+        cards = Card.objects.filter(Q(fromsender=profile_of_request_user) & Q(has_arrived=True))
 
         serializer = CardSerializer(cards, many=True, context={'request': request})
 
@@ -445,7 +456,7 @@ def api_profile_get_cards_sent_arrived(request, pk, format=None):
 
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
-def api_profile_get_cards_receive_arrived(request, pk, format=None):
+def profile_get_cards_receive_arrived(request, pk, format=None):
     try:
         profile = Profile.objects.get(pk=pk)
         profile_of_request_user = Profile.objects.get(profileuser

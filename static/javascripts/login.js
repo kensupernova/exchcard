@@ -1,38 +1,12 @@
 $(document).ready(function(){
-	console.log('log in ...');
-	// // Weibo Login
-	// // method 1: HTML + JS
-	// WB2.anyWhere(function(W){
-	//     W.widget.connectButton({
-	//         id: "wb_connect_btn",
-	//         type:"1,1",
-	//         callback : {
-	//             login:function(o){	//登录后的回调函数
-	//             },
-	//             logout:function(){	//退出后的回调函数
-	//             }
-	//         }
-	//     });
-	// });
-	//
-	// // method 2: WBML
-  //
-	// function login(o){
-	// 	console.log("login ..."+ JSON.parse(o));
-  //
-	// }
-  //
-	// function logout(){
-	// 	console.log("logout ...");
-  //
-	// }
 
   // local login
 	$(".btn-login-submit").click(function(){
 		// get the input values for email and password
-		var email = $("#form_email").val()|| "zgh1@126.com";
+		var email = $("#form_email").val()|| "zgh8@126.com";
 		var password = $("#form_password").val()||"z111111";
-		var username= email;
+
+		var username = convert_email_to_username(email);
 
     // console.log("username: " + username);
     // console.log("password: " + password);
@@ -48,9 +22,6 @@ $(document).ready(function(){
 			return;
 		}
 
-    // if(!validate_email(email)){
-    //   return;
-    // }
 
 		// use api for login
 		var baseURL = "";
@@ -66,19 +37,21 @@ $(document).ready(function(){
 			}
 		});
 
-		$.ajax({method: "POST",
-		    url: login_url,
+		$.ajax({
+		  method: "POST",
+      url: login_url,
 			data: {'username': username, 'password':password},
 			success: function(data){
-					console.log(data);
+					// console.log(data);
 					// redirect to profile page
 					window.location.href=baseURL +"/profile/"
-				}
-			}
-		).done(function(){
-			console.log("success!");
+      }
+
+		}).done(function(){
+			console.log("log in success!");
+
 		}).fail(function(){
-			console.log("failed!");
+			console.log("log in failed!");
 		});
 
 
@@ -90,6 +63,21 @@ $(document).ready(function(){
 	}
 
 
+  //// 微博登录
+  //// HTML + JS
+  // WB2.anyWhere(function(W){
+  //     W.widget.connectButton({
+  //         id: "wb_connect_btn",
+  //         type:"1,1",
+  //         callback : {
+  //             login:function(o){	//登录后的回调函数
+  //             },
+  //             logout:function(){	//退出后的回调函数
+  //             }
+  //         }
+  //     });
+  // });
+  //
 
 
 });

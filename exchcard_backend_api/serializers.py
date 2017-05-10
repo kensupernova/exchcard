@@ -62,7 +62,7 @@ class RegisterUserSerializer2(serializers.ModelSerializer):
 
 
 
-class RegisterUserAddressProfileSerializer(serializers.ModelSerializer):
+class UserAddressProfileSerializer(serializers.ModelSerializer):
     """
     注册新的Profile, 会创建一个User, 一个Address, 一个Profile
     """
@@ -86,22 +86,28 @@ class RegisterUserAddressProfileSerializer(serializers.ModelSerializer):
 明信片序列化类
 """
 class CardSerializer(serializers.ModelSerializer):
-    fromsender = serializers.CharField(source='fromsender.profileuser.username')
-    fromaddress = serializers.CharField(source='fromsender.profileaddress.address')
-    frompostcode = serializers.CharField(source='fromsender.profileaddress.postcode')
+    # fromsender_username = serializers.CharField(source='fromsender.profileuser.username')
 
-    torecipient = serializers.CharField(source='torecipient.profileuser.username')
-    toaddress = serializers.CharField(source='torecipient.profileaddress.address')
-    topostcode = serializers.CharField(source="torecipient.profileaddress.postcode")
-
+    fromsender_email = serializers.CharField(source='fromsender.profileuser.email')
     fromsender_id = serializers.IntegerField(source='fromsender.id')
+
+    from_name = serializers.CharField(source='fromsender.profileaddress.name')
+    from_address = serializers.CharField(source='fromsender.profileaddress.address')
+    from_postcode = serializers.CharField(source='fromsender.profileaddress.postcode')
+
+    torecipient_email = serializers.CharField(source='torecipient.profileuser.email')
     torecipient_id = serializers.IntegerField(source='torecipient.id')
+
+    to_name = serializers.CharField(source='torecipient.profileaddress.name')
+    to_address = serializers.CharField(source='torecipient.profileaddress.address')
+    to_postcode = serializers.CharField(source="torecipient.profileaddress.postcode")
+
 
     class Meta:
         model = Card
         fields = ("url", "card_name",
-                  "fromsender_id", "fromsender", "fromaddress", "frompostcode",
-                  "torecipient_id", "torecipient", "toaddress", "topostcode",
+                  "fromsender_id", "fromsender_email", "from_name","from_address", "from_postcode",
+                  "torecipient_id", "torecipient_email", "to_name", "to_address", "to_postcode",
                   "sent_time", "arrived_time",
                   "sent_date", "arrived_date", "has_arrived")
 
@@ -121,7 +127,7 @@ class CreateCardSerializer(serializers.ModelSerializer):
         # print validated_data
         ## card name should be generated from sever to avoid duplicates?
         ## print validated_data
-        card = Card.objects.create_with_profile_time(
+        card = Card.objects.create_with_profile_ids(
             card_name=validated_data["card_name"],
             torecipient_id=validated_data["torecipient"]["id"],
             fromsender_id=validated_data["fromsender"]["id"]

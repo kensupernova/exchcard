@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content %}
-<div>
+<div class="content-container">
 
   <div id="register-card-container">
     {% csrf_token %}
@@ -18,6 +18,7 @@
     {% endif %}
   </div>
 
+  <!--通过前端Form-->
   <!--<form method="POST" enctype="multipart/form-data" id="register-card-form">-->
     <!--{% csrf_token %}-->
     <!--<div><label>Postcard Id<input type="text" name="card_name" id="card_name" placeholder="postcard id"></label></div>-->
@@ -30,23 +31,6 @@
     <!--{% endif %}-->
   <!--</form>-->
 
-  <!--<form enctype="multipart/form-data" action="/" method="post">-->
-    <!--{% csrf_token %}-->
-    <!--{% if form.errors %}-->
-    <!--<p style="color: red;">-->
-      <!--Please correct the error{{ form.errors|pluralize }} below.-->
-    <!--</p>-->
-    <!--{% endif %}-->
-    <!--{% for field in form.visible_fields %}-->
-      <!--<div class="fieldWrapper">-->
-        <!--<div>-->
-          <!--{{ field.label_tag }} {{ field }}-->
-        <!--</div>-->
-      <!--</div>-->
-
-    <!--{% endfor %}-->
-    <!--<input type="submit" value="Submit" />-->
-  <!--</form>-->
 
 </div>
 

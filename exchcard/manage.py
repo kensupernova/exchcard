@@ -3,7 +3,7 @@ from django.db.models import Manager
 
 ## manage the model create, delete, etc.
 class DetailedAddressManager(Manager):
-    def create(self, first, second, third, city, stateorprovince, country):
+    def create_detailed_address(self, first, second, third, city, stateorprovince, country):
         detailedAddress = self.create(first, second, third, city, stateorprovince, country)
         return detailedAddress
 

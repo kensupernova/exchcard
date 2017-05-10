@@ -16,20 +16,24 @@ $(document).ready(function(){
     });
 
     $.ajax({method: "POST",
-        url: url,
-        success: function(data){
-          // console.log(data);
-          // redirect to profile page
-          window.location.href= "/";
-        }
+      url: url,
+      success: function(data){
+        // redirect to profile page
+        window.location.href= "/";
       }
-    ).done(function(){
-      console.log("success!");
+    }).done(function(){
+      console.log("log out success!");
     }).fail(function(){
-      console.log("failed!");
+      console.log("log out failed!");
     });
 
 	});
+
+  $("#setting").click(function () {
+    console.log("go to settting ... ");
+    window.location.href= "/account/setting";
+
+  });
 
 
 
