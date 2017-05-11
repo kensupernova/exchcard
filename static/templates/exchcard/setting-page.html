@@ -1,0 +1,36 @@
+{% extends "foundation.html" %}
+
+{% block headinfo %}
+
+{% endblock %}
+
+{% block content %}
+<div class="content-container">
+
+  <div ng-app="myApp" class="tab-container">
+    <div class="tab-btn-container top-tab">
+
+      <a ui-sref="account" ui-sref-active="active" id="tab-account" class="tab-btn">账号</a>
+      <a ui-sref="address" ui-sref-active="active" id="tab-address" class="tab-btn">地址</a>
+      <!--<a ui-sref="profile" ui-sref-active="active" id="tab-profile" class="tab-btn">主页</a>-->
+      <!--<a ui-sref="avatar" ui-sref-active="active" id="tab-avatar" class="tab-btn">头像</a>-->
+
+    </div>
+    <div class="below-content">
+      <ui-view>
+
+      </ui-view>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+{% endblock %}
+
+{% block jscontainer %}
+<script src="{{STATIC_URL}}lib/angular-ui-router.min.js"></script>
+<script src="{{STATIC_URL}}javascripts/setting-page.js"></script>
+{% endblock %}
