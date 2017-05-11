@@ -1,11 +1,12 @@
 $(document).ready(function(){
 	console.log("profile page ...");
-	$(".btn-send-card").click(function () {
-    window.location.href="http://localhost:8000/card/send/";
+
+  $(".btn-send-card").click(function () {
+    window.location.href="/card/send/";
   });
 
-  $(".btn-register-card").click(function () {
-    window.location.href="http://localhost:8000/card/register/";
+  $(".btn-receive-card").click(function () {
+    window.location.href="/card/receive/";
   });
 
   $("#cards").addClass('active');

@@ -1,10 +1,12 @@
 #coding:utf-8
 from django.conf.urls import include, url
+# from django.views.generic.simple import direct_to_template
+from django.views.generic.base import TemplateView
+
 
 # To enable the admin:
 from django.contrib import admin
 admin.autodiscover()
-
 
 
 urlpatterns = [
@@ -13,7 +15,7 @@ urlpatterns = [
     url(r'^account/register/$', 'exchcard.views.user_register'),
     url(r'^account/resetpassword/$', 'exchcard.views.profile'),
     url(r'^account/findpassword/$', 'exchcard.views.profile'),
-    url(r'^account/setting/$', 'exchcard.views.profile'),
+    url(r'^setting/$', 'exchcard.views.setting'),
 
     # view the current logged user's profile
     url(r'^profile/$', 'exchcard.views.profile'),
@@ -47,6 +49,9 @@ urlpatterns = [
 
     # oneverse的url
     url(r'^oneverse/', include('oneverse.urls')),
+
+    # 静态HTML文件
+    url(r'^html/$', TemplateView.as_view(template_name='index.html')),
 
     # 其他
     url(r'^search/$', 'exchcard.views_search.search'),

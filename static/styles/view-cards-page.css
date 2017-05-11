@@ -1,22 +1,31 @@
-a:active{
-  text-decoration: none;
-}
 table tr td{
   margin-right: 10px;
   padding-right: 10px;
 }
+
 table tr th{
   margin-right: 10px;
   padding-right: 10px;
 }
 
-.tab-btn-container {}
+.tab-btn-container {
 
-.tab-btn {
+}
+
+a.tab-btn {
   display: inline-block;
   width:10%;
+  text-decoration: none;
+}
+
+a.tab-btn:hover {
+  text-decoration: none;
+  color: white;
+  background: red;
 }
 
 a.tab-btn.active{
   background: red;
+  color: white;
+  text-decoration: none;
 }

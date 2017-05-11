@@ -16,35 +16,7 @@ app.config(function($interpolateProvider) {
 
 app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $urlRouterProvider) {
 
-  $urlRouterProvider.otherwise('/');
-
-  var defaultState = {
-    url:'',
-    name:'default',
-    template:
-      '<table class = ""  ng-controller="sentArrivedCtrl">'+
-      '<tr>'+
-      '<th>post id</th>'+
-      '<th>sent time</th>'+
-      '<th>from user</th>'+
-      '<th>from address</th>'+
-      '<th>to user</th>'+
-      '<th>to address</th>'+
-      '<th>arrived time</th>'+
-      '<th>arrived or not</th>'+
-      '</tr>'+
-      '<tr ng-repeat="card in sent_arrived">'+
-      '<td>{[{card.card_name}]}</td>'+
-      '<td>{[{card.sent_date}]}</td>'+
-      '<td>{[{card.fromsender_email}]}</td>'+
-      '<td>{[{card.from_address}]}</td>'+
-      '<td>{[{card.torecipient_email}]}</td>'+
-      '<td>{[{card.to_address}]}</td>'+
-      '<td>{[{card.arrived_date}]}</td>'+
-      '<td>{[{card.has_arrived}]}</td>'+
-      '</tr>'+
-      '</table>'
-  }
+  $urlRouterProvider.when("", "/sentArrived").otherwise('/');
 
   var sentArrivedState = {
     url:'/sentArrived',
@@ -159,19 +131,19 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
   }
 
   // 注册各个状态
-  $stateProvider.state(defaultState);
-
-  $stateProvider.state(sentArrivedState);
-  $stateProvider.state(receiveArrivedState);
-  $stateProvider.state(sentTravellingState);
-  $stateProvider.state(receiveTravellingState);
+  $stateProvider
+    .state(sentArrivedState)
+    .state(receiveArrivedState)
+    .state(sentTravellingState)
+    .state(receiveTravellingState);
 
 
 }]);
 
-////////////////
+///// 运行app
 app.run(function($rootScope, $http) {
   var csrftoken = Cookies.get('csrftoken');
+
   $http({
     method: "GET",
     headers: {
@@ -186,14 +158,16 @@ app.run(function($rootScope, $http) {
     $rootScope.sent_travelling = response.data['sent_travelling'];
     $rootScope.receive_travelling = response.data['receive_travelling'];
 
-
+    console.log("sucessfully get cards data total!")
     // console.log(JSON.stringify(response.data['sent_arrived'].length));
     // console.log(JSON.stringify(response.data['receive_arrived'].length));
     // console.log(JSON.stringify(response.data['sent_travelling'].length));
     // console.log(JSON.stringify(response.data['receive_travelling'].length));
 
-    // 点击第一个tab
-    $('#tab-sent-arrived').click();
+    // 点击第一个tab, 相当于点击shref
+    // $('#tab-sent-arrived').click();
+
+    // TODO: Refresh the ui-view
 
   }, function myError(response) {
     // console.log("fail to get cards data!");

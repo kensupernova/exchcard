@@ -82,14 +82,28 @@
 
 .upper .right .btns div:hover {
   background: red;
-  color: white;
+  /*color: white;*/
   cursor: pointer;
 }
 
 .upper .right .btns div:active {
   background: red;
+  /*color: white;*/
+  cursor: pointer;
+}
+
+.upper .right .btns div h3{
+  display: inline;
+}
+
+.upper .right .btns div:hover h3{
+  background: red;
   color: white;
-  cursor: hand;
+}
+
+.upper .right .btns div:active h3{
+  background: red;
+  color: white;
 }
 
 .upper .right .btns .btn-send-card {
@@ -97,7 +111,7 @@
 
 }
 
-.upper .right .btns .btn-register-card {
+.upper .right .btns .btn-receive-card {
 
 }
 

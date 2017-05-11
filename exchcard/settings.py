@@ -18,13 +18,6 @@ ADMINS = (
 #
 # MANAGERS = ADMINS
 
-# 如何syncdb到线上数据库
-# 在本地开发环境中，如下配置数据库，即可执行 python manage.py syncdb 直接syncdb到线上数据库。
-
-## 用于本地调试
-# from sae._restful_mysql import monkey
-# monkey.patch()
-
 # Hosts/domain names that are valid for this exchard; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = []
@@ -230,6 +223,12 @@ DEFAULT_FILE_STORAGE = 'sae.ext.django.storage.backend.Storage'
 STORAGE_BUCKET_NAME = 'exchcard_backend_api-bucket'
 # ref: https://docs.djangoproject.com/en/dev/topics/files/
 
+# 如何syncdb到线上数据库
+# 在本地开发环境中，如下配置数据库，即可执行 python manage.py syncdb 直接syncdb到线上数据库。
+
+## 用于本地调试
+# from sae._restful_mysql import monkey
+# monkey.patch()
 
 ## 线上数据库的配置
 # MYSQL_HOST = 'w.rdc.sae.sina.com.cn'

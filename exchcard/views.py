@@ -19,14 +19,26 @@ def user_register(request):
 
 
 @login_required
+def setting(request):
+    """
+    设置, 包括账户User, 地址Address, 主页Profile, 头像Avatar
+    :param request:
+    :return:
+    """
+    profile = Profile.objects.get(profileuser=request.user)
+    context = {'profile': profile}
+    return render(request, 'exchcard/setting-page.html', context)
+
+
+@login_required
 def account_setting(request):
     """
     账户设置
     :param request:
     :return:
     """
-    profile_from_request = Profile.objects.get(profileuser=request.user)
-    context = {'profile': profile_from_request}
+    profile = Profile.objects.get(profileuser=request.user)
+    context = {'profile': profile}
     return render(request, 'exchcard/account-setting-page.html', context)
 
 
@@ -38,10 +50,10 @@ def profile(request):
     return render(request, 'exchcard/profile-page.html', context)
 
 
-@login_required
+@login_required(login_url="/account/login")
 def card_send(request):
-    profile_from_request = Profile.objects.get(profileuser=request.user)
-    context = {'profile': profile_from_request}
+    logged_profile = Profile.objects.get(profileuser=request.user)
+    context = {'profile': logged_profile}
 
     return render(request, 'exchcard/send-card-page.html', context)
 

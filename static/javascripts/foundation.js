@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+  // 当点击退出按钮时
 	$("#logout").click(function () {
 	  console.log("log out ... ")
     var baseURL = "";
@@ -29,9 +30,10 @@ $(document).ready(function(){
 
 	});
 
+  // 当点击设置按钮时
   $("#setting").click(function () {
-    console.log("go to settting ... ");
-    window.location.href= "/account/setting";
+    console.log("go to settting page ... ");
+    window.location.href= "/setting";
 
   });
 
