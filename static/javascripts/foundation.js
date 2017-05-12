@@ -30,15 +30,6 @@ $(document).ready(function(){
 
 	});
 
-  // 当点击设置按钮时
-  $("#setting").click(function () {
-    console.log("go to settting page ... ");
-    window.location.href= "/setting";
-
-  });
-
-
-
 });
 
 

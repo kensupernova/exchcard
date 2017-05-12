@@ -48,11 +48,13 @@
 .upper .left .info-summary div a{
   display: inline-block;
   width: 100%;
+  font-size: 1.1em;
 }
 
 .upper .left .info-summary div a:hover{
   background: red;
   color: white;
+  text-decoration: none;
 }
 
 .upper .right {

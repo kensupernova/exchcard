@@ -1,4 +1,27 @@
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<div>
-  这是account page!
+<meta charset="UTF-8">
+<div class="account-container" ng-controller="accountController">
+
+  <div class="account-title account-item"><h3>账号信息</h3></div>
+
+  <fieldset><h5>基本信息</h5></fieldset>
+  <div class="row account-item">
+    <label for="username" class="account-item-title">用户名</label>
+    <input type="text" name="username" id="username" value="{{profile.id}}">
+  </div>
+  <div class="row account-item">
+    <label for="email" class="account-item-title">Email</label>
+    <input type="text" name="email" id="email" value="{{profile.id}}">
+  </div>
+
+  <fieldset><h5>密码</h5></fieldset>
+  <div class="row account-item">
+    <label for="password" class="account-item-title">当前密码</label>
+    <input type="text" name="password" id="password" value="{{profile.id}}">
+  </div>
+
+  <div class="row account-item">
+    <label for="password-new" class="account-item-title">新的密码</label>
+    <input type="text" name="password-new" id="password-new" value="{{profile.id}}">
+  </div>
+
 </div>

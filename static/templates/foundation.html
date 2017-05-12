@@ -7,19 +7,18 @@
 
   <!-- Libraries From CDN -->
   <!--  <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
-
    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
    <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.2.0/css/font-awesome.min.css">
    <script src="https://cdn.bootcss.com/angular.js/1.4.8/angular.min.js"></script>
    <script src="https://cdn.bootcss.com/angular.js/1.4.8/angular-route.min.js"></script> -->
 
-  <!--css and js-->
   <link href="{{STATIC_URL}}styles/foundation.css" rel="stylesheet">
 
 
   {% block title %}<title>明信片收藏家 Exchange Postcard</title>{% endblock %}
 
-  {% block headinfo %} {% endblock %}
+  {% block headinfo %}{% endblock %}
+
 </head>
 <body>
 <div id="profile-id-holder" style="display: none">{{profile.id}}</div>
@@ -35,7 +34,7 @@
         {% if profile%}
           <div >{{profile.profileuser.email}}</div>
         {%endif%}
-        <div id="setting">设置</div>
+        <div id="setting"><a href="/setting">设置</a></div>
         <div id="logout">退出</div>
       </div>
       <div class="clear"></div>
@@ -53,7 +52,7 @@
           </ul>
         </li>
         <!--<li><a href="/moments" id="moments">烧友圈</a></li>-->
-        <!--<li><a href="" id="stats">统计数据</a></li>-->
+        <!--<li><a href="/statistics" id="stats">统计数据</a></li>-->
 
         <li><a href="" id="about">关于</a></li>
       </ul>

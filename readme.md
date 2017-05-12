@@ -11,18 +11,23 @@ config.yaml ： 配置部署在新浪云上面
 
 ### 本地运营
 运营环境python2.7
-依赖包:
+后端依赖包:
     - Django
-    - django-rest-framework
+    - Django-Rest-Framework
+    - MySQL-python
 
-
+### 前端框架
+ - jquery  v2.1.0   
+ - angular  v1.6.0   
+ - angular-ui-router  v0.3.2   
+ - bootstrap  v3.3.7
 
 ### 账号系统
 1. 本地注册
 2. 微博注册
-3. 微信注册
 
-### 明信片寄送系统  
-管理明信片的寄送地址派发，明信片送达注册，统计等等。
+
+
+
 
 

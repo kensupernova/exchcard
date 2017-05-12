@@ -61,6 +61,12 @@ header .spanner .profile-setting {
   min-height: 3em;
 }
 
+header .spanner .profile-setting div#setting a:hover {
+  text-decoration: none;
+  color: white;
+}
+
+
 .logo-container {
 
 }
@@ -97,10 +103,11 @@ header .spanner .profile-setting {
 }
 
 .nav ul li a {
-  background: transparent;
+  /*background: transparent;*/
+  background: lightcoral;
   text-decoration: none;
   color: #323232;
-  font-size: 18px;
+  font-size: 2em;
   padding: 8px 8px 8px 8px;
   outline: none;
   display: block;
@@ -110,7 +117,7 @@ header .spanner .profile-setting {
 .nav ul li a:hover {
   background-color: red;
   color: white;
-
+  box-shadow: red 2px 2px 2px;
 }
 
 .nav ul li a:active, .nav ul li a.active {
@@ -119,6 +126,7 @@ header .spanner .profile-setting {
   box-shadow: red 2px 2px 2px;
 }
 
+/*有下拉菜单的列表项*/
 .nav ul li.dropdown {
   position: relative;
 }
@@ -126,9 +134,7 @@ header .spanner .profile-setting {
   background: red;
 }
 
-.nav ul li.dropdown a:hover .arr, .nav ul li a.active .arr{
-  background: red;
-}
+/*下拉菜单符号*/
 .nav ul li.dropdown a .arr {
   margin-left: 5px;
   font-family: "Lucida Grande",Helvetica,Arial,sans-serif;
@@ -138,9 +144,14 @@ header .spanner .profile-setting {
   line-height: 12px;
   position: relative;
   right:0;
-
+  background: lightcoral;
 }
 
+.nav ul li.dropdown a.active .arr, .nav ul li.dropdown a:active .arr, .nav ul li.dropdown a:hover .arr {
+  background: red;
+}
+
+/*下拉菜单隐藏*/
 .nav ul li.dropdown ul.collapsed{
   display: none;
   min-width: 200px;
@@ -153,6 +164,7 @@ header .spanner .profile-setting {
 
 }
 
+/*下拉菜单显现*/
 .nav ul li.dropdown:hover ul.collapsed {
   display: block;
 }
@@ -161,6 +173,10 @@ header .spanner .profile-setting {
   float:none;
   width:100%;
   margin:0;
+}
+
+.nav ul li.dropdown ul.collapsed li a{
+  font-size: 1.5em;
 }
 
 .nav ul li form {

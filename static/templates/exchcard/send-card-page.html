@@ -1,31 +1,69 @@
 {% extends "foundation.html" %}
 
 {% block headinfo %}
+<style>
+  .sent-card-container{
+    font-size: 1em;
+    font-style: normal;
+    font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+  }
+
+  .main-title {
+    padding-left: 50px;
+    font-size: 1.5em;
+  }
+
+  div.sent-card-container{
+    padding:10px;
+    margin:5px;
+  }
+
+  div label.warning-title{
+    font-size: 1.5em;
+  }
+
+  ul {
+    list-style: none;
+
+  }
+
+  ul li {
+    font-size: 1em;
+  }
+
+  label.send-postcard-wenzi{
+    font-size: 1em;
+  }
+
+  #sendButton{
+    margin-top: 1em;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
-<div>寄送一张明信片</div>
-<div ng-app="myApp", ng-controller="myCtrl">
-  <div class="promise-container">
-      <div>
-          <div><lable>注意事项</lable></div>
-          <ul>
-              <li>你会得到一个地址, 请确定地址正确书写。</li>
-              <li>你会得到一个Postcard Id, <b>请Id号码写在明信片上面</b>, 接受者需要注册, 才算成功寄送明信片。</li>
-
-          </ul>
-      </div>
-
-    <div id="sendForm">
-      {% csrf_token %}
-      <input type="checkbox" name="send_postcard" value="" id="send_postcard">
-      <label for="send_postcard">
-        I've read the notes above and want to receive an address to where I'll send a postcard.
-      </label><br>
-      <button id="sendButton" name="sendButton" class="button" ng-click="confirmSendCard()">Request address
-      </button>
+<div><label class="main-title">寄送明信片</label></div>
+<div ng-app="myApp", ng-controller="myCtrl" class="sent-card-container">
+  <div>
+    <div><label class="warning-title">注意事项</label></div>
+    <div>
+      <ul>
+        <li>你会得到一个地址, 请确定地址正确书写。</li>
+        <li>你会得到一个Postcard Id, <b>请Id号码写在明信片上面</b>, 接受者需要注册, 才算成功寄送明信片。</li>
+      </ul>
     </div>
+  </div>
 
+  <div id="sendForm">
+    {% csrf_token %}
+    <div>
+      <input type="checkbox" name="send_postcard" value="" id="send-postcard">
+      <label for="send-postcard" class="send-postcard-wenzi">
+        我已经阅读了上面的文字, 我确定我会向地址发送一张明信片, 并且我确定我会把POST ID写到明信片上面。
+      </label><br>
+    </div>
+    <button id="sendButton" name="sendButton" class="button" ng-click="confirmSendCard()">得到地址
+    </button>
   </div>
 
 </div>

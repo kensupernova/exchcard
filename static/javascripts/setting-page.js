@@ -67,3 +67,9 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
 //   });
 //
 // });
+
+// 注册
+app.controller("accountController", function($scope, $http){
+
+
+});

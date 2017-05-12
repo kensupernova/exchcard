@@ -1,19 +1,63 @@
 {% extends "foundation.html" %}
 
 {% block headinfo %}
+<style>
+  label{
+    margin-right: 5px;
+    padding: 2px;
+  }
+
+  .receive-card-title {
+    padding-left: 50px;
+    font-size: 1.5em;
+  }
+
+  input {
+    margin: 2px;
+  }
+
+  .card-info-item{
+    margin-bottom: 1em;
+    padding: 5px;
+  }
+
+  .card-id-container {
+    margin-top: 20px;
+  }
+
+  .btn-submit{
+    margin-top:1.5em;
+  }
+
+  .btn-submit button {
+    min-width: 6em;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="content-container">
 
-  <div id="register-card-container">
+  <div id="receive-card-container" class="receive-card-container">
     {% csrf_token %}
-    <div><label>Postcard Id<input type="text" name="card_name" id="card_name" placeholder="postcard id"></label></div>
-    <div><label>Postcard Photo<input type="file" name="card_photo" id="card_photo" placeholder="postcard photo"></label></div>
-    <div><button id="submit">Submit</button></div>
+    <div>
+      <label class="receive-card-title">注册明信片</label>
+    </div>
+    <div class="card-id-container card-info-item">
+      <label>Postcard Id</label>
+      <input type="text" name="card_name" id="card_name" placeholder="postcard id">
+    </div>
+    <div class="card-photo-container card-info-item">
+      <label>Postcard Photo</label>
+      <input type="file" name="card_photo" id="card_photo" placeholder="postcard photo">
+    </div>
+    <div class="btn-submit">
+      <button id="submit">Submit</button>
+    </div>
+
     {% if errors %}
     <p style="color: red;">
-      Please correct the error{{ errors|pluralize }} below.
+      Please correct the error {{ errors|pluralize }} below.
     </p>
     {% endif %}
   </div>
