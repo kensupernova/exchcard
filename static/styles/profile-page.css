@@ -49,6 +49,7 @@
   display: inline-block;
   width: 100%;
   font-size: 1.1em;
+  color: black;
 }
 
 .upper .left .info-summary div a:hover{
@@ -117,18 +118,20 @@
 
 }
 
-.news-box {
+/*明信片实时动态的格式*/
+.feeds-box {
   min-height: 20em;
 }
 
-.news-box div {
+.feeds-box div {
   text-align: center;
 }
 
-.news-box div h3{
+.feeds-box div h3{
   border:red 0.5px solid;
+  text-align: center;
 }
 
-.news-box div p{
+.feeds-box div p{
   border:red 0.5px solid;
 }

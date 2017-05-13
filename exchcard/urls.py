@@ -15,6 +15,8 @@ urlpatterns = [
     url(r'^account/register/$', 'exchcard.views.user_register'),
     url(r'^account/resetpassword/$', 'exchcard.views.profile'),
     url(r'^account/findpassword/$', 'exchcard.views.profile'),
+
+    #设置
     url(r'^setting/$', 'exchcard.views.setting'),
 
     # view the current logged user's profile
@@ -31,7 +33,8 @@ urlpatterns = [
     url(r'^card/(?P<cardname>.+)/$', 'exchcard.views.view_single_card'),
 
     # view current logged user's cards list
-    url(r'^profile/(?P<id>.+)/cards/$', 'exchcard.views.view_cards_list'),
+    # url(r'^profile/(?P<id>.+)/cards/$', 'exchcard.views.view_cards_list'),
+    url(r'^profile/cards/$', 'exchcard.views.view_cards_list'),
 
     # view other's public profile page
     url(r'^u/(?P<username>.+)/cards/$', 'exchcard.views.view_others_public_profile'),

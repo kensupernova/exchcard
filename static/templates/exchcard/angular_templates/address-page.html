@@ -1,2 +1,18 @@
 <meta charset="UTF-8">
-<div>这是地址页面</div>
+<div class="address-content-container" ng-controller="addressController">
+
+  <div class="address-info-title"><h3>地址信息</h3></div>
+
+  <div class="address-info-content">
+    <div class="address-info-name address-info-item">
+      <span>姓名</span>
+      <label>{[{name}]}</label></div>
+    <div class="address-info-address address-info-item">
+      <span>地址</span>
+      <label>{[{address}]}</label></div>
+    <div class="address-info-postocode address-info-item">
+      <span>邮编</span>
+      <label>{[{postcode}]}</label></div>
+  </div>
+
+</div>

@@ -24,13 +24,12 @@
 <div id="profile-id-holder" style="display: none">{{profile.id}}</div>
 <div class="container">
 
-  <header class="header">
+  <header class="header" id="header">
 
     {% csrf_token %}
     <div class="row spanner">
-      <div class="logo-container"><div><a href="/profile">明信片收藏家</a></div></div>
+      <div class="logo-container"><a href="/profile">明信片收藏家</a></div>
       <div class="profile-setting">
-        <img src=""/>
         {% if profile%}
           <div >{{profile.profileuser.email}}</div>
         {%endif%}
@@ -46,7 +45,7 @@
         <li class="dropdown">
           <a href="/profile/" id="cards">明信片 <span class="arr" >▼</span></a>
           <ul class="collapsed">
-            <li class=""><a href="/profile/{{profile.id}}/cards/#!/sentArrived">明信片统计</a></li>
+            <li class=""><a href="/profile/cards/">明信片统计</a></li>
             <li class=""><a href="/card/send">寄送明信片</a></li>
             <li class=""><a href="/card/receive">注册明信片</a></li>
           </ul>
@@ -66,7 +65,7 @@
   {% block content %} {% endblock %}
 
   <footer class="footer">
-    <p class ="copyright">&copy GUANGHUIZ 2017.</p>
+    <p class ="copyright">&copy GUANGHUI ZHANG 2017</p>
   </footer>
 </div>
 

@@ -4,6 +4,10 @@
   background-color:#ffffff;
 }
 
+a {
+  color: black;
+}
+
 div {
   font: inherit;
   font-size: 100%;
@@ -52,6 +56,18 @@ header .spanner .logo-container {
   display: inline-block;
 }
 
+header .spanner .logo-container {
+
+}
+
+header .spanner .logo-container a {
+  width: 100%;
+  display: inline-block;
+  font-size: 4em;
+  color: black;
+}
+
+
 
 header .spanner .profile-setting {
   display: inline-block;
@@ -59,6 +75,11 @@ header .spanner .profile-setting {
   margin-right: 3em;
   line-height: 3em;
   min-height: 3em;
+  margin-top: 1em;
+}
+
+header .spanner .profile-setting div#setting a{
+  color: black;
 }
 
 header .spanner .profile-setting div#setting a:hover {
@@ -67,15 +88,6 @@ header .spanner .profile-setting div#setting a:hover {
 }
 
 
-.logo-container {
-
-}
-
-.logo-container div a {
-  width: 100%;
-  display: inline-block;
-  font-size: 4em;
-}
 .profile-setting div {
   display: inline-block;
 }
@@ -183,6 +195,9 @@ header .spanner .profile-setting div#setting a:hover {
   background: transparent;
   display: inline-block;
 }
+
+
+
 
 
 footer p {

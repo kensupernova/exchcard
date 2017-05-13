@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import get_user_model # If used custom user mode
 from django.contrib.auth.models import User
 
-from exchcard_backend_api.serializers import UserSerializer, RegisterUserSerializer2
+from exchcard_backend_api.serializers import UserSerializer, UserSerializer2, RegisterUserSerializer2
 from exchcard_backend_api.util.utils import generateToken
 
 from rest_framework import generics
@@ -73,6 +73,24 @@ def register_new_user(request):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+@api_view(["GET", ])
+@permission_classes([permissions.IsAuthenticated, ])
+def get_info_of_logged_user(request):
+    """
+    得到目前登录用户的账户信息
+    :param request:
+    :return:
+    """
+    if request.method == "GET":
+        try:
+            print "getting info of user ... "
+            user = request.user
+            return Response(UserSerializer2(user).data, status=status.HTTP_200_OK)
+        except:
+            return Response({"details":"Internal server error"},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 

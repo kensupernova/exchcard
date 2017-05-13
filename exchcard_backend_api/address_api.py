@@ -114,6 +114,26 @@ def update_address_with_profile_id(request, pk, format=None):
         return Response(AddressSerializer(address).data, status=status.HTTP_200_OK)
 
     else:
-        return Response({"details: method is not allowed"},
+        return Response({"details": "method is not allowed"},
                         status= status.HTTP_403_FORBIDDEN)
 
+
+@api_view(["GET"])
+@permission_classes([permissions.IsAuthenticated, ])
+def get_address_of_logged_user(request, format=None):
+    """
+    得到目前登录用户的地址
+    :param request:
+    :param format:
+    :return:
+    """
+    if request.method == "GET":
+        try:
+            profile = Profile.objects.get(profileuser = request.user)
+
+            address = profile.profileaddress
+
+            return Response(AddressSerializer(address).data, status=status.HTTP_200_OK)
+        except:
+            return Response({"details":"Internal server error"},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)

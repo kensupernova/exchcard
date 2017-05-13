@@ -37,19 +37,19 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
     .state(accountState)
     .state(addressState);
 
-  // // Second method to create state
-  // $stateProvider.state('avatar', {
-  //   url:'/avatar',
-  //   name:'avatar',
-  //   templateUrl:
-  //     '/static/templates/exchcard/angular_templates/avatar-page.html'
-  //
-  // });
+  // Second method to register state
+  $stateProvider.state('avatar', {
+    url:'/avatar',
+    name:'avatar',
+    templateUrl:
+      '/static/templates/exchcard/angular_templates/avatar-page.html'
+
+  });
 
 
 }]);
 
-
+// app运行时
 // app.run(function($rootScope, $http) {
 //   var csrftoken = Cookies.get('csrftoken');
 //
@@ -68,8 +68,67 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
 //
 // });
 
-// 注册
+// 注册accountController
 app.controller("accountController", function($scope, $http){
+
+  var csrftoken = Cookies.get('csrftoken');
+
+  var urlPath = '/exchcard/api/users/get/info/';
+
+  $http({
+    method:"GET",
+    headers:{
+      'X-CSRFToken': csrftoken
+    },
+    url: urlPath
+
+  }).then(function mySucces(response) {
+    console.log(JSON.stringify(response.data));
+
+    if (response.data != null){
+      $scope.username = response.data.username;
+      $scope.email = response.data.email;
+    }
+
+
+
+  }, function myError(response) {
+    console.log(JSON.stringify(response));
+
+  });
+
+});
+
+
+// 注册addressController
+app.controller("addressController", function($scope, $http){
+  // js.cookie可以产生csrftoken
+  var csrftoken = Cookies.get('csrftoken');
+
+  var urlPath = '/exchcard/api/address/get/info';
+
+  $http({
+    method:"GET",
+    headers:{
+      'X-CSRFToken': csrftoken
+    },
+    url: urlPath
+
+  }).then(function mySucces(response) {
+    console.log(JSON.stringify(response.data));
+
+    if (response.data != null){
+      $scope.name = response.data['name'];
+      $scope.address = response.data['address'];
+      $scope.postcode = response.data['postcode'];
+    }
+
+
+
+  }, function myError(response) {
+    console.log(JSON.stringify(response));
+
+  });
 
 
 });

@@ -17,7 +17,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields =('url', 'username', "email")
 
 
-class GetUserSerializer(serializers.ModelSerializer):
+class UserSerializer2(serializers.ModelSerializer):
     class Meta:
         model = User
         fields=("username", "email") ### password can not be read
@@ -141,13 +141,13 @@ class CreateCardSerializer(serializers.ModelSerializer):
         return card
 
 
-
+"""
+地址序列化类
+"""
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields = ("name", "address", "postcode")
-
-
 
 
 

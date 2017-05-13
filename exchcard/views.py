@@ -132,7 +132,7 @@ def view_single_card(request, cardname):
 查看明信片列表
 """
 @login_required
-def view_cards_list(request, id):
+def view_cards_list(request):
     profile_from_request = Profile.objects.get(profileuser
                                             =request.user)
 

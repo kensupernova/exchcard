@@ -8,6 +8,10 @@ table tr th{
   padding-right: 10px;
 }
 
+.cards-info-container{
+  margin-top:1.5em;
+}
+
 .tab-btn-container {
 
 }
@@ -16,6 +20,7 @@ a.tab-btn {
   display: inline-block;
   width:10%;
   text-decoration: none;
+  color: black;
 }
 
 a.tab-btn:hover {
