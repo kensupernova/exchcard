@@ -132,3 +132,67 @@ app.controller("addressController", function($scope, $http){
 
 
 });
+
+
+
+app.controller("avatarController", function($scope, $http) {
+  // console.log("avatar ... ");
+
+  // js.cookie可以产生csrftoken
+  var csrftoken = Cookies.get('csrftoken');
+  // 有关头像图片的URL
+  var urlAvatarUrl = "/exchcard/api/profiles/avatar/url/";
+  var urlUploadAvatar = "/exchcard/api/profiles/avatar/upload/";
+
+  $http({
+    method:"GET",
+    headers:{
+      'X-CSRFToken': csrftoken
+    },
+    url: urlAvatarUrl
+  }).then(function mySucces(response) {
+    console.log(JSON.stringify(response.data['avatar']));
+
+    if (response.data.avatar != null){
+      var avatarUrl = response.data['avatar'];
+    }
+
+  }, function myError(response) {
+    // console.log(JSON.stringify(response));
+
+  });
+
+
+  $scope.upload_avatar = function(){
+
+    console.log("upload avatar ... ");
+
+    // 检测是否有文件
+    var avatarInput = $("#avatar");
+    if(avatarInput.val() === ''){
+      console.log("avatar photo is empty!");
+      $("span.errorMessage").text("头像图片不能为空!")
+      return;
+    }
+
+    var formData = new FormData($( "#uploadAvatarForm" )[0]);
+    $.ajax({
+      url: urlUploadAvatar,
+      type: 'POST',
+      data: formData,
+      async: false,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function (returndata) {
+        console.log(returndata);
+      },
+      error: function (returndata) {
+        // console.log(returndata);
+      }
+    });
+
+  }
+
+
+});

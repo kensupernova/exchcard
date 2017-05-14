@@ -1,9 +1,22 @@
 <meta charset="UTF-8">
-<div class="avatar-content-container">
+<div class="avatar-content-container" ng-controller="avatarController">
   <div class="avatar-title">
-    <h3>头像</h3>
+    <h3>设置头像</h3>
   </div>
   <div>
-    <img src="/static/images/profile-icon.jpg"/>
+    <fieldset>旧头像</fieldset>
+    <div>
+      <img src="/static/images/profile-icon.jpg"/>
+    </div>
+  </div>
+  <div class="avatar-add-new-container">
+    <form enctype="multipart/form-data" id ="uploadAvatarForm">
+      <fieldset>新头像</fieldset>
+      <div>
+        <input type="file" name="avatar" id="avatar" placeholder="avatar photo">
+        <span class="errorMessage" style="color: red;"></span>
+      </div>
+      <input type="button" value="上传" ng-click="upload_avatar()" id="submit"/>
+    </form>
   </div>
 </div>

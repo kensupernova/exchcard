@@ -15,15 +15,57 @@ from exchcard.manage import AddressManager
 from exchcard.manage import DetailedAddressManager
 
 
+#-------------------------------------------------------------------------
 """
-customized user model
+Model Manager管理模型的CRUD, 可以实现某些特殊的功能。
 """
-class CustomUser(User):
-    """
-    修改的参数为
-    """
+class ProfileManager(Manager):
+    def create_profile_with_ids(self, userid, addressid):
+        user = User.objects.get(pk=userid)
+        address = Address.objects.get(pk=addressid)
+
+        profile = self.create(profileuser=user, profileaddress=address)
+        return profile
+
+    def update_profile_address_with_ids(self, userid, addressid):
+        profile = Profile.objects.get(profileuser_id=userid)
+        profile.profileaddress_id = addressid
+
+        return profile
+
+
+class CardManager(Manager):
+    def create_with_profile_ids(self, card_name, torecipient_id, fromsender_id):
+        if Profile.objects.filter(id=torecipient_id).exists() and \
+                Profile.objects.filter(id=fromsender_id).exists():
+            card = self.create(card_name=card_name,
+                               torecipient_id=torecipient_id,
+                               fromsender_id=fromsender_id,
+                               has_arrived=False)
+
+            return card
+
+        return None
+
+
+class DianZanManager(Manager):
+    def create_with_ids(self, card_by_dianzan_id, person_who_dianzan_id):
+        if Card.objects.filter(id=card_by_dianzan_id).exists():
+            dianzan = self.create(card_by_dianzan=Card.objects.get(id=card_by_dianzan_id),
+                                  person_who_dianzan=Profile.objects.get(id=person_who_dianzan_id));
+
+            return dianzan
+
+        return None
+
+
+#-----------------------------------------------------------------------
+"""
+数据模型model
+"""
 
 class Address(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length = 255, default="name")
     address = models.CharField(max_length = 255, default="address")
     postcode = models.CharField(max_length = 100,  default="111111")
@@ -33,7 +75,7 @@ class Address(models.Model):
 
     # the full mailling address
     def __str__(self):
-        return u'%s, %s, %s, %s' % (self.id, self.name, self.address, self.postcode)
+        return u'%s, address: %s, %s, %s' % (self.id, self.name, self.address, self.postcode)
 
     def update(self, name, address, postcode, *args, **kwargs):
         self.name = name
@@ -57,22 +99,6 @@ class DetailedAddress(models.Model):
             self.address_third_line, self.city, self.country)
 
     objects = DetailedAddressManager()
-
-
-class ProfileManager(Manager):
-    def create_profile_with_ids(self, userid, addressid):
-        user = User.objects.get(pk=userid)
-        address = Address.objects.get(pk=addressid)
-
-        profile = self.create(profileuser=user, profileaddress=address)
-        return profile
-
-    def update_profile_address_with_ids(self, userid, addressid):
-        profile = Profile.objects.get(profileuser_id=userid)
-        profile.profileaddress_id = addressid
-
-        return profile
-
 
 
 class Profile(models.Model):
@@ -101,7 +127,19 @@ class Profile(models.Model):
         ordering = ['-created']
 
     def __unicode__(self):
-        return u'%s, %s, %s, %s' % (self.id, self.profileuser.id, self.profileuser.username, self.profileuser.email)
+        return u'%s, user: %s, %s; ' \
+               u'address: %s, %s, %s, %s' % (self.id,
+                   self.profileuser.id, self.profileuser.email,
+                   self.profileaddress.id, self.profileaddress.name,
+                   self.profileaddress.address,self.profileaddress.postcode)
+
+    def __str__(self):
+        return u'%s, user: %s, %s; ' \
+               u'address: %s, %s, %s, %s' % (self.id,
+                   self.profileuser.id, self.profileuser.email,
+                   self.profileaddress.id, self.profileaddress.name,
+                   self.profileaddress.address,
+                   self.profileaddress.postcode)
 
     def save(self, *args, **kwargs):
         """
@@ -113,23 +151,9 @@ class Profile(models.Model):
 
 
 
-class CardManager(Manager):
-    def create_with_profile_ids(self, card_name, torecipient_id, fromsender_id):
-        if Profile.objects.filter(id = torecipient_id).exists() and \
-                Profile.objects.filter(id = fromsender_id).exists():
-
-            card = self.create(card_name = card_name,
-                torecipient_id = torecipient_id,
-                fromsender_id = fromsender_id,
-                has_arrived= False)
-
-            return card
-
-        return None
-
-
 class Card(models.Model):
     created = models.DateTimeField(auto_now_add=True)
+
     card_name = models.CharField(max_length=50, default=None)
 
     #exchcard_backend_api of recipient
@@ -151,7 +175,25 @@ class Card(models.Model):
         ordering = ('created',)
 
     def __unicode__(self):
-        return u'%s, %s ->%s, %s, %s, %s, %s' % (
+        """
+        决定了后台管理呈现的数据
+        :return:
+        """
+        return u'sender: %s, %s -> recipient: %s, %s, address: %s, %s, %s' % (
+            self.fromsender.id,
+            self.fromsender.profileuser.email,
+            self.torecipient.id,
+            self.torecipient.profileuser.email,
+            self.torecipient.profileaddress.name,
+            self.torecipient.profileaddress.address,
+            self.torecipient.profileaddress.postcode)
+
+    def __str__(self):
+        """
+        决定了后台管理呈现的数据
+        :return:
+        """
+        return u'sender: %s, %s -> recipient: %s, %s, address: %s, %s, %s' % (
             self.fromsender.id,
             self.fromsender.profileuser.email,
             self.torecipient.id,
@@ -215,14 +257,9 @@ class Card(models.Model):
 
 ## exchcard_backend_api avatar photo
 class AvatarPhoto(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey("Profile", related_name="avatars") ## related name is for Profile to use
     avatar = models.ImageField(upload_to="avatar_photos")
-
-    # def save(self):
-    #     for field in self._meta.fields:
-    #         if field.name == 'image':
-    #             field.upload_to = 'photos/%d' % self.id
-    #     super(AvatarPhoto, self).save()
 
     def get_abs_path(self):
         return os.path.join(settings.MEDIA_ROOT, self.avatar.name)
@@ -230,6 +267,7 @@ class AvatarPhoto(models.Model):
 
 
 class CardPhoto(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey("Profile", related_name="cardphotos_of_profile") ## related name is for Profile to use
     card_host = models.ForeignKey('Card', related_name='photos_of_card', default=1)
 
@@ -237,20 +275,6 @@ class CardPhoto(models.Model):
 
     def get_abs_path(self):
         return os.path.join(settings.MEDIA_ROOT, self.card_photo.name)
-
-
-
-class DianZanManager(Manager):
-    def create_with_ids(self, card_by_dianzan_id, person_who_dianzan_id):
-        if Card.objects.filter(id=card_by_dianzan_id).exists():
-
-            dianzan = self.create(card_by_dianzan = Card.objects.get(id=card_by_dianzan_id),
-                                  person_who_dianzan = Profile.objects.get(id=person_who_dianzan_id));
-
-            return dianzan
-
-        return None
-
 
 
 class DianZan(models.Model):

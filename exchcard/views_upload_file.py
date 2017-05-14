@@ -20,7 +20,7 @@ def uploadFile(request):
 
             # ## method 2: handle by model with filefiled or imagefield
             # ## file is saved to MEDIA_ROOT/upload_to or storage root/upload_to
-            exchcard= Profile.objects.get(profileuser = request.user)
+            exchcard = Profile.objects.get(profileuser = request.user)
             instance = AvatarPhoto(owner = exchcard, avatar=f)
             instance.save()
 

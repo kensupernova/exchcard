@@ -261,20 +261,24 @@ class GetUserAddressProfileSerializer(serializers.ModelSerializer):
 
 ###################################################################################
 class AvatarPhotoSerializer(serializers.HyperlinkedModelSerializer):
-    owner = serializers.CharField(source='owner.profileuser.username')
+    # owner_username = serializers.CharField(source='owner.profileuser.username')
+    owner_email = serializers.CharField(source='owner.profileuser.email')
     owner_id = serializers.IntegerField(source="owner.id")
+
     class Meta:
         model = AvatarPhoto
-        fields = ('id', 'owner', "owner_id")
+        fields = ('id','avatar', "owner_id", "owner_email")
 
 class ProfileWithAvatarPhotoSerializer(serializers.HyperlinkedModelSerializer):
     profileuser_username = serializers.CharField(source="profileuser.username")
+    profileuser_email = serializers.CharField(source="profileuser.email")
+
     avatars = serializers.HyperlinkedIdentityField(many=True,
-        view_name="avatarphoto-detail", read_only=True)
+        view_name="avatarphoto-detail", read_only=True) #用户所有的头像图片
 
     class Meta:
         model = Profile
-        fields=("id", "profileuser_username", "avatars")
+        fields=("id", "profileuser_username", "profileuser_email", "avatars")
 
 class CreateAvatarPhotoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

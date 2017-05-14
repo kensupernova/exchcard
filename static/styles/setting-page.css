@@ -71,12 +71,35 @@ label.account-info-item-title {
 }
 
 /*头像信息页面*/
+.avatar-content-container{
+  padding: 5px;
+}
+
+.avatar-add-new-container{
+  padding: 5px;
+  margin-top: 50px;
+}
+
 .avatar-content-container .avatar-title{
   min-height: 5em;
   text-align: center;
+
 }
-.avatar-content-container div img {
+
+.avatar-content-container div div img {
   width: 100px;
   height: 100px;
   border: solid rosybrown 1px;
+}
+
+.avatar-add-new-container form #submit{
+  margin-top: 1.5em;
+  width: 5em;
+  height: 3em;
+}
+
+.avatar-add-new-container form input#avatar{
+  display: inline-block;
+  height: 2em;
+  margin: 5px;
 }

@@ -2,7 +2,7 @@
 from django.conf.urls import include, url
 # from django.views.generic.simple import direct_to_template
 from django.views.generic.base import TemplateView
-
+from exchcard import settings
 
 # To enable the admin:
 from django.contrib import admin
@@ -53,8 +53,15 @@ urlpatterns = [
     # oneverse的url
     url(r'^oneverse/', include('oneverse.urls')),
 
-    # 静态HTML文件
+    # 服务静态HTML文件
     url(r'^html/$', TemplateView.as_view(template_name='index.html')),
+
+    # 服务MEDIA_ROOT里面的文件
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.MEDIA_ROOT, }),
+    # Method 2 :
+    # urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
     # 其他
     url(r'^search/$', 'exchcard.views_search.search'),

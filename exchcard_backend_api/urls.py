@@ -67,11 +67,13 @@ urlpatterns = format_suffix_patterns([
         name="profile-getrandom-for-card"),
 
     ## 头像图片
-    url(r'^profiles/(?P<pk>[0-9]+)/avatar/$',
+    url(r'^profiles/avatar/url/$',
+        "exchcard_backend_api.upload_api.get_avatar_url"),
+    url(r'^profiles/avatar/upload/$',
         "exchcard_backend_api.upload_api.upload_avatar",
         name="profile-avatarphoto-upload"),
-    url(r'^profiles/(?P<pk>[0-9]+)/avatarf/$', upload_api.AvatarUploadView.as_view(),
-        name="profile-avatarphoto-uploadf"),
+    url(r'^profiles/(?P<pk>[0-9]+)/avatar/upload2/$', upload_api.AvatarUploadView.as_view(),
+        name="profile-avatarphoto-upload2"),
 
     url(r"^profiles/photos/$",
         upload_api.AvatarPhotoList.as_view(),

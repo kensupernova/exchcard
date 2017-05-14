@@ -31,11 +31,51 @@ def s3_storage(request, format=None):
         return Response({'content':data},
                         status=status.HTTP_200_OK)
 
+@api_view(["GET"])
+@permission_classes([permissions.IsAuthenticated, ])
+def get_avatar_url(request, format=None):
+    """
+    下载
+    :param request:
+    :param pk:
+    :param format:
+    :return:
+    """
+    if request.method == "GET":
+        try:
+            profile = Profile.objects.get(profileuser=request.user)
+
+            photos = AvatarPhoto.objects.filter(owner=profile).order_by('-created')
+
+            print "头像图片总数为{0}".format(len(photos))
+
+            if len(photos)>1:
+
+                photo = photos[0]
+            else:
+                photo = photos
+
+            url = photo.avatar.url
+
+            serializer = AvatarPhotoSerializer(photo, context={'request': request})
+            data = serializer.data
+            data["url"] = url
+
+            return Response(data, status=status.HTTP_201_CREATED)
+
+
+        except Profile.DoesNotExist:
+            return Response({"details":"profile of logged user does not exist"},
+                            status=status.HTTP_404_NOT_FOUND)
+        except AvatarPhoto.DoesNotExist:
+            return Response({"details": "avatar photo of logger user does not exist"},
+                            status=status.HTTP_404_NOT_FOUND)
+
 
 @api_view(["POST"])
 @permission_classes([permissions.IsAuthenticated, ])
 @parser_classes([MultiPartParser, FormParser])
-def upload_avatar(request, pk, format=None):
+def upload_avatar_to_s3(request, pk, format=None):
     if request.method == "POST":
         try:
             profile_from_request = Profile.objects.get(profileuser=request.user)
@@ -65,23 +105,38 @@ def upload_avatar(request, pk, format=None):
                             "id2:":profile_from_request.id },
                             status=status.HTTP_403_FORBIDDEN)
 
-            ## method 2: using serializer
-            # serializer = CreateAvatarPhotoSerializer(data=request.data, context={'request': request})
-            # if serializer.is_valid():
-            #     serializer.save(owner=exchcard_backend_api)
-            #     photo = AvatarPhoto(owner=exchcard_backend_api, avatar=request.data["avatar"])
-            #     photo.save()
-            #
-            #     ## bucket.put_object("%s-avatar"%pk, request.data['avatar'])
-            #     aserializer = AvatarPhotoSerializer(photo, context={'request': request})
-
-            #     return Response(aserializer.data, status=status.HTTP_201_CREATED)
-            # else:
-            #     return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
-
         except Profile.DoesNotExist:
             return Response({"details":"exchcard_backend_api id %s does not exist" % pk},
                             status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(["POST"])
+@permission_classes([permissions.IsAuthenticated, ])
+@parser_classes([MultiPartParser, FormParser])
+def upload_avatar(request):
+    if request.method == "POST":
+        try:
+            profile = Profile.objects.get(profileuser=request.user)
+
+            photo = AvatarPhoto(owner=profile, avatar=request.FILES['avatar'])
+            photo.save()
+
+            name = photo.avatar.name
+            url = photo.avatar.url
+
+            serializer = AvatarPhotoSerializer(photo, context={'request': request})
+            data = serializer.data
+            data["name"] = name
+            data["url"] = url
+
+            return Response(data, status=status.HTTP_201_CREATED)
+
+
+        except Profile.DoesNotExist:
+            return Response({"details":"Internal server error!"},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 
 class AvatarUploadView(APIView):
     parser_classes = ([MultiPartParser, FormParser]) ## only key is file
