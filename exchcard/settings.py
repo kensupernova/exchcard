@@ -34,7 +34,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 # LANGUAGE_CODE = 'en-us'
@@ -221,6 +220,14 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'exchcard.wsgi.application'
+
+# # Memcache cache
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+#         'LOCATION': '127.0.0.1:11211',
+#     }
+# }
 
 # ------------------------------------------------
 ## 配置SAE新浪云, 存储上传的media文件

@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Manager
 
-import exchcard_backend_api.util.datetime_helper
+import exchcard_backend_api.utils.datetime_helper
 
 from exchcard import settings
 from exchcard.manage import AddressManager
@@ -49,10 +49,14 @@ class CardManager(Manager):
 
 
 class DianZanManager(Manager):
-    def create_with_ids(self, card_by_dianzan_id, person_who_dianzan_id):
+    def create_with_ids(self, card_by_dianzan_id,
+                        card_photo_by_dianzan_id, person_who_dianzan_id):
         if Card.objects.filter(id=card_by_dianzan_id).exists():
             dianzan = self.create(card_by_dianzan=Card.objects.get(id=card_by_dianzan_id),
+                                  card_photo_by_dianzan=CardPhoto.objects.get(id=card_photo_by_dianzan_id),
                                   person_who_dianzan=Profile.objects.get(id=person_who_dianzan_id));
+
+            dianzan.save()
 
             return dianzan
 
@@ -235,20 +239,20 @@ class Card(models.Model):
     def update_date_with_timestamp(self, *args, **kwargs):
         if (not self.arrived_time) and (self.arrived_time != 0) and (self.arrived_time is not None):
             ## print self.arrived_time
-            self.arrived_date = exchcard_backend_api.util.datetime_helper.mills2datetime(self.arrived_time)
+            self.arrived_date = exchcard_backend_api.utils.datetime_helper.mills2datetime(self.arrived_time)
 
         if (not self.sent_time) and (self.sent_time != 0) and (self.sent_time is not None):
             ## print self.sent_time
-            self.sent_date = exchcard_backend_api.util.datetime_helper.mills2datetime(self.sent_time)
+            self.sent_date = exchcard_backend_api.utils.datetime_helper.mills2datetime(self.sent_time)
 
         super(Card, self).save(*args, **kwargs)
 
     def get_sent_datetime(self):
-        # return exchcard_backend_api.util.datetime_helper.mills2datetime(self.sent_time)
+        # return exchcard_backend_api.utils.datetime_helper.mills2datetime(self.sent_time)
         return self.sent_date
 
     def get_arrived_datetime(self):
-        # return exchcard_backend_api.util.datetime_helper.mills2datetime(self.arrived_time)
+        # return exchcard_backend_api.utils.datetime_helper.mills2datetime(self.arrived_time)
         return self.arrived_date
 
     objects = CardManager()
@@ -282,6 +286,9 @@ class DianZan(models.Model):
 
     # the card who is dianzaned
     card_by_dianzan = models.ForeignKey('Card', related_name='dianzans_of_card', default=1)
+
+    # Photo which is dianzaned
+    card_photo_by_dianzan = models.ForeignKey('CardPhoto', related_name='dianzans_of_card_photo', default=1)
 
     # the person who dianzan
     person_who_dianzan = models.ForeignKey('Profile', related_name='dianzans_by_person', default=1)

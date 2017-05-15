@@ -85,6 +85,7 @@ class RegisterAddressView(generics.CreateAPIView):
     ]
 
 
+# -----------------------------------------------------------------------
 @api_view(["PUT",])
 @permission_classes([permissions.IsAuthenticated, ])
 def update_address_with_profile_id(request, pk, format=None):

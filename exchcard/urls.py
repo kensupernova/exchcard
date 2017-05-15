@@ -66,6 +66,8 @@ urlpatterns = [
     # 其他
     url(r'^search/$', 'exchcard.views_search.search'),
 
+    url(r'^upload/file/$', 'exchcard.views_upload_file.uploadFile')
+
 
 
 ]

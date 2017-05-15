@@ -140,21 +140,29 @@ urlpatterns = format_suffix_patterns([
     url(r"^cards/(?P<pk>[0-9]+)/hasarrived/$",
         "exchcard_backend_api.card_api.card_check_isarrived",
         name="card-check-arrive"),
-    url(r"^cards/(?P<pk>[0-9]+)/cardphotos/(?P<photoid>[0-9]+)/dianzan/$",
+
+    # 某张明信片的某张照片得到的某个点赞
+    url(r"^cards/(?P<cardid>[0-9]+)/cardphotos/(?P<photoid>[0-9]+)/dianzan/$",
         "exchcard_backend_api.card_api.card_dianzan",
-        name="card-dianzan"),
-    url(r"^cards/(?P<pk>[0-9]+)/cardphotos/(?P<photoid>[0-9]+)/dianzans/$",
+        name="card-photo-dianzan-crud"),
+    # 某张明信片的某张照片得到的所有的点赞
+    url(r"^cards/(?P<cardid>[0-9]+)/cardphotos/(?P<photoid>[0-9]+)/dianzans/$",
         "exchcard_backend_api.card_api.card_dianzans",
-        name="card-dianzans"),
-    url(r"^cards/(?P<pk>[0-9]+)/dianzans2/$", card_api.DianzanListView.as_view(),
-        name="card-dianzans-2"),
-    url(r"^cards/(?P<pk>[0-9]+)/cardphoto/$", 'exchcard_backend_api.upload_api.upload_card_photo',
-        name="card-cardphoto"),
+        name="card-photo-dianzans-all"),
+    # 某张明信片的所有照片得到的所有的点赞
+    url(r"^cards/(?P<cardid>[0-9]+)/dianzans/$", card_api.DianzanListView.as_view(),
+        name="card-dianzans-all"),
+
+
+    url(r"^cards/(?P<pk>[0-9]+)/cardphoto/upload/$", 'exchcard_backend_api.upload_api.upload_card_photo',
+        name="card-cardphoto-upload"),
     ## 明信片实时信息
-    url(r"cards/feed/", "exchcard_backend_api.card_api.cards_feed", name="cards-feed"),
+    url(r"cards/feeds/", "exchcard_backend_api.card_api.cards_feeds", name="cards-feed"),
 
     ## 其他
-    url(r"^storage/s3/$", "exchcard_backend_api.upload_api.s3_storage"),
+    url(r"^storage/sae/s3/$", "exchcard_backend_api.upload_api.sae_s3_storage"),
+
+
 
 
     ])

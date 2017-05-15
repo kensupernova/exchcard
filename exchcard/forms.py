@@ -12,14 +12,14 @@ class UploadFileForm(forms.Form):
     def clean_message(self):
         message = self.cleaned_data['title']
         num_words = len(message.split())
-        if num_words < 0:
-            raise forms.ValidationError("Error!")
+        if num_words <= 0:
+            raise forms.ValidationError("title is empty!")
         return message
 
 
 class RegisterCardForm(forms.Form):
     """
-    upload file form
+    upload card photo form
     """
     card_name = forms.CharField(max_length=50)
     card_photo = forms.FileField()
@@ -28,5 +28,5 @@ class RegisterCardForm(forms.Form):
         message = self.cleaned_data['card_name']
         num_words = len(message.split())
         if num_words < 0:
-            raise forms.ValidationError("Error!")
+            raise forms.ValidationError("card name is empty")
         return message

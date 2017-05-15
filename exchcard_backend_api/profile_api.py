@@ -22,9 +22,9 @@ from exchcard_backend_api.serializers import GetProfileWithCardSerializer
 from exchcard_backend_api.serializers import GetUserAddressProfileSerializer
 from exchcard_backend_api.serializers import UserAddressProfileSerializer
 from exchcard_backend_api.serializers import UserSerializer, CardSerializer
-from exchcard_backend_api.util.utils import generateToken
+from exchcard_backend_api.utils.utils import generateToken
 
-from exchcard_backend_api.util.utils import count_arrive_travel
+from exchcard_backend_api.utils.utils import count_arrive_travel
 
 
 class GetProfileListView(generics.ListAPIView):

@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model # If used custom user mode
 from django.contrib.auth.models import User
 
 from exchcard_backend_api.serializers import UserSerializer, UserSerializer2, RegisterUserSerializer2
-from exchcard_backend_api.util.utils import generateToken
+from exchcard_backend_api.utils.utils import generateToken
 
 from rest_framework import generics
 from rest_framework import permissions

@@ -1,6 +1,8 @@
 #coding: utf-8
 
 import random
+import datetime
+import time
 
 from exchcard import settings
 from exchcard.models import Card
@@ -46,7 +48,7 @@ def count_arrive_travel(cards):
     return (total, arrive, travel)
 
 
-def get_bucket():
+def get_sae_bucket():
     # from sae.storage import Bucket
     from sae.storage import Connection
     from exchcard import settings
@@ -60,14 +62,14 @@ def get_bucket():
     return bucket
 
 
-def handle_uploaded_file(title, f):
+def handle_uploaded_file_sae_s3(title, f):
     """
     handle the file uploaded from the UploadFileForm
     :param f:
     :return:
     """
 
-    bucket = get_bucket()
+    bucket = get_sae_bucket()
     bucket.put_object("%s-avatar.jpg" % title, f)
 
     ## only when the folder of source code is writable
@@ -77,3 +79,29 @@ def handle_uploaded_file(title, f):
         # files don’t overwhelm your system’s memory.
         for chunk in f.chunks():
             destination.write(chunk)
+
+
+def hash_hash_file_name(fname):
+    parts = fname.split(".")
+
+    fileFormat = ".%s" % parts[-1]
+
+    try:
+        now = datetime.datetime.now()
+        ms = str(now.microsecond)
+
+        newName = ("{0}-{1}-{2}-{3}-{4}-{5}-{6}"+fileFormat).\
+            format(now.year, now.month, now.day, now.hour, now.minute, now.second, ms)
+
+    except:
+        # time.time()整数是秒，*1000，才是毫秒
+        timestamp = int(time.time()*1000) ## 毫秒，millsecond
+        newName = ("{0}"+fileFormat).format(timestamp)
+
+    return newName
+
+
+# -------------------------------------------------
+# testing
+
+print hash_hash_file_name("20160607_190736.jpg")
