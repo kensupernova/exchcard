@@ -1,4 +1,6 @@
 /**
+ * 用户+密码 登录
+ * 微博登录
  * Created by Guanghui on 2017/5/10.
  */
 
@@ -9,6 +11,7 @@ function login_with_validated(username, password){
 
   // 设置csrf token
   var csrftoken = Cookies.get('csrftoken');
+
   $.ajaxSetup({
     beforeSend: function(xhr, settings) {
       if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -23,7 +26,7 @@ function login_with_validated(username, password){
       url: login_url,
       data: {'username': username, 'password':password},
       success: function(data){
-        // console.log(data);
+
         // redirect to profile page
         window.location.href=baseURL +"/profile/"
       }

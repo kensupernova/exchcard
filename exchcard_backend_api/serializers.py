@@ -194,18 +194,19 @@ class CreateProfileSerializerWithIds(serializers.ModelSerializer):
 
 
 
-class GetProfileSerializer(serializers.ModelSerializer):
+class GetProfileSerializer(serializers.HyperlinkedModelSerializer):
     """
     Get Profile序列化
     """
     profileuser = serializers.CharField(source="profileuser.username")
+    profileuser_email = serializers.CharField(source="profileuser.email")
     profileaddress_name = serializers.CharField(source="profileaddress.name")
     profileaddress_address = serializers.CharField(source="profileaddress.address")
     profileaddress_postcode = serializers.CharField(source="profileaddress.postcode")
 
     class Meta:
         model = Profile
-        fields=("id", "url", "profileuser", "profileaddress_name", "profileaddress_address",
+        fields=("id", "url", "profileuser", 'profileuser_email', "profileaddress_name", "profileaddress_address",
                 "profileaddress_postcode")
         related_fields = ["user", "address"]
 
@@ -218,10 +219,19 @@ class GetProfileWithCardSerializer(serializers.HyperlinkedModelSerializer):
     profileaddress_address = serializers.CharField(source="profileaddress.address")
     profileaddress_postcode= serializers.CharField(source="profileaddress.postcode")
 
-    sent_cards = serializers.HyperlinkedIdentityField(many=True,
-        view_name="card-detail", read_only=True)
-    receive_cards = serializers.HyperlinkedIdentityField(many=True,
-        view_name="card-detail", read_only=True)
+    # sent_cards = serializers.HyperlinkedIdentityField(many=True,
+    #     view_name="card-detail", read_only=True)
+    #
+    # receive_cards = serializers.HyperlinkedIdentityField(many=True,
+    #     view_name="card-detail", read_only=True)
+
+    sent_cards = serializers.HyperlinkedRelatedField(many=True,
+                                                     view_name="card-detail",
+                                                     read_only=True)
+
+    receive_cards = serializers.HyperlinkedRelatedField(many=True,
+                                                        view_name="card-detail",
+                                                        read_only=True)
 
     class Meta:
         model = Profile
@@ -260,7 +270,7 @@ class GetUserAddressProfileSerializer(serializers.ModelSerializer):
 
 
 ###################################################################################
-class AvatarPhotoSerializer(serializers.HyperlinkedModelSerializer):
+class AvatarPhotoSerializer(serializers.ModelSerializer):
     # owner_username = serializers.CharField(source='owner.profileuser.username')
     owner_email = serializers.CharField(source='owner.profileuser.email')
     owner_id = serializers.IntegerField(source="owner.id")
@@ -299,6 +309,8 @@ class CardPhotoSerializer(serializers.HyperlinkedModelSerializer):
         model = CardPhoto
         fields = ('id', 'owner', "owner_id", "card_host", "card_host_id")
 
+
+#----------------------------------------------------------------------
 class DianZanSerializer(serializers.ModelSerializer):
     person_who_dianzan_id = serializers.IntegerField(source='person_who_dianzan.id')
     class Meta:

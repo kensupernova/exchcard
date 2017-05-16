@@ -56,18 +56,50 @@ label.account-info-item-title {
 
 /*地址信息页面格式*/
 
-.address-content-container .address-info-title h3{
+.address-info-container .address-info-main-title h3{
   text-align: center;
 }
 
-.address-info-item span {
+.address-info-content .address-info-item .address-info-item-title {
   margin-right: 2em;
   margin-left: 1em;
   width:4em;
 }
 
-.address-info-item label {
+.address-info-content .address-info-item .address-info-item-content {
   margin-left: 5px;
+  margin-right: 5px;
+}
+
+.address-info-item .error-message {
+  color: red;
+}
+
+.address-info-save {
+  margin: 5px;
+  margin-top: 20px;
+}
+
+button#save-address {
+  padding-left:5px;
+  padding-right: 5px;
+}
+
+button#save-address span {
+}
+
+button#save-address{
+  background: gainsboro;
+  color: white;
+}
+
+button#save-address.active span{
+
+}
+
+button#save-address.active{
+  color: white;
+  background: red;
 }
 
 /*头像信息页面*/

@@ -10,7 +10,7 @@ $(document).ready(function() {
     var password = $("#form-password").val() ||"z111111";
 
     // hashed username from email address
-    var username = convert_email_to_username(email); // turn email to username by hashcode
+    var username = convert_email_to_username(email); // turn email to username by hashcode, hash-sha1-helper.js
 
     // console.log("new user name: " + username);
 
@@ -20,32 +20,32 @@ $(document).ready(function() {
 
 
     if(!validate_email(email)) {
-      $("#email-error").text("邮箱地址错误");
+      $("#email-error").text("邮箱地址错误!");
       console.log(email);
       return;
     }
 
     if(!validate_password(password)) {
-      $("#password-error").text("密码错误");
+      $("#password-error").text("密码错误!");
       console.log(password);
       return;
     }
 
     if(!validate_name(name)) {
-      $("#name-error").text("姓名错误");
+      $("#name-error").text("姓名错误!");
       console.log(name);
       return;
     }
 
     if(!validate_address(address)) {
-      $("#address-error").text("邮寄地址错误");
+      $("#address-error").text("邮寄地址错误!");
       console.log(address);
       return;
     }
 
 
     if(!validate_postcode(postcode)) {
-      $("#postcode-error").text("邮政编码错误");
+      $("#postcode-error").text("邮政编码错误!");
       console.log(postcode);
       return;
     }
@@ -68,49 +68,37 @@ $(document).ready(function() {
 
     $.ajax({
       method:"post",
-        url: register_url,
-        data: {'username': username, 'password': password , "email": email,
-        "name": name, "address": address, "postcode": postcode},
-        success: function(data){
-          // console.log("register successs!");
+      url: register_url,
+      data: {
+        'username': username,
+        'password': password ,
+        "email": email,
+        "name": name,
+        "address": address,
+        "postcode": postcode},
+      success: function(data){
+        // console.log("register successs!");
 
-          // 同时login newly created user
-          // 函数来自login-helper.js
+        // 同时login newly created user
+        var id = setInterval(function () {
+          var result = login_with_validated(username, password); // 函数来自login-helper.js
+          if (result == 1){
+            window.location.href = baseURL +"/profile/";
+            clearInterval(id);
+          } else {
+            window.location.href = baseURL +"/register/";
+          }
+        }, 3000);
 
-          // //// method 1
-          // var result = login_with_validated(username, password);
-          // // 如果成功登录 3 seconds later, redirect to profile page
-          // if(result ==  1){
-          //   var redirect = setTimeout(function(){ window.location.href = baseURL +"/profile/";}, 3000);
-          //   clearTimeout(redirect);
-          // } else{
-          //   window.location.href = baseURL +"/register/";
-          // }
-
-          //// method 2
-          var id = setInterval(function () {
-            var result = login_with_validated(username, password);
-            if (result == 1){
-              window.location.href = baseURL +"/profile/";
-              clearInterval(id);
-            } else {
-              window.location.href = baseURL +"/register/";
-            }
-          }, 3000);
-
-        }
       }
-    ).done(function(data){
+    }).done(function(data){
+      // console.log(JSON.stringify(data));
+
     }).fail(function(data){
       console.log(JSON.stringify(data['responseText']));
       console.log("register failed!");
     });
   });
-
-  function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-  }
 
 
 });

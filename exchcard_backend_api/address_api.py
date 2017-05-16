@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.http import Http404
 
 from exchcard.models import Address
 from exchcard.models import Profile
@@ -19,8 +20,7 @@ class GetAllAddressListView(generics.ListAPIView):
     ]
 
 
-class GetOneAddressView(generics.RetrieveAPIView):
-    ## queryset = Address.objects.all()
+class GetOneRandomAddressView(generics.RetrieveAPIView):
     serializer_class = AddressSerializer
 
     permission_classes = [
@@ -47,7 +47,7 @@ class GetAddressView(generics.RetrieveAPIView):
     ]
 
 
-class GetAddressViewWithName(generics.ListAPIView):
+class GetAddressViewWithNameField(generics.ListAPIView):
     serializer_class = AddressSerializer
 
     lookup_field = ["name"]
@@ -62,7 +62,7 @@ class GetAddressViewWithName(generics.ListAPIView):
         # query params are like ?sortby=some_parameter
         # sortby = self.request.query_params.get('sortby', None) ## query是?sortby=
 
-        return Address.objects.filter(name=name)
+        return Address.objects.filter(name=name)[0]
 
 class GetAddressViewWithNameQuery(generics.ListAPIView):
     serializer_class = AddressSerializer
@@ -77,42 +77,70 @@ class GetAddressViewWithNameQuery(generics.ListAPIView):
         return Address.objects.filter(name=name)
 
 
-class RegisterAddressView(generics.CreateAPIView):
+class CreateAddressView(generics.CreateAPIView):
     serializer_class = AddressSerializer
 
     permission_classes = [
         permissions.IsAuthenticated
     ]
 
+class AddressDetail(generics.APIView):
+    """
+    Retrieve, update or delete
+    """
+
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
+    def get_object(self, pk):
+        try:
+            return Address.objects.get(pk=pk)
+        except Address.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        obj = self.get_object(pk)
+        serializer = AddressSerializer(obj)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        obj = self.get_object(pk)
+        serializer = AddressSerializer(obj, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        obj = self.get_object(pk)
+        obj.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 # -----------------------------------------------------------------------
-@api_view(["PUT",])
+@api_view(["PUT", "POST"])
 @permission_classes([permissions.IsAuthenticated, ])
-def update_address_with_profile_id(request, pk, format=None):
+def update_address(request, format=None):
     """
     更新某个Profile的地址
     :param request:
-    :param pk: profile id
     :param format:
     :return: 更新后的地址
     """
-    if request.method == "PUT":
-        profile_from_request = Profile.objects.get(profileuser
-                                                   =request.user)
-        if not int(pk) == int(profile_from_request.id):
-            return Response({"details": "request user != user with profile id in url",
-                             "id_url": pk,
-                             "id_request:": profile_from_request.id},
-                            status=status.HTTP_403_FORBIDDEN)
+    if request.method == "PUT" or request.method == "PUT":
+        try:
+            profile = Profile.objects.get(profileuser=request.user)
 
+            address = profile.profileaddress
 
-        profile = Profile.objects.get(pk=pk)
-        address = profile.profileaddress
-        address.update(name=request.data["name"],
-                       address=request.data["address"],
-                       postcode=request.data["postcode"])
+            address.update(name=request.data["name"],
+                           address=request.data["address"],
+                           postcode=request.data["postcode"])
 
-        return Response(AddressSerializer(address).data, status=status.HTTP_200_OK)
+            return Response(AddressSerializer(address).data, status=status.HTTP_200_OK)
+        except:
+            return Response({"details":"Internal server error in address_api.py"},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     else:
         return Response({"details": "method is not allowed"},

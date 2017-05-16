@@ -251,7 +251,7 @@ function binb2hex(binarray) {
 function reduceLength(sha1_result){
   var length = sha1_result.length;
 
-  var result_length = 16;
+  var result_length = 12;
   var result = "";
   for(var i = 0; i < result_length*2; i++, i++){
     // 如果是随机得到的用户是变动的不好

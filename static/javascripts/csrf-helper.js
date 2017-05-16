@@ -7,12 +7,12 @@ function csrfSafeMethod(method) {
   return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
 
-// csrf token
-var csrftoken = Cookies.get('csrftoken');
-$.ajaxSetup({
-  beforeSend: function(xhr, settings) {
-    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-      xhr.setRequestHeader("X-CSRFToken", csrftoken);
-    }
-  }
-});
+// // csrf token
+// var csrftoken = Cookies.get('csrftoken');
+// $.ajaxSetup({
+//   beforeSend: function(xhr, settings) {
+//     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+//       xhr.setRequestHeader("X-CSRFToken", csrftoken);
+//     }
+//   }
+// });

@@ -115,7 +115,7 @@ app.controller("addressController", function($scope, $http){
     url: urlPath
 
   }).then(function mySucces(response) {
-    console.log(JSON.stringify(response.data));
+    // console.log(JSON.stringify(response.data));
 
     if (response.data != null){
       $scope.name = response.data['name'];
@@ -126,12 +126,85 @@ app.controller("addressController", function($scope, $http){
 
 
   }, function myError(response) {
-    console.log(JSON.stringify(response));
+    console.log(JSON.stringify(response.data));
+
+  });
+
+  // 监听input.address-info-item-content的内容改变
+  $("input.address-info-item-content").bind("input propertychange", function () {
+    // console.log("address content changed!");
+
+    // 按钮背景变化
+    var b = $("button#save-address");
+    b.addClass("active");
+    b.prop('disabled', false);
+
+    // 清除所有error message
+    $(".error-message").text("");
+
+  });
+
+  $("#save-address").click(function(){
+    console.log("clicked save address button!");
+
+    var newName = $("#name").val();
+    var newAddress = $("#address").val();
+    var newPostcode = $("#postcode").val();
+
+    if(!validate_name(newName)) {
+      $("#name-error").text("姓名错误! 要求:2-10位汉字；3-30位字母; 可以包括空格,点号");
+      return false;
+    }
+
+    if(!validate_address(newAddress)) {
+      $("#address-error").text("邮寄地址错误! 要求:2-50位汉字; 5-100位字母");
+      return false;
+    }
+
+
+    if(!validate_postcode(newPostcode)) {
+      $("#postcode-error").text("邮政编码错误! ");
+      return false;
+    }
+
+    var updateAddressUrl = "/exchcard/api/address/update/";
+
+    var data = {
+      name: newName,
+      address: newAddress,
+      postcode: newPostcode
+    };
+
+    // setting csrf token, 避免403错误
+    var csrftoken = Cookies.get('csrftoken');
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+      }
+    });
+
+    $.ajax({
+      method: "post",
+      url: updateAddressUrl,
+      data: data,
+      success: function(response){
+        console.log(JSON.stringify(response));
+
+      }
+
+    }).fail(function(response){
+      console.log(JSON.stringify(response));
+    });
 
   });
 
 
+
+
 });
+
 
 
 

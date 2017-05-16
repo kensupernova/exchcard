@@ -2,21 +2,22 @@
 
 from django.conf.urls import url, include
 
-from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
-from exchcard_backend_api import card_api, profile_api, address_api, user_api, upload_api, apis
+
+from exchcard_backend_api import card_api, profile_api, address_api, user_api, upload_api
+
+
 
 urlpatterns = format_suffix_patterns([
-    url(r"^$", apis.root),
 
     ## authentication and registeration
     url(r"^auth/", "exchcard_backend_api.user_api.user_auth", name="auth"),
-    url(r"^login/", "exchcard_backend_api.user_api.user_login", name="login"),
+    url(r"^login/", "exchcard_backend_api.user_api.user_login_with_username_pw", name="login"),
     url(r"^logout/", "exchcard_backend_api.user_api.user_logout", name="logout"),
     url(r"^register/$", "exchcard_backend_api.profile_api.register_user_address_profile",
-        name="exchcard_backend_api-user-address-register"),
+        name="user-address-profile-register"),
     url(r"^register2/$", profile_api.RegisterUserAddressProfileView.as_view(),
-        name="exchcard_backend_api-user-address-register2"),
+        name="user-address-profile-register2"),
 
     ## users
     url(r"^users/$", user_api.UserList.as_view(),
@@ -33,17 +34,17 @@ urlpatterns = format_suffix_patterns([
     ## addresss
     url(r'^address/$', address_api.GetAllAddressListView.as_view(),
         name="address-list"),
-    url(r'^address/register/$', address_api.RegisterAddressView.as_view(),
+    url(r'^address/register/$', address_api.CreateAddressView.as_view(),
         name="address-register"),
-    url(r'^address/getrandom/$', address_api.GetOneAddressView.as_view(),
+    url(r'^address/getrandom/$', address_api.GetOneRandomAddressView.as_view(),
         name="address-random"),
     url(r'^address/get/id/(?P<pk>[0-9]+)/$', address_api.GetAddressView.as_view(),
-        name="address-get-id"),
-    url(r'^address/get/name/(?P<name>.+)/$', address_api.GetAddressViewWithName.as_view(),
-        name="address-get-name"),
-    url(r'^address/update/(?P<pk>[0-9]+)/$',
-        "exchcard_backend_api.address_api.update_address_with_profile_id",
-        name="address-update-with-profile-id"),
+        name="address-detail-by-id"),
+    url(r'^address/get/name/(?P<name>.+)/$', address_api.GetAddressViewWithNameField.as_view(),
+        name="address-detail-by-name"),
+    url(r'^address/update/$',
+        "exchcard_backend_api.address_api.update_address",
+        name="address-update"),
     ## 得到当前登录用户的地址
     url(r'^address/get/info/$',
         "exchcard_backend_api.address_api.get_address_of_logged_user",

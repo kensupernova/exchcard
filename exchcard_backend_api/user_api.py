@@ -96,7 +96,7 @@ def get_info_of_logged_user(request):
 
 @api_view(["POST"])
 @permission_classes([permissions.AllowAny])
-def user_login(request):
+def user_login_with_username_pw(request):
     """
     User log in with username and password, the name is email is the username
     :param request:
@@ -105,7 +105,7 @@ def user_login(request):
     if request.method == "POST":
         username = request.data['username']
         password = request.data['password']
-        print "login with {0}: {1}".format(username, password)
+        # print "login with {0}: {1}".format(username, password)
 
         user = authenticate(username=username, password=password)
         if user is not None:

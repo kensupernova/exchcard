@@ -85,6 +85,7 @@ class Address(models.Model):
         self.name = name
         self.address =address
         self.postcode = postcode
+
         super(Address, self).save(*args, **kwargs)
 
 
@@ -273,7 +274,7 @@ class AvatarPhoto(models.Model):
 class CardPhoto(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey("Profile", related_name="cardphotos_of_profile") ## related name is for Profile to use
-    card_host = models.ForeignKey('Card', related_name='photos_of_card', default=1)
+    card_host = models.ForeignKey('Card', related_name='cardphotos_of_card', default=1)
 
     card_photo = models.ImageField(upload_to="card_photos")
 

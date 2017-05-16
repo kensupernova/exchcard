@@ -53,7 +53,7 @@ function validate_password(password){
 
 }
 
-/* 真实姓名要求：2到10位汉字,可以包括点号, 至少两位汉字； 3-30位, 可以包括空格,点号 */
+/* 真实姓名要求：2到10位汉字；3-30位字母; 可以包括空格,点号 */
 function validate_name(name) {
   // console.log("validating... ");
   var str = name;
@@ -63,14 +63,14 @@ function validate_name(name) {
   }
 
 
-  // 中国名字: 2到10位汉字,可以包括点号, 至少两位汉字
-  // 外国名字: 3-30位, 可以包括空格,点号
+  // 中国名字: 2-10位汉字,可以包括点号, 至少两位汉字
+  // 外国名字: 3-30位字母, 可以包括空格,点号
   var re = /^((?=.{2}[\u4e00-\u9fa5])[\u4e00-\u9fa5 .a-zA-Z]{2,10})|([a-zA-Z. ]{3,30})$/;
   return re.test(name);
 }
 
 
-
+/* 2-50位汉字, 或者5-100位字母 */
 function validate_address(address) {
   // console.log("validating... add");
   var str = address;
@@ -85,7 +85,7 @@ function validate_address(address) {
   return re.test(address);
 }
 
-
+/* 各国邮政编码不一, 粗略定为3-11位字母或数字 */
 function validate_postcode(postcode) {
   // console.log("validating... add");
   var str = postcode;
@@ -97,8 +97,9 @@ function validate_postcode(postcode) {
 
   var re = /^[a-zA-Z0-9.-]{3,11}$/;
   var us = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
-  return re.test(postcode);
+  return re.test(postcode) | us.test(postcode);
 }
+
 
 function validate_mobile (value){
   var mobileRegex =  /^(((1[3456789][0-9]{1})|(15[0-9]{1}))+\d{8})$/;
