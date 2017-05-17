@@ -7,13 +7,13 @@ from exchcard.models import AvatarPhoto, CardPhoto, Card
 from exchcard.models import Profile
 from exchcard_backend_api.permissions import IsOwnerOrReadOnly
 from exchcard_backend_api.serializers import AvatarPhotoSerializer, CreateAvatarPhotoSerializer, CardPhotoSerializer
-from exchcard_backend_api.utils import utils
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from utils import utils
 
 
 #
@@ -169,7 +169,7 @@ def upload_card_photo(request, pk, format=None):
             # 确保目前登录用户就是明信片的接受者
             if profile_from_request.id == recipient.id or profile_from_request.id == sender.id:
                 f = request.FILES['cardphoto']
-                f.name = utils.hash_hash_file_name(f.name)
+                f.name = utils.hash_file_name(f.name)
 
                 photo = CardPhoto(owner=profile_from_request,
                                   card_host=card_host,

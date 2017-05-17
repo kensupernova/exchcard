@@ -229,6 +229,16 @@ WSGI_APPLICATION = 'exchcard.wsgi.application'
 #     }
 # }
 
+# 微博登陆
+URL = 'http://codetheme.sinaapp.com'
+APP_KEY = '你的'
+APP_SERCET = '你的'
+CALLBACK_URL = URL+'/account/login/weibo_check/'  # 回调地址
+
+AUTH_USER_MODEL = 'exchcard.XUser'   # 扩展表的位置，appname.Model,   MyUser是manager app下models中的用户类
+AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', 'exchcard.xauth_models.XAuth')   # 后端认证
+
+
 # ------------------------------------------------
 ## 配置SAE新浪云, 存储上传的media文件
 # sae的本地文件系统是只读的，修改django的file storage backend为Storage
@@ -240,7 +250,7 @@ WSGI_APPLICATION = 'exchcard.wsgi.application'
 # STORAGE_BUCKET_NAME = 'exchcard-bucket'
 
 
-
+# ---------------------------------------------------
 ## SAE线上数据库的配置
 # MYSQL_HOST = 'w.rdc.sae.sina.com.cn'
 # MYSQL_PORT = '3307'

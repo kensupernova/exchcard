@@ -2,18 +2,16 @@
 
 import datetime
 import time
-import os
 
+import os
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Manager
 
-import exchcard_backend_api.utils.datetime_helper
-
+import utils.datetime_helper
 from exchcard import settings
 from exchcard.manage import AddressManager
 from exchcard.manage import DetailedAddressManager
-
 
 #-------------------------------------------------------------------------
 """
@@ -240,11 +238,11 @@ class Card(models.Model):
     def update_date_with_timestamp(self, *args, **kwargs):
         if (not self.arrived_time) and (self.arrived_time != 0) and (self.arrived_time is not None):
             ## print self.arrived_time
-            self.arrived_date = exchcard_backend_api.utils.datetime_helper.mills2datetime(self.arrived_time)
+            self.arrived_date = utils.datetime_helper.mills2datetime(self.arrived_time)
 
         if (not self.sent_time) and (self.sent_time != 0) and (self.sent_time is not None):
             ## print self.sent_time
-            self.sent_date = exchcard_backend_api.utils.datetime_helper.mills2datetime(self.sent_time)
+            self.sent_date = utils.datetime_helper.mills2datetime(self.sent_time)
 
         super(Card, self).save(*args, **kwargs)
 

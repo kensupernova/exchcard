@@ -2,19 +2,9 @@
 
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.contrib.auth import authenticate, login
-
-from multiple_model.views import MultipleModelAPIView
-
-from rest_framework import generics
-from rest_framework import permissions
-from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
 
 from exchcard.models import Address, Card
 from exchcard.models import Profile
-
 from exchcard_backend_api.permissions import IsProfileUserOrStaffUser
 from exchcard_backend_api.serializers import AddressSerializer
 from exchcard_backend_api.serializers import CreateProfileSerializer
@@ -22,9 +12,13 @@ from exchcard_backend_api.serializers import GetProfileWithCardSerializer
 from exchcard_backend_api.serializers import GetUserAddressProfileSerializer
 from exchcard_backend_api.serializers import UserAddressProfileSerializer
 from exchcard_backend_api.serializers import UserSerializer, CardSerializer
-from exchcard_backend_api.utils.utils import generateToken
-
-from exchcard_backend_api.utils.utils import count_arrive_travel
+from multiple_model.views import MultipleModelAPIView
+from rest_framework import generics
+from rest_framework import permissions
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from utils.utils import count_arrive_travel
 
 
 class GetProfileListView(generics.ListAPIView):

@@ -4,7 +4,8 @@ from django.shortcuts import render
 
 from exchcard.forms import UploadFileForm
 from exchcard.models import Profile, AvatarPhoto
-from exchcard_backend_api.utils import utils
+from utils import utils
+
 
 def uploadFile(request):
     if request.method == "POST":
@@ -22,7 +23,7 @@ def uploadFile(request):
             # ## upload_to is a parameter when creating the model
             profile = Profile.objects.get(profileuser = request.user)
             # 改变文件的名字
-            f.name = utils.hash_hash_file_name(f.name)
+            f.name = utils.hash_file_name(f.name)
             instance = AvatarPhoto(owner = profile, avatar=f)
             instance.save()
 

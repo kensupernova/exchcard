@@ -30,6 +30,13 @@ class XUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, username, password):
+        """
+        创建超级用户
+        :param email:
+        :param username:
+        :param password:
+        :return:
+        """
         user = self.create_user(email,
             password=password,
            username=username,

@@ -11,10 +11,14 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^$', 'exchcard.views.index'),
-    url(r'^account/login/$', 'exchcard.views.user_login'),
     url(r'^account/register/$', 'exchcard.views.user_register'),
+    url(r'^account/login/$', 'exchcard.views.user_login'),
+
+
     url(r'^account/resetpassword/$', 'exchcard.views.profile'),
     url(r'^account/findpassword/$', 'exchcard.views.profile'),
+
+    url(r'^account/login/weibo_check/', 'exchcard.weibo_auth.weibo_check'),
 
     #设置
     url(r'^setting/$', 'exchcard.views.setting'),

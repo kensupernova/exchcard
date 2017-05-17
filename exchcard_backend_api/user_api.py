@@ -6,14 +6,13 @@ from django.contrib.auth import get_user_model # If used custom user mode
 from django.contrib.auth.models import User
 
 from exchcard_backend_api.serializers import UserSerializer, UserSerializer2, RegisterUserSerializer2
-from exchcard_backend_api.utils.utils import generateToken
-
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
+from utils.utils import generateToken
 
 
 ### list all users

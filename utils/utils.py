@@ -81,7 +81,7 @@ def handle_uploaded_file_sae_s3(title, f):
             destination.write(chunk)
 
 
-def hash_hash_file_name(fname):
+def hash_file_name(fname):
     parts = fname.split(".")
 
     fileFormat = ".%s" % parts[-1]
@@ -100,8 +100,12 @@ def hash_hash_file_name(fname):
 
     return newName
 
+def hash_email_to_username(email):
+    email = email.replace("@", "at")
+    email = email.replace(".", "dot")
 
+    return email
 # -------------------------------------------------
 # testing
 
-print hash_hash_file_name("20160607_190736.jpg")
+print hash_file_name("20160607_190736.jpg")

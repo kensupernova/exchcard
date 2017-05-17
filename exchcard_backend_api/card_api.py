@@ -8,15 +8,13 @@ from exchcard.models import Profile
 from exchcard_backend_api.permissions import IsSenderStaffOrReadOnly
 from exchcard_backend_api.serializers import CreateCardSerializer, CardSerializer
 from exchcard_backend_api.serializers import DianZanSerializer
-from exchcard_backend_api.utils import utils
-
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
-
+from utils import utils
 
 
 ## create and list cards
