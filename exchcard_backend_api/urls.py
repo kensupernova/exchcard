@@ -12,11 +12,12 @@ urlpatterns = format_suffix_patterns([
 
     ## authentication and registeration
     url(r"^auth/", "exchcard_backend_api.user_api.user_auth", name="auth"),
-    url(r"^login/", "exchcard_backend_api.user_api.user_login_with_username_pw", name="login"),
+    url(r"^login/", "exchcard_backend_api.user_api.user_login_with_email_pw", name="login-email-pw"),
     url(r"^logout/", "exchcard_backend_api.user_api.user_logout", name="logout"),
-    url(r"^register/$", "exchcard_backend_api.profile_api.register_user_address_profile",
+
+    url(r"^user/address/register/$", "exchcard_backend_api.profile_api.register_user_address_profile",
         name="user-address-profile-register"),
-    url(r"^register2/$", profile_api.RegisterUserAddressProfileView.as_view(),
+    url(r"^user/address/register2/$", profile_api.RegisterUserAddressProfileView.as_view(),
         name="user-address-profile-register2"),
 
     ## users
@@ -24,6 +25,8 @@ urlpatterns = format_suffix_patterns([
         name="user-list"),
     url(r"^users/register/", user_api.RegisterUserView.as_view(),
         name="user-register"),
+    url(r"^users/register2/", "exchcard_backend_api.user_api.register_new_user",
+        name="user-register2"),
     url(r"^users/(?P<pk>[0-9]+)/$", user_api.UserDetail.as_view(),
         name="user-detail"),
     ## 得到当前登录用户信息
@@ -34,8 +37,10 @@ urlpatterns = format_suffix_patterns([
     ## addresss
     url(r'^address/$', address_api.GetAllAddressListView.as_view(),
         name="address-list"),
-    url(r'^address/register/$', address_api.CreateAddressView.as_view(),
-        name="address-register"),
+    url(r'^address/create/$', address_api.CreateAddressView.as_view(),
+        name="address-create"),
+    url(r'^address/profile/create/$', "exchcard_backend_api.address_api.address_profile_create",
+        name="address-profile-create"),
     url(r'^address/getrandom/$', address_api.GetOneRandomAddressView.as_view(),
         name="address-random"),
     url(r'^address/get/id/(?P<pk>[0-9]+)/$', address_api.GetAddressView.as_view(),

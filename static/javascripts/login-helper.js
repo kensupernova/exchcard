@@ -1,10 +1,10 @@
 /**
- * 用户+密码 登录
+ * 本地登录
  * 微博登录
  * Created by Guanghui on 2017/5/10.
  */
 
-function login_with_validated(username, password){
+function login_with_validated(email, password){
   // use api for login
   var baseURL = "";
   var login_url = baseURL + "/exchcard/api/login/";
@@ -20,25 +20,23 @@ function login_with_validated(username, password){
     }
   });
 
+  var result = 0;
 
   // 发动登录请求
-  $.ajax({method: "POST",
-      url: login_url,
-      data: {'username': username, 'password':password},
-      success: function(data){
+  $.ajax({
+    method: "POST",
+    url: login_url,
+    data: {'email': email, 'password':password},
+    success: function(data){
+      result = 1;
+      console.log("log in by login-helper.js success!");
 
-        // redirect to profile page
-        window.location.href=baseURL +"/profile/"
-      }
     }
-  ).done(function(){
-    console.log("login success!");
-
-    return 1;
   }).fail(function(){
     console.log("login failed!");
 
-    return 0;
+    result = 0;
   });
 
+  return result;
 }

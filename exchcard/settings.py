@@ -236,7 +236,7 @@ APP_SERCET = '你的'
 CALLBACK_URL = URL+'/account/login/weibo_check/'  # 回调地址
 
 AUTH_USER_MODEL = 'exchcard.XUser'   # 扩展表的位置，appname.Model,   MyUser是manager app下models中的用户类
-AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', 'exchcard.xauth_models.XAuth')   # 后端认证
+AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', 'exchcard.models.XAuth')   # 后端认证
 
 
 # ------------------------------------------------

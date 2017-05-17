@@ -3,8 +3,7 @@
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
-from exchcard.models import Card, DianZan, CardPhoto
-from exchcard.models import Profile
+from exchcard.models_profile import Card, DianZan, CardPhoto, Profile
 from exchcard_backend_api.permissions import IsSenderStaffOrReadOnly
 from exchcard_backend_api.serializers import CreateCardSerializer, CardSerializer
 from exchcard_backend_api.serializers import DianZanSerializer

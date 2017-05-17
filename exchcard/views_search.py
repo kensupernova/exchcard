@@ -1,5 +1,9 @@
+#coding: utf-8
 import re
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model # If used custom user mode
+User = get_user_model()
+
 from django.db.models import Q
 
 from django.shortcuts import render_to_response

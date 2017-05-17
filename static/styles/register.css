@@ -6,12 +6,8 @@
   display: block;
 }
 
-#form-address {
-  width: 25em;
-}
 
 #btn-register-submit {
-  margin-top: 1em;
   background: white;
   color: black;
   border: black 1px solid;
@@ -39,3 +35,14 @@
 .hide {
   display: none;
 }
+
+.item-server-error {
+  margin-top: 1em;
+}
+
+.item-server-error label {
+  font-size: 12px;
+  font-weight: normal;
+  color: red;
+}
+

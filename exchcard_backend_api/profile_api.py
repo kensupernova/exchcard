@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model # If used custom user mode
+User = get_user_model()
+
 from django.db.models import Q
 
-from exchcard.models import Address, Card
-from exchcard.models import Profile
+from exchcard.models_profile import Address, Card, Profile
 from exchcard_backend_api.permissions import IsProfileUserOrStaffUser
 from exchcard_backend_api.serializers import AddressSerializer
 from exchcard_backend_api.serializers import CreateProfileSerializer

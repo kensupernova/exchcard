@@ -4,8 +4,11 @@ import random
 from django import forms
 from django.contrib.auth import authenticate
 
-from exchcard.xauth_models import XUser
+from exchcard.models import XUser
 from utils import utils
+
+# from django.contrib.auth import get_user_model # If used custom user mode
+# User = get_user_model()
 
 
 class UploadFileForm(forms.Form):

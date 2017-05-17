@@ -1,10 +1,11 @@
 #coding: utf-8
-from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model # If used custom user mode
+User = get_user_model()
+# from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
-from exchcard.models import Card, Profile, Address, AvatarPhoto, DianZan, CardPhoto
+from exchcard.models_profile import Card, Profile, Address, AvatarPhoto, DianZan, CardPhoto
 
 
 
@@ -198,16 +199,23 @@ class GetProfileSerializer(serializers.HyperlinkedModelSerializer):
     """
     Get Profile序列化
     """
-    profileuser = serializers.CharField(source="profileuser.username")
+    profileuser_id = serializers.CharField(source="profileuser.id")
+    profileuser_username = serializers.CharField(source="profileuser.username")
     profileuser_email = serializers.CharField(source="profileuser.email")
+
+    profileaddress_id = serializers.CharField(source="profileaddress.id")
     profileaddress_name = serializers.CharField(source="profileaddress.name")
     profileaddress_address = serializers.CharField(source="profileaddress.address")
     profileaddress_postcode = serializers.CharField(source="profileaddress.postcode")
 
     class Meta:
         model = Profile
-        fields=("id", "url", "profileuser", 'profileuser_email', "profileaddress_name", "profileaddress_address",
-                "profileaddress_postcode")
+        fields=("id", "url", "profileuser_id", "profileuser_username", 'profileuser_email',
+                "profileaddress_id",
+                "profileaddress_name",
+                "profileaddress_address",
+                "profileaddress_postcode"
+                )
         related_fields = ["user", "address"]
 
 

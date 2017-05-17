@@ -1,9 +1,11 @@
 #coding: utf-8
 
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
-from exchcard.models import Card, CardPhoto, Profile
+from exchcard.models_profile import Card, CardPhoto, Profile
 
 
 def index(request):
@@ -15,7 +17,18 @@ def user_login(request):
 
 
 def user_register(request):
-    return render(request, 'exchcard/user-address-register-page.html')
+    return render(request, 'exchcard/user-register-page.html')
+
+@login_required
+def address_create(request):
+    if request.user.is_authenticated():
+        context = {
+            "user": request.user
+        }
+
+        return render(request, 'exchcard/address-create-page.html', context)
+    else:
+        return Http404
 
 
 @login_required
@@ -45,9 +58,12 @@ def account_setting(request):
 ## 注入登录验证
 @login_required
 def profile(request):
-    profile_from_request = Profile.objects.get(profileuser=request.user)
-    context = {'profile': profile_from_request}
-    return render(request, 'exchcard/profile-page.html', context)
+    try:
+        profile_from_request = Profile.objects.get(profileuser=request.user)
+        context = {'profile': profile_from_request}
+        return render(request, 'exchcard/profile-page.html', context)
+    except Profile.DoesNotExist:
+        return HttpResponseRedirect(redirect_to="/account/address/create/")
 
 
 @login_required(login_url="/account/login")

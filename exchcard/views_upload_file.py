@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from exchcard.forms import UploadFileForm
-from exchcard.models import Profile, AvatarPhoto
+from exchcard.models_profile import Profile, AvatarPhoto
 from utils import utils
 
 

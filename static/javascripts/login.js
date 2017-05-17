@@ -2,65 +2,67 @@ $(document).ready(function(){
 
   // local login
 	$(".btn-login-submit").click(function(){
-		// get the input values for email and password
-		var email = $("#form_email").val()|| "zgh8@126.com";
-		var password = $("#form_password").val()||"z111111";
+    // get the input values for email and password
+    var email = $("#form_email").val()|| "zgh7@126.com";
+    var password = $("#form_password").val()||"z111111";
 
-		var username = convert_email_to_username(email);
+    var username = convert_email_to_username(email);
 
     // console.log("username: " + username);
     // console.log("password: " + password);
     // console.log("email: " + email);
 
-		if(!validate_username(username)){
-		  console.log("username is wrong")
-			return;
-		}
+    if(!validate_email(email)){
+      console.log("email is wrong")
+      return;
+    }
 
-		if(!validate_password(password)){
+    if(!validate_username(username)){
+      console.log("username is wrong")
+      return;
+    }
+
+    if(!validate_password(password)){
       console.log("password is wrong")
-			return;
-		}
+      return;
+    }
 
+    // use api for login
+    var baseURL = "";
+    var login_url = baseURL + "/exchcard/api/login/";
 
-		// use api for login
-		var baseURL = "";
-		var login_url = baseURL + "/exchcard/api/login/";
+    // 设置csrf token
+    var csrftoken = Cookies.get('csrftoken');
 
-		// csrf token
-		var csrftoken = Cookies.get('csrftoken');
-		$.ajaxSetup({
-			beforeSend: function(xhr, settings) {
-				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-					xhr.setRequestHeader("X-CSRFToken", csrftoken);
-				}
-			}
-		});
-
-		$.ajax({
-		  method: "POST",
-      url: login_url,
-			data: {'username': username, 'password':password},
-			success: function(data){
-					// console.log(data);
-					// redirect to profile page
-					window.location.href=baseURL +"/profile/"
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
       }
+    });
 
-		}).done(function(){
-			console.log("log in success!");
+    var result = 0;
 
-		}).fail(function(){
-			console.log("log in failed!");
-		});
+    // 发动登录请求
+    $.ajax({
+      method: "POST",
+      url: login_url,
+      data: {'email': email, 'password':password},
+      success: function(data){
+        console.log("login success!");
+        result = 1;
+        window.location.href = "/profile/";
+
+      }
+    }).fail(function(){
+      console.log("login failed!");
+
+      result = 0;
+    });
 
 
 	});
-
-	function csrfSafeMethod(method) {
-		// these HTTP methods do not require CSRF protection
-		return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-	}
 
 
   //// 微博登录

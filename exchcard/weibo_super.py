@@ -15,7 +15,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 from django.conf import settings
 
-from exchcard.xauth_models import XUser
+from exchcard.models import XUser
 
 
 # 默认图片

@@ -3,8 +3,7 @@ from django.contrib.admin import AdminSite
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy
 
-from exchcard.models import Address, Card, Profile
-
+from exchcard.models_profile import Address, Card, Profile
 
 
 """

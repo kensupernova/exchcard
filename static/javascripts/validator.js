@@ -65,7 +65,7 @@ function validate_name(name) {
 
   // 中国名字: 2-10位汉字,可以包括点号, 至少两位汉字
   // 外国名字: 3-30位字母, 可以包括空格,点号
-  var re = /^((?=.{2}[\u4e00-\u9fa5])[\u4e00-\u9fa5 .a-zA-Z]{2,10})|([a-zA-Z. ]{3,30})$/;
+  var re = /^((?=.{2}[\u4e00-\u9fa5])[\u4e00-\u9fa5 .a-zA-Z]{2,10})|([a-zA-Z0-9. ]{3,30})$/;
   return re.test(name);
 }
 

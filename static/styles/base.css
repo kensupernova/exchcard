@@ -68,3 +68,8 @@ footer p {
 .copyright{
   margin: 0 auto;
 }
+
+
+.logged-user-info-container{
+  margin-bottom: 20px;
+}

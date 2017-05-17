@@ -7,7 +7,7 @@ from rest_framework.test import APIClient
 
 from exchcard import settings
 from exchcard.weibo_super import SuperWeibo
-from exchcard.xauth_models import XUser
+from exchcard.models import XUser
 
 def weiboLogin(request):
     """微博登录"""

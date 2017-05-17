@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 from django.http import Http404
 
-from exchcard.models import Address
-from exchcard.models import Profile
-from exchcard_backend_api.serializers import AddressSerializer
+from exchcard.models_profile import Address, Profile
+from exchcard_backend_api.serializers import AddressSerializer, GetProfileSerializer
 
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 
 class GetAllAddressListView(generics.ListAPIView):
@@ -84,7 +84,7 @@ class CreateAddressView(generics.CreateAPIView):
         permissions.IsAuthenticated
     ]
 
-class AddressDetail(generics.APIView):
+class AddressDetail(APIView):
     """
     Retrieve, update or delete
     """
@@ -103,9 +103,17 @@ class AddressDetail(generics.APIView):
         serializer = AddressSerializer(obj)
         return Response(serializer.data)
 
+    def post(self, request, format=None):
+        serializer = AddressSerializer(data=request.data) # create a object when save
+        if serializer.is_valid():
+            obj = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def put(self, request, pk, format=None):
         obj = self.get_object(pk)
-        serializer = AddressSerializer(obj, data=request.data)
+        serializer = AddressSerializer(obj, data=request.data) ## update object when save
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -118,6 +126,34 @@ class AddressDetail(generics.APIView):
 
 
 # -----------------------------------------------------------------------
+
+@api_view(["POST"])
+@permission_classes([permissions.IsAuthenticated, ])
+def address_profile_create(request):
+    """
+    address and profile created
+    :param request:
+    :return:
+    """
+    # METHOD 1
+    obj = Address.objects.create_address(name=request.data["name"],
+                           address=request.data["address"],
+                           postcode=request.data["postcode"])
+
+    # METHOD 2
+    # serializer = AddressSerializer(data=request.data)
+    # if serializer.is_valid():
+    #     obj = serializer.save()
+
+    user = request.user
+
+    profile = Profile.objects.create_profile_with_ids(userid=user.id, addressid=obj.id)
+
+    return Response(GetProfileSerializer(profile, context={'request': request}).data,
+                    status=status.HTTP_201_CREATED)
+
+
+
 @api_view(["PUT", "POST"])
 @permission_classes([permissions.IsAuthenticated, ])
 def update_address(request, format=None):
@@ -127,7 +163,7 @@ def update_address(request, format=None):
     :param format:
     :return: 更新后的地址
     """
-    if request.method == "PUT" or request.method == "PUT":
+    if request.method == "PUT" or request.method == "POST":
         try:
             profile = Profile.objects.get(profileuser=request.user)
 

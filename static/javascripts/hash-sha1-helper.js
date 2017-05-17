@@ -248,10 +248,10 @@ function binb2hex(binarray) {
  * 考虑到hex_sha1出来是40位字符, 通过挑选奇数位上的缩小一半
  */
 
-function reduceLength(sha1_result){
+function reduceLength(sha1_result, maxLengh){
   var length = sha1_result.length;
 
-  var result_length = 12;
+  var result_length = maxLengh;
   var result = "";
   for(var i = 0; i < result_length*2; i++, i++){
     // 如果是随机得到的用户是变动的不好
@@ -267,12 +267,15 @@ function reduceLength(sha1_result){
  * 终极把email变成sha1 code的函数
  */
 
-function convert_email_to_username(s){
-  var r = reduceLength(hex_sha1(s));
+function convert_email_to_username_sha1(email, maxLength){
+  var r = reduceLength(hex_sha1(email), maxLength);
   return r;
 }
 
-//////////// testing
-// var result = convert_email_to_username("email@12.com");
-// console.log(result)
+function convert_email_to_username(email){
+  email = email.replace(/@/, "at");
+  email = email.replace(/\./, "dot"); // Must excape .
+  return email;
+}
+
 

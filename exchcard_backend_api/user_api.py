@@ -2,8 +2,11 @@
 
 import django.contrib.auth as auth
 from django.contrib.auth import authenticate, login
+
+# from django.contrib.auth.models import User
+# from exchcard.models import XUser as User
 from django.contrib.auth import get_user_model # If used custom user mode
-from django.contrib.auth.models import User
+User = get_user_model()
 
 from exchcard_backend_api.serializers import UserSerializer, UserSerializer2, RegisterUserSerializer2
 from rest_framework import generics
@@ -17,7 +20,7 @@ from utils.utils import generateToken
 
 ### list all users
 class UserList(generics.ListAPIView):
-    queryset = User.objects.all().order_by('-date_joined')
+    queryset = User.objects.all().order_by('-created')
     serializer_class = UserSerializer
 
     permission_classes = [
@@ -35,7 +38,9 @@ class UserDetail(generics.RetrieveAPIView):
 
 ### method 2: to create a new user, without auth
 class RegisterUserView(CreateAPIView):
-    model = get_user_model()
+    # model = get_user_model()
+    model = User
+
     serializer_class = RegisterUserSerializer2
 
     permission_classes = [
@@ -95,24 +100,25 @@ def get_info_of_logged_user(request):
 
 @api_view(["POST"])
 @permission_classes([permissions.AllowAny])
-def user_login_with_username_pw(request):
+def user_login_with_email_pw(request):
     """
     User log in with username and password, the name is email is the username
     :param request:
     :return:
     """
     if request.method == "POST":
-        username = request.data['username']
+        email = request.data['email']
         password = request.data['password']
-        # print "login with {0}: {1}".format(username, password)
 
-        user = authenticate(username=username, password=password)
+        print "login with {0}: {1}".format(email, password)
+
+        user = authenticate(username=email, password=password)
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return Response({"username": username,
+                return Response({"username": email,
                          "isauth": True,
-                         "accessToken": generateToken(username)},
+                         "accessToken": generateToken(email)},
                         status= status.HTTP_200_OK
                     )
                 # Redirect to a success page.
@@ -122,6 +128,7 @@ def user_login_with_username_pw(request):
         else:
             # Return an 'invalid login' error message.
             return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 @api_view(["POST", "GET"])
 @permission_classes([permissions.AllowAny])

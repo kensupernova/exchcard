@@ -3,8 +3,7 @@ import datetime
 
 from django.shortcuts import Http404
 
-from exchcard.models import AvatarPhoto, CardPhoto, Card
-from exchcard.models import Profile
+from exchcard.models_profile import AvatarPhoto, CardPhoto, Card, Profile
 from exchcard_backend_api.permissions import IsOwnerOrReadOnly
 from exchcard_backend_api.serializers import AvatarPhotoSerializer, CreateAvatarPhotoSerializer, CardPhotoSerializer
 from rest_framework import permissions

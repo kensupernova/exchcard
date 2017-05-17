@@ -115,7 +115,7 @@ app.controller("addressController", function($scope, $http){
     url: urlPath
 
   }).then(function mySucces(response) {
-    // console.log(JSON.stringify(response.data));
+    console.log(JSON.stringify(response.data));
 
     if (response.data != null){
       $scope.name = response.data['name'];
@@ -131,21 +131,24 @@ app.controller("addressController", function($scope, $http){
   });
 
   // 监听input.address-info-item-content的内容改变
-  $("input.address-info-item-content").bind("input propertychange", function () {
-    // console.log("address content changed!");
+  $(".address-info-item-content").bind("input propertychange", respond_to_address_change);
 
-    // 按钮背景变化
-    var b = $("button#save-address");
-    b.addClass("active");
-    b.prop('disabled', false);
+  function respond_to_address_change() {
+      // console.log("address content changed!");
 
-    // 清除所有error message
-    $(".error-message").text("");
+      // 按钮背景变化, 激活按钮
+      var b = $("button#save-address");
+      b.addClass("active");
+      b.prop('disabled', false);
 
-  });
+      // 清除所有error message
+      $(".error-message").text("");
+  }
+
+
 
   $("#save-address").click(function(){
-    console.log("clicked save address button!");
+    // console.log("clicked save address button!");
 
     var newName = $("#name").val();
     var newAddress = $("#address").val();
@@ -190,7 +193,15 @@ app.controller("addressController", function($scope, $http){
       url: updateAddressUrl,
       data: data,
       success: function(response){
-        console.log(JSON.stringify(response));
+        // console.log(JSON.stringify(response));
+
+        // 按钮背景变化, disable按钮
+        var b = $("button#save-address");
+        b.removeClass("active");
+        b.prop('disabled', true);
+
+        // 清除所有error message
+        $(".error-message").text("");
 
       }
 
