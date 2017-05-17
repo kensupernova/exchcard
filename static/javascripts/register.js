@@ -6,7 +6,7 @@ $(document).ready(function() {
 
   $("#btn-register-submit").click(function () {
     // get the input values for email and password
-    var email = $("#form-email").val() || "zgh7@126.com";
+    var email = $("#form-email").val() || "zgh8@126.com";
     var password = $("#form-password").val() || "z111111";
 
     var password2 = $("#form-password-2").val() ||  "z111111";

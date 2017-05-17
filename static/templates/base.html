@@ -22,8 +22,8 @@
 
     <main class="main">
         <div class="logged-user-info-container">
-            {% if request.user %}
-                <label><span>登录用户:</span>{{request.user.email}}</label>
+            {% if user.email %}
+                <label><span>登录用户:</span>{{user.email}}</label>
                 <label id="btn-logout">退出</label>
             {% else %}
               <a href="/account/login">登录</a>
