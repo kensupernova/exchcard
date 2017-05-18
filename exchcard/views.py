@@ -19,6 +19,7 @@ def user_login(request):
 def user_register(request):
     return render(request, 'exchcard/user-register-page.html')
 
+
 @login_required
 def address_create(request):
     if request.user.is_authenticated():

@@ -25,6 +25,7 @@
             {% if user.email %}
                 <label><span>登录用户:</span>{{user.email}}</label>
                 <label id="btn-logout">退出</label>
+                <wb:login-button type="3,2" ></wb:login-button>
             {% else %}
               <a href="/account/login">登录</a>
               <a href="/account/register">注册</a>
@@ -53,12 +54,14 @@
 <script type="text/javascript" src="{{STATIC_URL}}lib/bootstrap/bootstrap.min.js"></script>
 
 <script type="text/javascript" src="{{STATIC_URL}}javascripts/logout-helper.js"></script>
-<script type="text/javascript" src="{{STATIC_URL}}javascripts/login-helper.js"></script>
 
 <!--<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">-->
 <!--<link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.2.0/css/font-awesome.min.css">-->
 <!--<script src="https://cdn.bootcss.com/angular.js/1.4.8/angular.min.js"></script>-->
 <!--<script src="https://cdn.bootcss.com/angular.js/1.4.8/angular-route.min.js"></script>-->
+
+<script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js?appkey=appkey&debug=true"
+        type="text/javascript" charset="utf-8"></script>
 
 <script>
   $("#btn-logout").click(function(){

@@ -17,7 +17,9 @@ urlpatterns = [
     url(r'^account/resetpassword/$', 'exchcard.views.profile'),
     url(r'^account/findpassword/$', 'exchcard.views.profile'),
 
-    url(r'^account/login/weibo_check/', 'exchcard.weibo_auth.weibo_check'),
+    url(r'^weibo/auth/$', 'exchcard.weibo_auth_views.weibo_login'),
+    url(r'^weibo/auth/callback/$', 'exchcard.weibo_auth_views.weibo_check'),
+
 
     url(r'^account/address/create/$', 'exchcard.views.address_create'),
 

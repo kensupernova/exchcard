@@ -48,7 +48,7 @@ class SuperWeibo(object):
             username = username+'[weibo]'
 
         ## 用户的Id
-        u_id = 0
+        newuser_id = 0
 
         try:
             new_user = XUser.objects.create_user(
@@ -66,13 +66,13 @@ class SuperWeibo(object):
                     avatar=userInfo.get('avatar_large')
             )
 
-            u_id = new_user.id
+            newuser_id = new_user.id
         except:
             pass
 
         self.Login() # 新用户登陆
 
-        return u_id
+        return newuser_id
 
     def getUserInfo(self):
         """获取微博用户信息"""

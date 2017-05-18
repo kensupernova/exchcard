@@ -230,10 +230,10 @@ WSGI_APPLICATION = 'exchcard.wsgi.application'
 # }
 
 # 微博登陆
-URL = 'http://codetheme.sinaapp.com'
-APP_KEY = '你的'
-APP_SERCET = '你的'
-CALLBACK_URL = URL+'/account/login/weibo_check/'  # 回调地址
+URL = 'http://exchcard.applinzi.com'
+APP_KEY = 'appkey'
+APP_SERCET = 'appsecret'
+CALLBACK_URL = URL+'/weibo/auth/callback/'  # 回调地址
 
 AUTH_USER_MODEL = 'exchcard.XUser'   # 扩展表的位置，appname.Model,   MyUser是manager app下models中的用户类
 AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', 'exchcard.models.XAuth')   # 后端认证
