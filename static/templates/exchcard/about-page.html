@@ -1,0 +1,28 @@
+{% extends "foundation.html" %}
+
+{% block headinfo %}
+{% endblock %}
+
+{% block content %}
+<div class="about-main-content">
+  <div>
+    <p>
+      一个明信片交流网站，陌生人之间交换明信片。只要通过本地注册或者微博注册，填好地址，就会收到远方朋友的明信片，
+      也可以在旅游时领取任务给陌生的朋友寄送好看的明信片。给别人寄送的明信片越多，收到的明信片也越多。
+    </p>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block jscontainer %}
+
+<script>
+  $(document).ready(function(){
+
+    $("#about").addClass('active');
+
+  });
+</script>
+
+{% endblock %}

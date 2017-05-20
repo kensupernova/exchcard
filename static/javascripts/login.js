@@ -3,8 +3,11 @@ $(document).ready(function(){
   // local login
 	$(".btn-login-submit").click(function(){
     // get the input values for email and password
-    var email = $("#form_email").val()|| "zgh8@126.com";
-    var password = $("#form_password").val()||"z111111";
+    // var email = $("#form_email").val()|| "zgh8@126.com";
+    // var password = $("#form_password").val()||"z111111";
+
+    var email = $("#form_email").val();
+    var password = $("#form_password").val();
 
     var username = convert_email_to_username(email);
 

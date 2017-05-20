@@ -6,9 +6,13 @@ $(document).ready(function() {
 
   $("#btn-register-submit").click(function () {
 
-    var name = $("#form-name").val()|| "zgh7";
-    var address = $("#form-address").val() || "address street 1, Chengdu, China";
-    var postcode = $("#form-postcode").val() || "610234";
+    // var name = $("#form-name").val()|| "zgh7";
+    // var address = $("#form-address").val() || "address street 1, Chengdu, China";
+    // var postcode = $("#form-postcode").val() || "610234";
+
+    var name = $("#form-name").val();
+    var address = $("#form-address").val();
+    var postcode = $("#form-postcode").val();
 
     if(!validate_name(name)) {
       $("#name-error").text("姓名错误!");

@@ -15,7 +15,7 @@
   vertical-align: top;
   overflow: hidden;
   display: inline-block;
-
+  height: 150px;
 }
 
 .upper .left  .profile-image {
@@ -28,8 +28,8 @@
 }
 
 .upper .left  .profile-image img {
-  height: 10em;
-  width: 10em;
+  height: 140px;
+  width: 140px;
   overflow: hidden;
 }
 
@@ -41,18 +41,15 @@
 }
 
 .upper .left .info-summary div {
-  height:2em;
-  border:red 0.5px solid;
-}
-
-.upper .left .info-summary div a{
-  display: inline-block;
+  height: 35px;
+  line-height: 35px;
+  border:red 1px solid;
   width: 100%;
-  font-size: 1.1em;
+  font-size: 1.0em;
   color: black;
 }
 
-.upper .left .info-summary div a:hover{
+.upper .left .info-summary div:hover{
   background: red;
   color: white;
   text-decoration: none;
@@ -63,23 +60,25 @@
   display: inline-block;
   vertical-align: middle;
   overflow: hidden;
-  height:12em;
-  line-height: 12em;
+  height: 150px;
   border:red 0.5px solid;
 }
 
 
 .upper .right .btns {
   margin-top: 2px;
+  height: 100%;
 }
 .upper .right .btns div {
   text-align: center;
-  height: 100%;
+  height: 140px;
+  line-height: 140px;
   border:red 0.5px solid;
   width: calc(50% - 5px);
   display: inline-block;
-  vertical-align: top;
+  vertical-align: middle;
   overflow: hidden;
+  font-size: 25px;
 
 }
 
@@ -95,16 +94,12 @@
   cursor: pointer;
 }
 
-.upper .right .btns div h3{
-  display: inline;
-}
-
-.upper .right .btns div:hover h3{
+.upper .right .btns div:hover{
   background: red;
   color: white;
 }
 
-.upper .right .btns div:active h3{
+.upper .right .btns div:active {
   background: red;
   color: white;
 }
@@ -120,7 +115,15 @@
 
 /*明信片实时动态的格式*/
 .feeds-box {
-  min-height: 20em;
+  min-height: 100em;
+  margin: 0 5px;
+  border: 1px solid red;
+}
+
+.feeds-box .feeds-box-main-title{
+  font-size: 16px;
+  margin-top:8px;
+  margin-bottom: 8px;
 }
 
 .feeds-box div {
@@ -134,4 +137,8 @@
 
 .feeds-box div p{
   border:red 0.5px solid;
+}
+
+.feeds-box #liveEvents ul li{
+  list-style: none;
 }

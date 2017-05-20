@@ -1,13 +1,14 @@
-name: exchcard
-version: 2
-
 libraries:
 - name: "django"
-  version: "1.8"
+  version: "1.8.3"
+- name: "werkzeug"
+  version: "0.7.1"
 
-- name: "pytz"
-  version: "2015.7"
 
 handlers:
 - url: /static
   static_dir: static
+- url: /robots.txt
+  static_path: robots.txt
+- url: /favicon.ico
+  static_path: favicon.ico

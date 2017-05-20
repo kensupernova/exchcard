@@ -232,7 +232,7 @@ def get_random_profile(request, format=None):
 
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
-def profile_get_cards_all_state_count(request, pk, format=None):
+def profile_get_cards_each_state_count(request, pk, format=None):
     """
     得到某个Profile的各个状态的明信片总信息汇总
     :param request:
@@ -285,7 +285,7 @@ def profile_get_cards_all_state_count(request, pk, format=None):
 """
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
-def profile_get_cards_total(request, pk, format=None):
+def profile_get_all_cards(request, pk, format=None):
     """
     得到所有的明信片
     :param request:

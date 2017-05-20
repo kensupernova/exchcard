@@ -10,6 +10,7 @@ import datetime
 import urllib
 import urllib2
 import simplejson as json
+# import json
 
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
@@ -62,15 +63,18 @@ class SuperWeibo(object):
                     weibo_access_token=self.weibo_access_token,
 
                     url=userInfo.get('url', ''),
-                    desc =userInfo.get('description', ''),
+                    desc=userInfo.get('description', ''),
                     avatar=userInfo.get('avatar_large')
             )
 
             newuser_id = new_user.id
-        except:
-            pass
+            print "success create new user from new weibo login"
 
-        self.Login() # 新用户登陆
+            self.Login()  # 新用户登陆
+
+        except:
+            print "fail to create new user from new weibo login"
+            pass
 
         return newuser_id
 
@@ -82,7 +86,7 @@ class SuperWeibo(object):
 
         values = urllib2.Request(USER_INFO_URL+'?%s' %params, headers=headers)
         response = urllib2.urlopen(values)
-        result = json.loads(response.read())
+        result = json.loads(response.read()) # 把string转化为dict对象，与json.dumps把dict对象转化为string
 
         if result.get('error_code', None):
             # 写入日志
@@ -112,6 +116,13 @@ class SuperWeibo(object):
 
     def Login(self):
         """登陆"""
-        user_ = XUser.objects.filter(uid=self.weibo_uid)[0]
-        user = authenticate(email=user_.email, password=self.weibo_uid)
+        # user_ = XUser.objects.filter(weibo_uid=self.weibo_uid).first()
+        user = authenticate(email=str(self.weibo_uid) + '@weibo.com', password=self.weibo_uid)
         login(self.request, user)
+
+    def Logout(self):
+        """
+        注销
+        :return:
+        """
+        logout(self.request)

@@ -1,40 +1,79 @@
-table tr td{
-  margin-right: 10px;
-  padding-right: 10px;
+.cards-info-container table{
+  width: 100%;
+}
+.cards-info-container table tr td, .cards-info-container table tr th{
+  margin: 0 2px;
+  padding: 0 2px;
+  border: solid 1px black;
 }
 
-table tr th{
-  margin-right: 10px;
-  padding-right: 10px;
+.cards-info-container table tr th{
+  text-align: center;
+}
+
+table tr th:nth-child(1){
+  width: 8.4%;
+}
+
+
+table tr th:nth-child(2){
+  width: 9.6%;
+}
+
+table tr th:nth-child(3){
+  width: 20.9%;
+}
+
+table tr th:nth-child(4){
+  width: 11.5%;
+}
+
+
+table tr th:nth-child(5){
+  width: 9.6%;
+}
+
+table tr th:nth-child(6){
+  width: 20.9%;
+}
+
+table tr th:nth-child(7){
+  width: 11.5%;
+}
+table tr th:nth-child(8){
+  width: 7.4%;
 }
 
 .cards-info-container{
-  margin-top:1.5em;
+  margin-top:.5em;
 }
 
 .cards-info-main-title{
   padding-left: 50px;
   font-size: 1.5em;
 }
+
 .tab-btn-container {
 
 }
 
-a.tab-btn {
+.tab-btn-container a.tab-btn {
   display: inline-block;
   width:10%;
   text-decoration: none;
+  text-align: center;
   color: black;
+  border: 1px solid red;
 }
 
-a.tab-btn:hover {
-  text-decoration: none;
+.tab-btn-container a.tab-btn:hover {
   color: white;
   background: red;
+  box-shadow: #888888 1px 1px 1px;
 }
 
-a.tab-btn.active{
+.tab-btn-container a.tab-btn.active{
   background: red;
   color: white;
-  text-decoration: none;
+  box-shadow: #888888 1px 1px 1px;
 }

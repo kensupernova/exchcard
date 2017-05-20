@@ -5,19 +5,21 @@
 {% endblock %}
 
 {% block content %}
-<div class="main" ng-app="myApp" ng-controller="myCtrl">
- <div class="info-box" >
+<div class="main-content-container" ng-app="myApp" >
+ <div class="info-box" ng-controller="myCtrl">
   <div class="upper">
    <div class="left">
     <div class="profile-image">
-     <div><img src="{{STATIC_URL}}images/profile-icon.jpg"></div>
+     <div>
+      <img src="{{STATIC_URL}}images/profile-icon.jpg">
+     </div>
     </div>
     <div class="info-summary">
 
-     <div><a href="">成功发送了{[{sent_cards_arrived}]}张</a></div>
-     <div><a href="">成功接收了{[{receive_cards_arrived}]}张</a></div>
-     <div><a href="">有{[{sent_cards_travelling}]}张明信片在飞向别人</a></div>
-     <div><a href="">有{[{receive_cards_travelling}]}张明信片正在飞向我</a></div>
+     <div>成功发送了{[{sent_cards_arrived}]}张</div>
+     <div>成功接收了{[{receive_cards_arrived}]}张</div>
+     <div>有{[{sent_cards_travelling}]}张明信片在飞向别人</div>
+     <div>有{[{receive_cards_travelling}]}张明信片正在飞向我</div>
     </div>
 
    </div>
@@ -25,10 +27,10 @@
 
     <div class="btns">
      <div class="btn-send-card">
-      <h3>寄送明信片</h3>
+      寄送明信片
      </div>
      <div class="btn-receive-card">
-      <h3>注册明信片</h3>
+      注册明信片
      </div>
     </div>
    </div>
@@ -42,8 +44,8 @@
 
  <div class="feeds-box">
 
-  <div><h3>寄送明信片的实时动态</h3></div>
-  <div id="liveEvents">
+  <div class="feeds-box-main-title">寄送明信片的实时动态</div>
+  <div id="liveEvents" class="liveEvents">
    <ul>
     <li>
      <p id="event-94573570" style="opacity: 1;"><a href="/u/hsianfarergniwu">Liu Chang</a> sent a postcard to

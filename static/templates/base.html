@@ -9,28 +9,38 @@
     <!--css and js-->
     <link href="{{STATIC_URL}}styles/base.css" rel="stylesheet">
     
-    {% block title %}<title>明信片收藏家 Exchange Postcard</title>{% endblock %}
+    {% block title %}<title>明信片交换网 Exchange Postcard</title>{% endblock %}
 
     {% block headinfo %} {% endblock %}
 </head>
 <body>
 <div class="container">
-    <header class="header">
-        <div><a href="/">明信片收藏家</a></div>
-        
-    </header>
+  <header class="header">
+    <div><a href="/">明信片交换网</a></div>
+
+    <div class="logged-user-info-container">
+      {% if request.user.email %}
+        <label><span>登录用户:</span><span>{{request.user.email}}</span></label>
+        <label><a href="/profile">个人主页</a></label>
+        <label><a id="btn-logout">退出</a></label>
+
+
+      {% else %}
+        <a href="/account/login">登录</a>
+        <a href="/account/register">注册</a>
+
+        <!--第一方法WBML-->
+        <wb:login-button type="3,2" id="wb_connect_btn" onlogin="weibo_login"
+                         onlogout="weibo_logout"></wb:login-button>
+        <!--&lt;!&ndash;第二方法html+js&ndash;&gt;-->
+        <!--<div id="wb_connect_btn"></div>-->
+      {% endif %}
+    </div>
+
+  </header>
 
     <main class="main">
-        <div class="logged-user-info-container">
-            {% if user.email %}
-                <label><span>登录用户:</span>{{user.email}}</label>
-                <label id="btn-logout">退出</label>
-                <wb:login-button type="3,2" ></wb:login-button>
-            {% else %}
-              <a href="/account/login">登录</a>
-              <a href="/account/register">注册</a>
-            {% endif %}
-        </div>
+
         {% block content %}
          <p>This is content block </p>
         {% endblock %}
@@ -55,18 +65,51 @@
 
 <script type="text/javascript" src="{{STATIC_URL}}javascripts/logout-helper.js"></script>
 
+<!--cdn js-->
 <!--<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">-->
 <!--<link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.2.0/css/font-awesome.min.css">-->
 <!--<script src="https://cdn.bootcss.com/angular.js/1.4.8/angular.min.js"></script>-->
 <!--<script src="https://cdn.bootcss.com/angular.js/1.4.8/angular-route.min.js"></script>-->
+<!---->
 
-<script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js?appkey=appkey&debug=true"
+<script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js?appkey=2764709156&debug=true"
         type="text/javascript" charset="utf-8"></script>
 
 <script>
+  //  本地注销
   $("#btn-logout").click(function(){
     logout();
-  })
+  });
+
+  function weibo_login(o) {
+    alert(o.screen_name)
+  }
+
+  function weibo_logout() {
+    alert('logout');
+  }
+
+  //第二种方法html + js
+  //  WB2.anyWhere(function (W) {
+  //    W.widget.connectButton({
+  //      id: "wb_connect_btn",
+  //      type: '3,2',
+  //      callback: {
+  //        login: function (o) { //登录后的回调函数
+  //          alert("login: " + o.screen_name)
+  //        },
+  //        logout: function () { //退出后的回调函数
+  //          alert('logout');
+  //        }
+  //      }
+  //    });
+  //  });
+
+  $("#wb_connect_btn").click(function () {
+    window.location.href = "/weibo/auth/";
+  });
+
+
 </script>
 {% block jscontainer %}
 {% endblock %}

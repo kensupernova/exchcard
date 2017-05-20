@@ -216,5 +216,4 @@ def reload_api_settings(*args, **kwargs):
     if setting == 'REST_FRAMEWORK':
         api_settings = APISettings(value, DEFAULTS, IMPORT_STRINGS)
 
-
 setting_changed.connect(reload_api_settings)

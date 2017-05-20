@@ -89,14 +89,14 @@ urlpatterns = format_suffix_patterns([
         name="avatarphoto-detail"),
 
     ## 查看总的各状态的明信片
-    url(r"^profiles/(?P<pk>[0-9]+)/cards/allstate/count/$",
-        "exchcard_backend_api.profile_api.profile_get_cards_all_state_count",
+    url(r"^profiles/(?P<pk>[0-9]+)/cards/eachstate/count/$",
+        "exchcard_backend_api.profile_api.profile_get_cards_each_state_count",
         name="profile-get-cards-allstate-count"),
 
     ## 查看各个状态的明信片
-    url(r"^profiles/(?P<pk>[0-9]+)/cards/total/$",
-        "exchcard_backend_api.profile_api.profile_get_cards_total",
-        name="profile-get-cards-total"),
+    url(r"^profiles/(?P<pk>[0-9]+)/cards/all/$",
+        "exchcard_backend_api.profile_api.profile_get_all_cards",
+        name="profile-get-all-cards-data"),
 
     #### 接受之所以用receive, 是因为包括发出去未到的，和已经到达的两种
     url(r"^profiles/(?P<pk>[0-9]+)/cards/sent/total/$",

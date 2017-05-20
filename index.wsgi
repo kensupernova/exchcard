@@ -1,5 +1,13 @@
 import sae
-sae.add_vendor_dir('site-packages')
+import os
+import sys
 
-from mysite import wsgi
+path = os.path.join(os.path.dirname(os.path.abspath('__file__')), 'site-packages')
+sae.add_vendor_dir(path)
+
+
+
+
+
+from exchcard import wsgi
 application = sae.create_wsgi_app(wsgi.application)

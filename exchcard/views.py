@@ -168,10 +168,15 @@ def view_others_public_profile(request, username):
     :return:
     """
 
+def hobbyist(request):
+    profile_from_request = Profile.objects.get(profileuser
+                                               =request.user)
 
-"""
-明信片发烧友圈子
-"""
+    context = {'profile': profile_from_request}
+
+    return render(request, 'exchcard/hobbyist-page.html', context=context)
+
+
 @login_required
 def view_shao_you_quan(request):
     """
@@ -185,3 +190,12 @@ def view_shao_you_quan(request):
     context = {'profile': profile_from_request}
 
     return render(request, 'exchcard/moments-page.html', context=context)
+
+
+def about(request):
+    profile_from_request = Profile.objects.get(profileuser
+                                               =request.user)
+
+    context = {'profile': profile_from_request}
+
+    return render(request, 'exchcard/about-page.html', context=context)

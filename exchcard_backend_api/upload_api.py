@@ -34,7 +34,7 @@ def sae_s3_storage(request, format=None):
 @permission_classes([permissions.IsAuthenticated, ])
 def get_avatar_url(request, format=None):
     """
-    下载
+    得到avatar photo的url
     :param request:
     :param pk:
     :param format:
@@ -51,8 +51,13 @@ def get_avatar_url(request, format=None):
             if len(photos)>1:
 
                 photo = photos[0]
-            else:
+            elif len(photos)==1:
                 photo = photos
+            elif len(photos) < 1:
+                print "no avatar photo, use default"
+                return Response({
+                    "url": "/static/images/default-avatar.jpg"
+                })
 
             url = photo.avatar.url
 
@@ -60,7 +65,7 @@ def get_avatar_url(request, format=None):
             data = serializer.data
             data["url"] = url
 
-            return Response(data, status=status.HTTP_201_CREATED)
+            return Response(data, status=status.HTTP_200_OK)
 
 
         except Profile.DoesNotExist:

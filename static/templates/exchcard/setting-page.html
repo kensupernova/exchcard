@@ -5,16 +5,15 @@
 {% endblock %}
 
 {% block content %}
-<div class="content-container">
+<div class="setting-main-content-container">
 
-  <div ng-app="myApp" class="tab-container">
-    <div class="tab-btn-container top-tab">
-
-      <a ui-sref="account" ui-sref-active="active" id="tab-account" class="tab-btn">账号</a>
-      <a ui-sref="address" ui-sref-active="active" id="tab-address" class="tab-btn">地址</a>
-      <a ui-sref="avatar" ui-sref-active="active" id="tab-avatar" class="tab-btn">头像</a>
-      <!--<a ui-sref="profile" ui-sref-active="active" id="tab-profile" class="tab-btn">主页</a>-->
-
+  <div ng-app="myApp" class="setting-ui-container">
+    <div class="tab-btn-container">
+      <div>
+        <a ui-sref="account" ui-sref-active="active" id="tab-account" class="tab-btn">账号</a>
+        <a ui-sref="address" ui-sref-active="active" id="tab-address" class="tab-btn">地址</a>
+        <a ui-sref="avatar" ui-sref-active="active" id="tab-avatar" class="tab-btn">头像</a>
+      </div>
     </div>
     <div class="below-content">
       <ui-view>

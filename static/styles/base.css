@@ -29,7 +29,7 @@ body {
 header{
   min-height: 50px;
   width: 100%;
-  border: red 1px solid;
+  /*border: red 1px solid;*/
 }
 
 header div{
@@ -43,6 +43,7 @@ header div a{
   display: inline-block;
   font-size: 3em;
 }
+
 
 main {
 	margin-top: 10px;
@@ -72,4 +73,9 @@ footer p {
 
 .logged-user-info-container{
   margin-bottom: 20px;
+}
+
+.logged-user-info-container label span, .logged-user-info-container label a{
+  font-size: 13px;
+  font-weight: normal;
 }

@@ -14,28 +14,28 @@ middleware here, or combine a Django application with an application of another
 framework.
 
 """
-import os
-import sys
-
 
 # # We defer to a DJANGO_SETTINGS_MODULE already in the environment. This breaks
 # # if running multiple sites in the same mod_wsgi process. To fix this, use
 # # mod_wsgi daemon mode with each exchard in its own daemon process, or use
 # # os.environ["DJANGO_SETTINGS_MODULE"] = "exchard.settings"
-# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exchard.settings")
+# # os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exchard.settings")
 #
 # # This application object is used by any WSGI server configured to use this
 # # file. This includes Django's development server, if the WSGI_APPLICATION
 # # setting points here.
 
+import os
+import sys
 
-# 添加系统中没有的依赖包
-# site_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'exchard-packages'),
-# sys.path.insert(0, site_path)
+
+site_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'site-packages')
+# print site_path
+sys.path.insert(0, site_path)
+
 
 # 设置系统环境
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exchcard.settings")
-# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exchard.settings_dev")
 
 # WSGI application
 from django.core.wsgi import get_wsgi_application

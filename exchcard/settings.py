@@ -31,6 +31,7 @@ DEBUG = True
 
 # Hosts/domain names that are valid for this exchard; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
+# ALLOWED_HOSTS = ['exchcard.applinzi.com/']
 ALLOWED_HOSTS = []
 
 
@@ -128,6 +129,7 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
 )
 
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -165,7 +167,11 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     # admin user is the default permission for security
     # the permission of each view will be defined one by one specifically
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAdminUser',),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',
         'rest_framework.parsers.FormParser',
@@ -173,6 +179,7 @@ REST_FRAMEWORK = {
     ),
     'PAGE_SIZE': 10
 }
+
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
@@ -229,21 +236,24 @@ WSGI_APPLICATION = 'exchcard.wsgi.application'
 #     }
 # }
 
-# 微博登陆
-URL = 'http://exchcard.applinzi.com'
-APP_KEY = 'appkey'
-APP_SERCET = 'appsecret'
-CALLBACK_URL = URL+'/weibo/auth/callback/'  # 回调地址
 
+
+# 自定义的用户认证系统
 AUTH_USER_MODEL = 'exchcard.XUser'   # 扩展表的位置，appname.Model,   MyUser是manager app下models中的用户类
 AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', 'exchcard.models.XAuth')   # 后端认证
 
+# 微博登陆, 在微博开放平台上应用的key和secret
+URL = 'http://exchcard.applinzi.com'
+APP_KEY = '2764709156'
+APP_SERCET = '172a5be795a5ccdb70d205cda876e636'
+CALLBACK_URL = URL+'/weibo/auth/callback/'  # 回调地址
 
 # ------------------------------------------------
 ## 配置SAE新浪云, 存储上传的media文件
 # sae的本地文件系统是只读的，修改django的file storage backend为Storage
 # This overides the MEDIA_ROOT
 # ref: https://docs.djangoproject.com/en/dev/topics/files/
+
 # DEFAULT_FILE_STORAGE = 'sae.ext.django.storage.backend.Storage'
 
 # media文件使用这个bucket
@@ -251,14 +261,14 @@ AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', 'exchcar
 
 
 # ---------------------------------------------------
-## SAE线上数据库的配置
+# # SAE线上数据库的配置, user为新浪云上应用的access key, pass为secret key
 # MYSQL_HOST = 'w.rdc.sae.sina.com.cn'
 # MYSQL_PORT = '3307'
-# MYSQL_USER = 'yn4j01zlxx'
-# MYSQL_PASS = 'xl4w353h2h3h1315jzl2imx1hj0likwj1z2m125m'
+# MYSQL_USER = '30n1003100'
+# MYSQL_PASS = 'ml33hhjh4i1k01kwyjxi15wh4m1ikyw0lmyllx52'
 # MYSQL_DB   = 'app_exchcard'
 #
-## Database setting for SAE My Sql
+# # Database setting for SAE My Sql
 # DATABASES = {
 #     'default': {
 #         'ENGINE':   'django.db.backends.mysql',
@@ -270,7 +280,13 @@ AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', 'exchcar
 #     }
 # }
 
+# -------------------------------------------------------------
 
+# # 在本地开发环境中，如下配置数据库，即可执行 python manage.py syncdb 直接 syncdb 到线上数据库。
+# from sae._restful_mysql import monkey
+# monkey.patch()
+#
+# -------------------------------------------------------------
 # Local Database Connection
 DATABASES = {
     'default': {

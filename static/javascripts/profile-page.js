@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	console.log("profile page ...");
+	// console.log("profile page ...");
 
   $(".btn-send-card").click(function () {
     window.location.href="/card/send/";
@@ -16,8 +16,7 @@ $(document).ready(function(){
 
 'use strict';
 var profile_id =$('#profile-id-holder').text().trim();
-var BASE_URL = "";
-var path = BASE_URL + "/exchcard/api/"+"profiles/"+profile_id+"/cards/allstate/count/";
+var path = "/exchcard/api/"+"profiles/"+profile_id+"/cards/eachstate/count/";
 
 var app = angular.module('myApp',[]);
 // 修改全段angular中的符号, 不与后端python的数据填入符号{{}}混淆

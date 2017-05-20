@@ -15,7 +15,7 @@
   <link href="{{STATIC_URL}}styles/foundation.css" rel="stylesheet">
 
 
-  {% block title %}<title>明信片收藏家 Exchange Postcard</title>{% endblock %}
+  {% block title %}<title>明信片交换网 Exchange Postcard</title>{% endblock %}
 
   {% block headinfo %}{% endblock %}
 
@@ -23,50 +23,54 @@
 <body>
 <div id="profile-id-holder" style="display: none">{{profile.id}}</div>
 <div class="container">
+  <div class="smaller-container col-md-10">
+    <header class="header" id="header">
 
-  <header class="header" id="header">
+      {% csrf_token %}
+      <div class="row spanner">
+        <div class="logo-container"><a href="/profile">明信片交换网</a></div>
+        <div class="profile-setting right">
+          {% if profile %}
+            <div >{{profile.profileuser.email}}</div>
+          {%endif%}
+          <div id="setting"><a href="/setting">设置</a></div>
+          {% if profile.profileuser.weibo_uid %}
+            <div id="wb_connect_btn"></div>
+          {% else %}
+            <div id="logout">退出</div>
+          {% endif %}
 
-    {% csrf_token %}
-    <div class="row spanner">
-      <div class="logo-container"><a href="/profile">明信片收藏家</a></div>
-      <div class="profile-setting">
-        {% if profile%}
-          <div >{{profile.profileuser.email}}</div>
-        {%endif%}
-        <div id="setting"><a href="/setting">设置</a></div>
-        <div id="logout">退出</div>
+        </div>
+        <div class="clear">
+        </div>
       </div>
-      <div class="clear"></div>
-    </div>
+      <div class="nav" id="nav">
+        <ul class="md-col-8">
+          <li class="dropdown">
+            <a href="/profile/" id="cards">明信片 <span class="arr" >▼</span></a>
+            <ul class="collapsed">
+              <li class="collapsed-item"><a href="/profile/cards/">明信片统计</a></li>
+              <li class="collapsed-item"><a href="/card/send">寄送明信片</a></li>
+              <li class="collapsed-item"><a href="/card/receive">注册明信片</a></li>
+            </ul>
+          </li>
+          <li><a href="/hobbyist" id="hobbyist">发烧友</a></li>
+          <li><a href="/moments" id="moments">烧友圈</a></li>
+          <li><a href="/about" id="about">关于</a></li>
 
-    <div class="clear"></div>
-    <div class="nav" id="nav">
-      <ul class="md-col-8">
-        <li class="dropdown">
-          <a href="/profile/" id="cards">明信片 <span class="arr" >▼</span></a>
-          <ul class="collapsed">
-            <li class=""><a href="/profile/cards/">明信片统计</a></li>
-            <li class=""><a href="/card/send">寄送明信片</a></li>
-            <li class=""><a href="/card/receive">注册明信片</a></li>
-          </ul>
-        </li>
-        <!--<li><a href="/moments" id="moments">烧友圈</a></li>-->
-        <!--<li><a href="/statistics" id="stats">统计数据</a></li>-->
-
-        <li><a href="" id="about">关于</a></li>
-      </ul>
-    </div>
+        </ul>
+      </div>
 
 
-  </header>
+    </header>
 
-  <div class="clear"></div>
 
-  {% block content %} {% endblock %}
+    {% block content %} {% endblock %}
 
-  <footer class="footer">
-    <p class ="copyright">&copy GUANGHUI ZHANG 2017</p>
-  </footer>
+    <footer class="footer">
+      <p class ="copyright">&copy GUANGHUI ZHANG 2017</p>
+    </footer>
+  </div>
 </div>
 
 
@@ -81,6 +85,10 @@
 
 <!--cookie-->
 <script type="text/javascript" src="{{STATIC_URL}}lib/js.cookie.js"></script>
+
+<script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js?appkey=2764709156&debug=true"
+        type="text/javascript" charset="utf-8"></script>
+
 <!--csrf when send form thru ajax-->
 <script type="text/javascript" src="{{STATIC_URL}}javascripts/csrf-helper.js"></script>
 

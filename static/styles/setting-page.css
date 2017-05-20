@@ -1,18 +1,22 @@
-.content-container{
-  margin-top:20px;
+.setting-main-content-container{
+
 }
 
 .tab-btn-container{
-  width: 100%;
+  width: 90%;
+  margin:0 auto
 }
 
+.tab-btn-container div {
+  width: 100%;
+}
 .tab-btn-container a.tab-btn{
   text-align: center;
   display: inline-block;
-  width: calc(100%/3 - 10px);
+  width: calc(99%/3 - 2px);
   background: lightcoral;
   min-height: 20px;
-  font-size: 1.5em;
+  font-size: 1.2em;
   text-decoration: none;
   color: black;
 }
@@ -64,11 +68,21 @@ label.account-info-item-title {
   margin-right: 2em;
   margin-left: 1em;
   width:4em;
+  line-height: 100%;
+  height: 100%;
+  vertical-align: middle;
 }
 
 .address-info-content .address-info-item .address-info-item-content {
   margin-left: 5px;
   margin-right: 5px;
+}
+
+#address {
+  width:300px;
+  overflow-y:visible;
+  margin-top:5px;
+  margin-bottom: 5px;
 }
 
 .address-info-item .error-message {
@@ -83,24 +97,24 @@ label.account-info-item-title {
 button#save-address {
   padding-left:5px;
   padding-right: 5px;
-}
-
-button#save-address span {
-}
-
-button#save-address{
   background: gainsboro;
   color: white;
-}
-
-button#save-address.active span{
-
 }
 
 button#save-address.active{
   color: white;
   background: red;
 }
+
+button#save-address span {
+}
+
+
+button#save-address.active span{
+
+}
+
+
 
 /*头像信息页面*/
 .avatar-content-container{

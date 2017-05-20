@@ -285,7 +285,7 @@ class AvatarPhotoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AvatarPhoto
-        fields = ('id','avatar', "owner_id", "owner_email")
+        fields = ('id', 'avatar', "owner_id", "owner_email")
 
 class ProfileWithAvatarPhotoSerializer(serializers.HyperlinkedModelSerializer):
     profileuser_username = serializers.CharField(source="profileuser.username")

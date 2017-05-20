@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>用户注册</title>
+{% endblock %}
+
+{% block headinfo %}
+<!--<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}styles/register.css" >-->
+<style>
+
+  /*地址注册*/
+  #registerform .item{
+
+    margin-top:15px;
+  }
+
+  #registerform {
+    width: 25em;
+  }
+
+  #btn-register-submit {
+    background: white;
+    color: black;
+    border: black 1px solid;
+    display: inline-flex;
+    padding-left: 1em;
+    padding-right: 1em;
+    min-width: 5em;
+  }
+
+  #btn-register-submit:hover{
+    background: red;
+    color:white;
+  }
+
+  #btn-register-submit:active{
+    background: red;
+    color:white;
+    box-shadow: red 2px 2px 2px;
+  }
+
+
+</style>
+
+{% endblock %}
+
+{% block content%}
+<div class="section-register">
+	<div id="registerform" name="registerform" class="register-form col-md-4">
+    <fieldset>
+      <!--为了得到csrf token-->
+      <form action="" method="post">{% csrf_token %}</form>
+      <div>收件信息</div>
+      <div class="item item-name">
+        <input name="form-name" placeholder="姓名" id="form-name" class="inp" type="text" tabindex="2"/>
+        <label id="name-error" class="input-error"></label>
+      </div>
+      <div class="item item-address">
+          <textarea name="form-address" placeholder="地址" id="form-address" class="inp" type="text" tabindex="2"></textarea>
+        <label id="address-error" class="input-error"></label>
+      </div>
+      <div class="item item-postcode">
+        <input name="form-postcode" placeholder="邮编" id="form-postcode" class="inp" type="text" tabindex="2"/>
+        <label id="postcode-error" class="input-error"></label>
+      </div>
+
+      <div class="item item-submit">
+          <div id="btn-register-submit" tabindex="4">提交</div>
+      </div>
+
+    </fieldset>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block jscontainer %}
+<script type="text/javascript" src="{{STATIC_URL}}javascripts/validator.js" ></script>
+<script type="text/javascript" src="{{STATIC_URL}}javascripts/address-create.js"></script>
+{% endblock %}
