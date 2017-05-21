@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.utils.translation import ugettext_lazy
 
 from exchcard.models_profile import Address, Card, Profile
+from exchcard.models import XUser
 
 
 """
@@ -45,12 +46,18 @@ class ProfileAdmin(admin.ModelAdmin):
     model = Profile
     fields = ('profileaddress', 'profileuser')
 
-
+class XUserAdmin(admin.ModelAdmin):
+    """
+    Extended django.contrib.auth.models.AbstractBaseUser
+    """
+    model = XUser
+    name = 'XUser'
+    fields = ('email', 'is_admin', 'is_active', 'type', 'desc')
 
 # 注册对于模型的后台管理
 admin.site.register(Address, AddressAdmin)
 admin.site.register(Card, CardAdmin)
 admin.site.register(Profile, ProfileAdmin)
-
+admin.site.register(XUser, XUserAdmin)
 
 

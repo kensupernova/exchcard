@@ -52,7 +52,17 @@ class XUserManager(BaseUserManager):
 
 class XUser(AbstractBaseUser):
     """
-    Extended User Model, customize user model
+    Extended User Model, customize user model,
+    AbstractBaseUser already has:
+    - password,
+
+    - get_username()
+    - is_anonymous()
+    - is_authenticated()
+    - set_password(raw_password)
+      - Taking care of the password hashing. Doesn’t save the AbstractBaseUser object, call obj.save() afterwards
+    - check_password(raw_password)
+      - Returns True if the given raw string is the correct password for the user
     """
     created = models.DateTimeField(auto_now_add=True)
 
@@ -64,8 +74,9 @@ class XUser(AbstractBaseUser):
     sex = models.IntegerField(default=1)  # sex
     weibo_uid = models.CharField(max_length=50, null=True)  # weibo uid
     weibo_access_token = models.CharField(max_length=100, null=True)  # weibo access_token
-    url = models.URLField(null=True)  # 个人站点
     desc = models.CharField(max_length=2000, null=True)  # 个人信息简介
+
+    url = models.URLField(null=True)  # 个人站点
     avatar = models.CharField(max_length=500, null=True)  # 头像
 
     objects = XUserManager()
@@ -81,8 +92,11 @@ class XUser(AbstractBaseUser):
         # The user is identified by their email address
         return self.email
 
+
+
+
     def __unicode__(self):
-        return self.email
+        return u'%s, %s, %s, %s' % (self.type, self.email, self.weibo_uid, self.weibo_access_token)
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"

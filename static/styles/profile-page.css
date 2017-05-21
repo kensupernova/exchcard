@@ -1,8 +1,5 @@
-.main {
-  background-color: #ffffff;
-  padding: 10px;
-  min-height:30em;
-
+.profile-main-content-container {
+  margin: 0 5px;
   border: red 1px solid;
 }
 
@@ -24,7 +21,7 @@
   vertical-align: middle;
   overflow: hidden;
   max-height: 100%;
-  border:red 0.5px solid;
+  border:red 1px solid;
 }
 
 .upper .left  .profile-image img {
@@ -41,9 +38,10 @@
 }
 
 .upper .left .info-summary div {
-  height: 35px;
-  line-height: 35px;
+  height: 32px;
+  line-height: 32px;
   border:red 1px solid;
+  margin-bottom: 3px;
   width: 100%;
   font-size: 1.0em;
   color: black;
@@ -112,6 +110,96 @@
 .upper .right .btns .btn-receive-card {
 
 }
+
+/*主页明信片详细情况*/
+.profile-cards-info-container{
+  min-height: 200px;
+  border: 1px solid red;
+  margin: 0 5px;
+}
+
+.profile-cards-info-main-title{
+  padding-left: 50px;
+  font-size: 1.5em;
+}
+
+.tab-btn-container {
+
+}
+
+.tab-btn-container a.tab-btn {
+  display: inline-block;
+  width:10%;
+  text-decoration: none;
+  text-align: center;
+  color: black;
+  border: 1px solid red;
+}
+
+.tab-btn-container a.tab-btn:hover {
+  color: white;
+  background: red;
+  box-shadow: #888888 1px 1px 1px;
+  -moz-box-shadow: #888888 1px 1px 1px;
+  -webkit-box-shadow: #888888 1px 1px 1px;
+}
+
+.tab-btn-container a.tab-btn.active{
+  background: red;
+  color: white;
+  box-shadow: #888888 1px 1px 1px;
+  -moz-box-shadow: #888888 1px 1px 1px;
+  -webkit-box-shadow: #888888 1px 1px 1px;
+}
+
+
+.profile-cards-info-container table{
+  width: 99%;
+}
+.profile-cards-info-container table tr td, .profile-cards-info-container table tr th{
+  margin: 0 2px;
+  padding: 0 2px;
+  border: solid 1px black;
+}
+
+.profile-cards-info-container table tr th{
+  text-align: center;
+}
+
+table tr th:nth-child(1){
+  width: 8.4%;
+}
+
+
+table tr th:nth-child(2){
+  width: 9.6%;
+}
+
+table tr th:nth-child(3){
+  width: 20.9%;
+}
+
+table tr th:nth-child(4){
+  width: 11.5%;
+}
+
+
+table tr th:nth-child(5){
+  width: 9.6%;
+}
+
+table tr th:nth-child(6){
+  width: 20.9%;
+}
+
+table tr th:nth-child(7){
+  width: 11.5%;
+}
+table tr th:nth-child(8){
+  width: 7.4%;
+}
+
+
 
 /*明信片实时动态的格式*/
 .feeds-box {

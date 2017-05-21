@@ -25,12 +25,13 @@ class ProfileManager(Manager):
         address = Address.objects.get(pk=addressid)
 
         profile = self.create(profileuser=user, profileaddress=address)
+        profile.save()
         return profile
 
     def update_profile_address_with_ids(self, userid, addressid):
         profile = Profile.objects.get(profileuser_id=userid)
         profile.profileaddress_id = addressid
-
+        profile.save()
         return profile
 
 
@@ -44,7 +45,7 @@ class CardManager(Manager):
                                torecipient_id=torecipient_id,
                                fromsender_id=fromsender_id,
                                has_arrived=False)
-
+            card.save()
             return card
 
         return None
@@ -56,7 +57,7 @@ class DianZanManager(Manager):
         if Card.objects.filter(id=card_by_dianzan_id).exists():
             dianzan = self.create(card_by_dianzan=Card.objects.get(id=card_by_dianzan_id),
                                   card_photo_by_dianzan=CardPhoto.objects.get(id=card_photo_by_dianzan_id),
-                                  person_who_dianzan=Profile.objects.get(id=person_who_dianzan_id));
+                                  person_who_dianzan=Profile.objects.get(id=person_who_dianzan_id))
 
             dianzan.save()
 
@@ -71,10 +72,25 @@ class DianZanManager(Manager):
 """
 
 class Address(models.Model):
+    """
+    postal address, 可以邮寄用的，包括名字，地址，邮编等
+    """
     created = models.DateTimeField(auto_now_add=True)
+    # DateField.auto_now表示是否每次修改时改变时间
+    # DateField.auto_now_add 表示是否创建时表示时间
     name = models.CharField(max_length = 255, default="name")
+    # 包括邮箱号，门牌号，房间楼层，建筑名，建筑牌号，街道，城市，国家
     address = models.CharField(max_length = 255, default="address")
     postcode = models.CharField(max_length = 100,  default="111111")
+
+    # 单独列出城市，国家
+    city = models.CharField(max_length=50, null=True)
+    country = models.CharField(max_length=50, null=True)
+
+    ## 包括以上所有信息
+    full_text_address = models.CharField(max_length=510, null=True)
+
+    objects = AddressManager()
 
     class Meta:
         ordering = ['-name']
@@ -91,13 +107,11 @@ class Address(models.Model):
 
     def update(self, name, address, postcode, *args, **kwargs):
         self.name = name
-        self.address =address
+        self.address = address
         self.postcode = postcode
+        super(Address, self).save(*args, **kwargs) ## 一定要save
 
-        super(Address, self).save(*args, **kwargs)
 
-
-    objects = AddressManager()
 
 class DetailedAddress(models.Model):
     address_first_line = models.CharField(max_length = 255, default=" ")
@@ -107,11 +121,15 @@ class DetailedAddress(models.Model):
     state_province = models.CharField(max_length = 255, default=" ")
     country = models.CharField(max_length = 255, default=" ")
 
+    objects = DetailedAddressManager()
+
     def __str__(self):
         return u'%s, %s, %s, %s, %s' % (self.address_first_line, self.address_second_line,
             self.address_third_line, self.city, self.country)
 
-    objects = DetailedAddressManager()
+
+
+
 
 class Profile(models.Model):
     """

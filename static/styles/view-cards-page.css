@@ -1,5 +1,40 @@
+
+.cards-info-container{
+  margin-top:.5em;
+}
+
+.cards-info-main-title{
+  padding-left: 50px;
+  font-size: 1.5em;
+}
+
+.tab-btn-container {
+
+}
+
+.tab-btn-container a.tab-btn {
+  display: inline-block;
+  width:10%;
+  text-decoration: none;
+  text-align: center;
+  color: black;
+  border: 1px solid red;
+}
+
+.tab-btn-container a.tab-btn:hover {
+  color: white;
+  background: red;
+  box-shadow: #888888 1px 1px 1px;
+}
+
+.tab-btn-container a.tab-btn.active{
+  background: red;
+  color: white;
+  box-shadow: #888888 1px 1px 1px;
+}
+
 .cards-info-container table{
-  width: 100%;
+  width: 99%;
 }
 .cards-info-container table tr td, .cards-info-container table tr th{
   margin: 0 2px;
@@ -42,38 +77,4 @@ table tr th:nth-child(7){
 }
 table tr th:nth-child(8){
   width: 7.4%;
-}
-
-.cards-info-container{
-  margin-top:.5em;
-}
-
-.cards-info-main-title{
-  padding-left: 50px;
-  font-size: 1.5em;
-}
-
-.tab-btn-container {
-
-}
-
-.tab-btn-container a.tab-btn {
-  display: inline-block;
-  width:10%;
-  text-decoration: none;
-  text-align: center;
-  color: black;
-  border: 1px solid red;
-}
-
-.tab-btn-container a.tab-btn:hover {
-  color: white;
-  background: red;
-  box-shadow: #888888 1px 1px 1px;
-}
-
-.tab-btn-container a.tab-btn.active{
-  background: red;
-  color: white;
-  box-shadow: #888888 1px 1px 1px;
 }

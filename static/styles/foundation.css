@@ -2,7 +2,6 @@
   padding: 2px;
   margin: 0 auto;
   font-size:12px;
-  font-family: "微软雅黑";
   background-color:#ffffff;
 }
 
@@ -20,7 +19,7 @@ a {
 body {
   font-size: 16px;
   text-align:center;
-font-family: 'Tahoma', 'Helvetica', 'Arial', sans-serif;
+  font-family: 'Tahoma', 'Helvetica', 'Arial', sans-serif;
 }
 
 
@@ -66,7 +65,8 @@ header div{
   text-align: center;
 }
 
-.row.spanner {
+/*篡改bootstrap的设计*/
+.row {
   margin-right: 0px;
   margin-left: 0px;
 }
@@ -158,12 +158,16 @@ div.profile-setting.right{
   background-color: red;
   color: white;
   box-shadow: #888888 5px 5px 5px;
+  -moz-box-shadow: #888888 5px 5px 5px;
+  -webkit-box-shadow: #888888 5px 5px 5px;
 }
 
 .nav ul li a:active, .nav ul li a.active {
   background-color: red;
   color: white;
   box-shadow: #888888 5px 5px 5px;
+  -moz-box-shadow: #888888 5px 5px 5px;
+  -webkit-box-shadow: #888888 5px 5px 5px;
 }
 
 /*下拉菜单符号*/
@@ -179,6 +183,7 @@ div.profile-setting.right{
   background: lightcoral;
 }
 
+/*下拉菜单符号*/
 .nav ul li.dropdown a.active .arr, .nav ul li.dropdown a:active .arr, .nav ul li.dropdown a:hover .arr {
   background: red;
 }

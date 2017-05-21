@@ -89,7 +89,7 @@ def get_info_of_logged_user(request):
     """
     if request.method == "GET":
         try:
-            print "getting info of user ... "
+            # print "getting info of user ... "
             user = request.user
             return Response(UserSerializer2(user).data, status=status.HTTP_200_OK)
         except:

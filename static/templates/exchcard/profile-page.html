@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block content %}
-<div class="main-content-container" ng-app="myApp" >
- <div class="info-box" ng-controller="myCtrl">
+<div class="profile-main-content-container" ng-app="myApp" >
+  <div class="info-box" ng-controller="myCtrl">
   <div class="upper">
    <div class="left">
     <div class="profile-image">
@@ -39,10 +39,24 @@
 
 
  </div>
+  <div class="profile-cards-info-container">
+  <div>
+   <label class="profile-cards-info-main-title">明信片统计</label>
+  </div>
+  <div class="tab-btn-container ">
 
+   <a ui-sref="sentArrived" ui-sref-active="active" id="tab-sent-arrived" class="tab-btn">成功寄送</a>
+   <a ui-sref="receiveArrived" ui-sref-active="active" id="tab-receive-arrived" class="tab-btn">成功接收</a>
+   <a ui-sref="sentTravelling" ui-sref-active="active" id="tab-sent-travelling" class="tab-btn">未寄送到</a>
+   <a ui-sref="receiveTravelling" ui-sref-active="active" id="tab-receive-travelling" class="tab-btn">未接收到</a>
 
+  </div>
+  <div>
+   <ui-view></ui-view>
+  </div>
 
- <div class="feeds-box">
+ </div>
+  <div class="feeds-box">
 
   <div class="feeds-box-main-title">寄送明信片的实时动态</div>
   <div id="liveEvents" class="liveEvents">
@@ -57,15 +71,13 @@
   </div>
 
  </div>
-
-
 </div>
 
 {% endblock %}
 
 {% block jscontainer %}
-
-
+<script type="text/javascript" src="{{STATIC_URL}}lib/angular.js"></script>
+<script src="{{STATIC_URL}}lib/angular-ui-router.min.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}javascripts/profile-page.js"></script>
 
 {% endblock %}

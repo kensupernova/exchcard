@@ -1,22 +1,12 @@
-a:active{
-  text-decoration: none;
-}
-table tr td{
-  margin-right: 10px;
-  padding-right: 10px;
-}
-table tr th{
-  margin-right: 10px;
-  padding-right: 10px;
+.moments-main-content-container {
+  min-height: 200px;
+  border: red 1px solid;
+  margin: 0 5px;
 }
 
-.tab-btn-container {}
-
-.tab-btn {
-  display: inline-block;
-  width:10%;
+.moments-main-content-container .moments-main-title{
+  font-size: 18px;
+  font-weight: bold;
 }
 
-a.tab-btn.active{
-  background: red;
-}
+

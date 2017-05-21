@@ -21,10 +21,9 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
     url:'/sentArrived',
     name:'sentArrived',
     template:
-    '<table class = ""  ng-controller="sentArrivedCtrl">'+
+    '<table class = "table-cards"  ng-controller="sentArrivedCtrl" > '+
     '<tr>'+
     '<th class="cell-1">post id</th>'+
-
     '<th class="cell-2">from user</th>'+
     '<th class="cell-3">from address</th>'+
     '<th class="cell-4">sent time</th>'+
@@ -33,6 +32,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
     '<th class="cell-7">arrived time</th>'+
     '<th class="cell-8">isArrived</th>'+
     '</tr>'+
+    '<tr ng-show="sent_arrived == null"><th colspan ="8">空</th></tr>'+
     '<tr ng-repeat="card in sent_arrived">'+
     '<td>{[{card.card_name}]}</td>'+
     '<td>{[{card.fromsender_email}]}</td>'+
@@ -49,36 +49,37 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
   var receiveArrivedState= {
     url:'/receiveArrived',
     name:'receiveArrived',
-      template:
-      '<table class = "receive-arrived"  ng-controller="receiveArrivedCtrl">'+
-      '<tr>'+
-      '<th>post id</th>'+
-      '<th>from user</th>'+
-      '<th>from address</th>'+
-      '<th>sent time</th>'+
-      '<th>to user</th>'+
-      '<th>to address</th>'+
-      '<th>arrived time</th>'+
-      '<th>isArrived</th>'+
-      '</tr>'+
-      '<tr ng-repeat="card in receive_arrived">'+
-      '<td>{[{card.card_name}]}</td>'+
-      '<td>{[{card.fromsender_email}]}</td>'+
-      '<td>{[{card.from_address}]}</td>'+
-      '<td>{[{card.sent_date}]}</td>'+
-      '<td>{[{card.torecipient_email}]}</td>'+
-      '<td>{[{card.to_address}]}</td>'+
-      '<td>{[{card.arrived_date}]}</td>'+
-      '<td>{[{card.has_arrived}]}</td>'+
-      '</tr>'+
-      '</table>'
+    template:
+    '<table class = "table-cards receive-arrived"  ng-controller="receiveArrivedCtrl">'+
+    '<tr>'+
+    '<th>post id</th>'+
+    '<th>from user</th>'+
+    '<th>from address</th>'+
+    '<th>sent time</th>'+
+    '<th>to user</th>'+
+    '<th>to address</th>'+
+    '<th>arrived time</th>'+
+    '<th>isArrived</th>'+
+    '</tr>'+
+    '<tr ng-repeat="card in receive_arrived">'+
+    '<td>{[{card.card_name}]}</td>'+
+    '<td>{[{card.fromsender_email}]}</td>'+
+    '<td>{[{card.from_address}]}</td>'+
+    '<td>{[{card.sent_date}]}</td>'+
+    '<td>{[{card.torecipient_email}]}</td>'+
+    '<td>{[{card.to_address}]}</td>'+
+    '<td>{[{card.arrived_date}]}</td>'+
+    '<td>{[{card.has_arrived}]}</td>'+
+    '</tr>'+
+    '<tr ng-show="receive_arrived == null"><th colspan ="8">空</th></tr>'+
+    '</table>'
   };
 
   var sentTravellingState= {
     url:'/sentTravelling',
     name:'sentTravelling',
     template:
-    '<table  ng-controller="sentTravellingCtrl">'+
+    '<table class="table-cards" ng-controller="sentTravellingCtrl" >'+
     '<tr>'+
     '<th>post id</th>'+
     '<th>from user</th>'+
@@ -99,6 +100,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
     '<td>{[{card.arrived_date}]}</td>'+
     '<td>{[{card.has_arrived}]}</td>'+
     '</tr>'+
+    '<tr ng-show="sent_travelling == null"><th colspan ="8">空</th></tr>'+
     '</table>'
   };
 
@@ -106,7 +108,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
     url:'/receiveTravelling',
     name:'receiveTravelling',
     template:
-    '<table  ng-controller="receiveTravellingCtrl">'+
+    '<table class="table-cards" ng-controller="receiveTravellingCtrl">'+
     '<tr>'+
     '<th>post id</th>'+
     '<th>from user</th>'+
@@ -127,6 +129,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
     '<td>{[{card.arrived_date}]}</td>'+
     '<td>{[{card.has_arrived}]}</td>'+
     '</tr>'+
+    '<tr ng-show="receive_travelling == null"><th colspan ="8">空</th></tr>'+
     '</table>'
   };
 
@@ -139,6 +142,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
 
 
 }]);
+
 
 ///// 运行app
 app.run(function($rootScope, $http) {

@@ -6,7 +6,7 @@ from exchcard import settings
 
 # To enable the admin:
 from django.contrib import admin
-admin.autodiscover()
+admin.autodiscover() ## before url conf
 
 
 urlpatterns = [
@@ -75,12 +75,8 @@ urlpatterns = [
     # Method 2 :
     # urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-
     # 其他
     url(r'^search/$', 'exchcard.views_search.search'),
-
-    url(r'^upload/file/$', 'exchcard.views_upload_file.uploadFile')
-
-
+    url(r'^upload/file/$', 'exchcard.views_upload_file.uploadFile'),
 
 ]
