@@ -115,37 +115,64 @@ button#save-address.active span{
 }
 
 
-
 /*头像信息页面*/
-.avatar-content-container{
+.avatar-info-container{
   padding: 5px;
+  width: 60%;
 }
 
-.avatar-add-new-container{
-  padding: 5px;
-  margin-top: 50px;
+.avatar-info-container .avatar-old-container{
+  border: solid red 1px;
 }
 
-.avatar-content-container .avatar-title{
+
+.avatar-info-container .avatar-info-main-title{
   min-height: 5em;
   text-align: center;
 
 }
 
-.avatar-content-container div div img {
+.avatar-old-container img#img-avatar {
   width: 100px;
   height: 100px;
   border: solid rosybrown 1px;
 }
 
-.avatar-add-new-container form #submit{
-  margin-top: 1.5em;
-  width: 5em;
-  height: 3em;
+.avatar-add-new-container{
+  margin-top: 10px;
+  border: solid red 1px;
 }
 
-.avatar-add-new-container form input#avatar{
-  display: inline-block;
-  height: 2em;
-  margin: 5px;
+.form-row {
+  clear: both;
+  overflow: hidden;
+  /*消除float*/
+}
+
+.form-row>label {
+  float: left;
+  width: 25%;
+  text-align: right;
+  padding-right: 10px;
+}
+
+.form-row>div {
+  float: right;
+  width: 75%;
+  text-align: left;
+}
+
+.form-row>div .help{
+  text-align: left;
+}
+
+.form-row input[type=file]{
+  border-radius: 0;
+}
+
+.form-row input#submit {
+  float: left;
+  display: inline;
+  margin: 10px 0;
+  padding: .5em 2em;
 }

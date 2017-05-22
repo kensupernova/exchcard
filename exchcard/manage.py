@@ -11,6 +11,7 @@ class DetailedAddressManager(Manager):
 class AddressManager(Manager):
     def create_address(self, name, address, postcode):
         address_object = self.create(name=name, address=address, postcode=postcode)
+        ## obj = self.model(name=name, address=address, postcode=postcode)
         address_object.save()
         return address_object
 

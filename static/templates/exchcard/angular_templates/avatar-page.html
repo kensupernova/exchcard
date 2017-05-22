@@ -1,22 +1,36 @@
 <meta charset="UTF-8">
-<div class="avatar-content-container" ng-controller="avatarController">
-  <div class="avatar-title">
+<div class="avatar-info-container" ng-controller="avatarController">
+  <div class="avatar-info-main-title">
     <h3>设置头像</h3>
   </div>
-  <div>
-    <fieldset>旧头像</fieldset>
-    <div>
-      <img src="/static/images/profile-icon.jpg"/>
+  <div class="avatar-old-container">
+    <div class="form-row">
+      <label>旧头像</label>
+      <div>
+        <img id="img-avatar" src="{[{avatar}]}"/>
+      </div>
     </div>
   </div>
   <div class="avatar-add-new-container">
     <form enctype="multipart/form-data" id ="uploadAvatarForm">
-      <fieldset>新头像</fieldset>
-      <div>
-        <input type="file" name="avatar" id="avatar" placeholder="avatar photo">
-        <span class="errorMessage" style="color: red;"></span>
+      <div class="form-row">
+        <label>新头像</label>
+        <div>
+          <input type="file" name="avatar" id="avatar" placeholder="avatar photo">
+          <br style="clear:both">
+          <div class="help">
+            Minimum size: 140x140<br>
+            Don't use commercial, promotional or copyrighted images.
+          </div>
+          <div class="errorMessage" style="text-align: left; display: none; color: red;">头像图片不能为空!</div>
+          <input type="button" value="上传新头像" ng-click="upload_avatar()" id="submit"/>
+          <br style="clear:both">
+          <br style="clear:both">
+        </div>
+
+        <br style="clear:both">
       </div>
-      <input type="button" value="上传" ng-click="upload_avatar()" id="submit"/>
+
     </form>
   </div>
 </div>

@@ -1,7 +1,6 @@
 #coding: utf-8
 
 #--------------------------------------------------
-from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
@@ -17,8 +16,10 @@ class XUserManager(BaseUserManager):
             email=XUserManager.normalize_email(email),
             username=username,
             type=type if type else 0
-        )
+        ) ## 不用obj.save()
+
         user.set_password(password)
+
         if kwargs:
             if kwargs.get('sex', None): user.sex = kwargs['sex']
             if kwargs.get('is_active', None): user.is_active=kwargs['is_active']
@@ -28,8 +29,31 @@ class XUserManager(BaseUserManager):
             if kwargs.get('desc', None): user.desc=kwargs['desc']
             if kwargs.get('avatar', None): user.avatar=kwargs['avatar']
 
-        user.save(using=self._db)
+        user.save(using=self._db) ## 必须save()
+
         return user
+
+    def create_user_with_no_username(self, email, password=None, type=None, **kwargs):
+        if not email:
+            raise ValueError(u'用户必须要有邮箱')
+
+        ## 瞒天过海，把邮箱地址转化为用户名
+        username = email.replace("@", "at")
+        username = username.replace(".", "dot")
+
+        user = self.self.model(
+            email=XUserManager.normalize_email(email),
+            username=username,
+            type=type if type else 0,
+            **kwargs
+        ) ## 不用obj.save()
+
+        user.set_password(password)
+        user.save(using=self._db)
+
+        return user
+    #
+
 
     def create_superuser(self, email, username, password):
         """
@@ -70,7 +94,9 @@ class XUser(AbstractBaseUser):
     username = models.CharField(max_length=50, unique=True, db_index=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-    type = models.IntegerField(default=0)  # 类型，0本站，1微博登录
+
+    type = models.IntegerField(default=0)  # 类型，0本站注册，1微博注册登录
+
     sex = models.IntegerField(default=1)  # sex
     weibo_uid = models.CharField(max_length=50, null=True)  # weibo uid
     weibo_access_token = models.CharField(max_length=100, null=True)  # weibo access_token
@@ -92,7 +118,8 @@ class XUser(AbstractBaseUser):
         # The user is identified by their email address
         return self.email
 
-
+    def get_username(self):
+        return self.username
 
 
     def __unicode__(self):

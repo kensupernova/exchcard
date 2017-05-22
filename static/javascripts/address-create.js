@@ -37,7 +37,7 @@ $(document).ready(function() {
     var baseURL = "";
     var address_create_url = baseURL+"/exchcard/api/address/profile/create/";
 
-    console.log("register new address...");
+    // console.log("register new address...");
 
     // csrf token, 避免403错误
     var csrftoken = Cookies.get('csrftoken');

@@ -11,9 +11,8 @@ from django.db.models import Manager
 from exchcard import settings
 from exchcard.manage import AddressManager, DetailedAddressManager
 
-# from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model # If used custom user mode
-User = get_user_model()
+User = get_user_model() #  自定义用户模型
 
 from utils import datetime_helper
 
@@ -93,7 +92,7 @@ class Address(models.Model):
     objects = AddressManager()
 
     class Meta:
-        ordering = ['-name']
+        ordering = ['-created']
 
     # the full mailling address
     def __str__(self):
@@ -109,7 +108,7 @@ class Address(models.Model):
         self.name = name
         self.address = address
         self.postcode = postcode
-        super(Address, self).save(*args, **kwargs) ## 一定要save
+        super(Address, self).save(*args, **kwargs)
 
 
 
@@ -134,8 +133,8 @@ class DetailedAddress(models.Model):
 class Profile(models.Model):
     """
     It combines information for:
-    Account information: User account, Weibo UID, Weixin UID, etc,
-    Address information
+    XUser information: email, Weibo UID, Weixin UID, etc,
+    Address information: name, address, postcode, city, country
 
     """
 
@@ -145,13 +144,14 @@ class Profile(models.Model):
         User,
         on_delete=models.CASCADE,
         verbose_name="profileuser",
-        null=False,
-        default=1
+        null=False
     )
+
     profileaddress = models.OneToOneField(
         Address,
         on_delete=models.CASCADE,
-        verbose_name="profileaddress", null=True)
+        verbose_name="profileaddress",
+        null=True)
 
     objects = ProfileManager()
 
@@ -178,6 +178,7 @@ class Profile(models.Model):
         save the newly created Object
         """
         super(Profile, self).save(*args, **kwargs)
+        ## *args表示任何多个无名参数，它是一个tuple；**kwargs表示关键字参数，它是一个dict。
 
 
 

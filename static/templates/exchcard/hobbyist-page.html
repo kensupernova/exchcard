@@ -13,63 +13,77 @@
   .hobbyist-main-content-container .hobbyist-main-title{
     font-size: 18px;
     font-weight: bold;
+    margin-bottom: 10px;
   }
 
-  .hobbyist-container {
+  .h-container {
     border: red 1px solid;
-    min-height: 100px;
+    margin: 1px;
+    min-height: 104px;
+  }
+
+  .clear {
+    clear: both;
   }
 
 
-  .h-card {
+  .h-item {
     border: red 1px solid;
     height: 100px;
     float: left;
     margin-right: 10px;
     position: relative;
-
+    overflow: hidden;
+    /*等同于clear:both*/
   }
 
-  .h-card div {
-    margin-right: 1px;
+  .h-item div {
+    margin: 0 1px;
   }
 
-  .h-card .h-avatar{
-    width: 90px;
-    height: 90px;
+  .h-item .h-avatar{
+    width: 96px;
+    height: 96px;
     border: red 1px solid;
     background: transparent;
     display: inline-block;
     margin: 0 2px;
-    clear: both;
   }
 
-  .h-card .h-text-info {
+  .h-avatar img{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .h-item .h-text-info {
     vertical-align: top;
     width: 100px;
-    height: 90px;
+    height: 96px;
     display: inline-block;
-    clear:both;
     border: red 1px solid;
-    /*position: relative;*/
-    /*top: 0;*/
-    /*left: -100%;*/
   }
 
-  .h-text-info div{
-    height: 40px;
-    line-height: 40px;
+  .h-item .h-text-info div{
+    height: calc(88px/4);
+    line-height: calc(88px/4);
     border: red 1px solid;
+    margin: 1px;
 
   }
 
-
-  .h-card:hover {
+  .h-item:hover {
     box-shadow: #888888 5px 5px 5px;
     -moz-box-shadow: #888888 5px 5px 5px;
     -webkit-box-shadow: #888888 5px 5px 5px;
   }
 
+  .h-text-info .h-text-info-item{
+    overflow: hidden;
+    font-size: 6px;
+    text-align: right;
+    padding-right: 2px;
+  }
 
 
 
@@ -77,26 +91,28 @@
 {% endblock %}
 
 {% block content %}
-<div class="hobbyist-main-content-container">
-  <div class="hobbyist-main-title">发烧朋友</div>
-  <div class="hobbyist-container">
-    <div class="h-card">
+<div class="hobbyist-main-content-container" ng-app="myApp">
+  <div class="hobbyist-main-title">发烧友</div>
+  <div class="h-container" ng-controller="myCtrl">
+
+    <div class="h-item" ng-repeat="h in hobbyists">
       <div class="h-avatar">
+        <img src="{[{h.avatar_info.avatar_url}]}"/>
       </div>
       <div class="h-text-info">
-        <div></div>
-        <div>, </div>
+        <div class="h-text-info-item">{[{h.text_info.name}]}</div>
+        <div class="h-text-info-item">{[{h.text_info.city}]},{[{h.text_info.country}]}</div>
+        <div class="h-text-info-item">明信片指数:{[{h.text_info.postcards_index}]}</div>
+        <div class="h-text-info-item">等级:{[{h.text_info.ranking}]}</div>
       </div>
     </div>
 
-    <div class="h-card">
-      <div class="h-avatar">
-      </div>
-      <div class="h-text-info">
-        <div></div>
-        <div>, </div>
-      </div>
-    </div>
+    <br style="clear: both"/>
+    <div class="clear"></div>
+
+  </div>
+
+
 
   </div>
 
@@ -106,14 +122,6 @@
 {% endblock %}
 
 {% block jscontainer %}
-
-<script>
-  $(document).ready(function(){
-
-    $("#hobbyist").addClass('active');
-
-  });
-</script>
-
-
+<script src="{{STATIC_URL}}lib/angular.js" type="text/javascript" ></script>
+<script src="{{STATIC_URL}}javascripts/hobbyist-page.js"></script>
 {% endblock %}

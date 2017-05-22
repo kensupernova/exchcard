@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model # If used custom user mode
 User = get_user_model()
 
 from django.db.models import Q
 
-from exchcard.models_profile import Address, Card, Profile
+from exchcard.models_profile import Address, Card, Profile, AvatarPhoto
 from exchcard_backend_api.permissions import IsProfileUserOrStaffUser
-from exchcard_backend_api.serializers import AddressSerializer
+from exchcard_backend_api.serializers import AddressSerializer, AvatarPhotoSerializer
 from exchcard_backend_api.serializers import CreateProfileSerializer
 from exchcard_backend_api.serializers import GetProfileWithCardSerializer
 from exchcard_backend_api.serializers import GetUserAddressProfileSerializer
@@ -231,6 +230,58 @@ def get_random_profile(request, format=None):
 
 
 @api_view(["GET"])
+@permission_classes([permissions.IsAuthenticated, ])
+def get_avatar_url(request, format=None):
+    """
+    得到avatar photo的url
+    :param request:
+    :param pk:
+    :param format:
+    :return:
+    """
+    if request.method == "GET":
+        try:
+            profile = Profile.objects.get(profileuser=request.user)
+
+            photos = AvatarPhoto.objects.filter(owner=profile).order_by('-created') ## 得到最新添加图片
+
+            # count = AvatarPhoto.objects.filter(owner=profile).count()
+            # print "头像图片总数为{0}".format(count)
+
+            # print "头像图片总数为{0}".format(len(photos))
+
+            if len(photos)>1:
+                photo = photos[0]
+            elif len(photos)==1:
+                photo = photos.first()
+            elif len(photos) < 1:
+                # print "no avatar photo, use default"
+                return Response({
+                    "avatar_url": "/static/images/default-avatar.jpg",
+                    "avatar": "/static/images/default-avatar.jpg",
+                    "avatarHasBaseUrl": 0
+                })
+
+            serializer = AvatarPhotoSerializer(photo, context={'request': request})
+            data = serializer.data
+
+            # serializer.data - type is <class 'rest_framework.utils.serializer_helpers.ReturnDict'>
+
+            data["avatarHasBaseUrl"] = 1
+
+            return Response(data=data, status=status.HTTP_200_OK)
+
+
+        except Profile.DoesNotExist:
+            return Response({"details":"profile of logged user does not exist"},
+                            status=status.HTTP_404_NOT_FOUND)
+        except AvatarPhoto.DoesNotExist:
+            return Response({"details": "avatar photo of logger user does not exist"},
+                            status=status.HTTP_404_NOT_FOUND)
+
+
+
+@api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
 def profile_get_cards_each_state_count(request, pk, format=None):
     """
@@ -281,7 +332,7 @@ def profile_get_cards_each_state_count(request, pk, format=None):
 
 
 """
-用户明信片根据各个状态分别处理
+用户明信片根据各个状态分别处理, 所有明信片
 """
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
@@ -330,6 +381,7 @@ def profile_get_all_cards(request, pk, format=None):
             return Response({"detail":"Error when get all cards info"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+#--------------------------------------------------------------------------------------------------------
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
 def profile_get_cards_sent_total(request, pk, format=None):
@@ -473,3 +525,4 @@ def profile_get_cards_receive_arrived(request, pk, format=None):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+#----------------------------------------------------------------------------------------------------------

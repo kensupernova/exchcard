@@ -72,11 +72,13 @@ urlpatterns = format_suffix_patterns([
         "exchcard_backend_api.profile_api.get_random_profile",
         name="profile-getrandom-for-card"),
 
-    ## 头像图片
     url(r'^profiles/avatar/url/$',
-        "exchcard_backend_api.upload_api.get_avatar_url"),
+        "exchcard_backend_api.profile_api.get_avatar_url",
+        name="profile-get-avatar-photo-url"),
+
+    ## 头像图片上传
     url(r'^profiles/avatar/upload/$',
-        "exchcard_backend_api.upload_api.upload_avatar",
+        "exchcard_backend_api.upload_api.upload_avatarphoto",
         name="profile-avatarphoto-upload"),
     url(r'^profiles/(?P<pk>[0-9]+)/avatar/upload2/$', upload_api.AvatarUploadView.as_view(),
         name="profile-avatarphoto-upload2"),
@@ -159,11 +161,16 @@ urlpatterns = format_suffix_patterns([
     url(r"^cards/(?P<cardid>[0-9]+)/dianzans/$", card_api.DianzanListView.as_view(),
         name="card-dianzans-all"),
 
-
     url(r"^cards/(?P<pk>[0-9]+)/cardphoto/upload/$", 'exchcard_backend_api.upload_api.upload_card_photo',
         name="card-cardphoto-upload"),
     ## 明信片实时信息
-    url(r"cards/feeds/", "exchcard_backend_api.card_api.cards_feeds", name="cards-feed"),
+    url(r"^cards/feeds/$", "exchcard_backend_api.card_api.cards_feeds",
+        name="cards-feed"),
+
+    ## 发烧友
+    url(r"^hobbyist/list/page/(?P<number>[0-9]+)/$",
+        "exchcard_backend_api.hobbyist_api.get_hobbyist_list_basic_info",
+        name="hobbyist-list"),
 
     ## 其他
     url(r"^storage/sae/s3/$", "exchcard_backend_api.upload_api.sae_s3_storage"),

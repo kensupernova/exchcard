@@ -7,12 +7,22 @@ function csrfSafeMethod(method) {
   return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
 
-// // csrf token
-// var csrftoken = Cookies.get('csrftoken');
-// $.ajaxSetup({
-//   beforeSend: function(xhr, settings) {
-//     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-//       xhr.setRequestHeader("X-CSRFToken", csrftoken);
-//     }
-//   }
-// });
+function addCSRFTokenPreAjax(){
+  // csrf token
+  // 解决403错误, 发送ajax post请求前, 添加X-CSRFTOKEN HEADER
+  // 基于 js.cookie.js
+  var csrftoken = Cookies.get('csrftoken'); // 发送请求时,提取csrftoken cookie
+  $.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+      if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+      }
+    }
+  });
+
+  // 相当于
+  //      var csrftoken = Cookies.get('csrftoken');
+  //      headers: {
+  //        'X-CSRFToken': csrftoken
+  //      }
+}

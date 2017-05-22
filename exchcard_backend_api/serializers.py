@@ -148,10 +148,22 @@ class CreateCardSerializer(serializers.ModelSerializer):
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
-        fields = ("name", "address", "postcode")
+        fields = ("id", "name", "address", "postcode")
 
+class SimpleAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = ("id", "name", "address", "postcode")
 
+class AddressSerializer2(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = ("id", "name", "city", "country")
 
+class FullTextAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = ("id", "full_text_address")
 
 ###################################################################################
 """
@@ -279,13 +291,19 @@ class GetUserAddressProfileSerializer(serializers.ModelSerializer):
 
 ###################################################################################
 class AvatarPhotoSerializer(serializers.ModelSerializer):
+    """
+    只有avatar 包含全地址
+    avatar_url 仅仅包含path
+    """
     # owner_username = serializers.CharField(source='owner.profileuser.username')
     owner_email = serializers.CharField(source='owner.profileuser.email')
     owner_id = serializers.IntegerField(source="owner.id")
+    avatar_url = serializers.CharField(source='avatar.url')
+
 
     class Meta:
         model = AvatarPhoto
-        fields = ('id', 'avatar', "owner_id", "owner_email")
+        fields = ('id', 'avatar', 'avatar_url',"owner_id", "owner_email")
 
 class ProfileWithAvatarPhotoSerializer(serializers.HyperlinkedModelSerializer):
     profileuser_username = serializers.CharField(source="profileuser.username")

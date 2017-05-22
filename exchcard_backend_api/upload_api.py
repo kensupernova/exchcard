@@ -30,52 +30,6 @@ def sae_s3_storage(request, format=None):
         return Response({'content':data},
                         status=status.HTTP_200_OK)
 
-@api_view(["GET"])
-@permission_classes([permissions.IsAuthenticated, ])
-def get_avatar_url(request, format=None):
-    """
-    得到avatar photo的url
-    :param request:
-    :param pk:
-    :param format:
-    :return:
-    """
-    if request.method == "GET":
-        try:
-            profile = Profile.objects.get(profileuser=request.user)
-
-            photos = AvatarPhoto.objects.filter(owner=profile).order_by('-created')
-
-            print "头像图片总数为{0}".format(len(photos))
-
-            if len(photos)>1:
-
-                photo = photos[0]
-            elif len(photos)==1:
-                photo = photos
-            elif len(photos) < 1:
-                print "no avatar photo, use default"
-                return Response({
-                    "url": "/static/images/default-avatar.jpg"
-                })
-
-            url = photo.avatar.url
-
-            serializer = AvatarPhotoSerializer(photo, context={'request': request})
-            data = serializer.data
-            data["url"] = url
-
-            return Response(data, status=status.HTTP_200_OK)
-
-
-        except Profile.DoesNotExist:
-            return Response({"details":"profile of logged user does not exist"},
-                            status=status.HTTP_404_NOT_FOUND)
-        except AvatarPhoto.DoesNotExist:
-            return Response({"details": "avatar photo of logger user does not exist"},
-                            status=status.HTTP_404_NOT_FOUND)
-
-
 @api_view(["POST"])
 @permission_classes([permissions.IsAuthenticated, ])
 @parser_classes([MultiPartParser, FormParser])
@@ -86,12 +40,12 @@ def upload_avatar_to_s3(request, pk, format=None):
             if int(pk) == profile_from_request.id:
                 profile = Profile.objects.get(pk=int(pk))
 
-                ##photo = AvatarPhoto(owner=profile, avatar=request.data['avatar'])
+                # photo = AvatarPhoto(owner=profile, avatar=request.data['avatar'])
                 photo = AvatarPhoto(owner=profile, avatar=request.FILES['avatar'])
                 photo.save()
 
                 name_on_s3 = photo.avatar.name
-                ## sae s3 does not support path
+                # sae s3 does not support path
                 # path_on_s3 = photo.avatar.path
                 url_on_s3 = photo.avatar.url
 
@@ -125,7 +79,7 @@ def upload_avatar_to_s3(request, pk, format=None):
 @api_view(["POST"])
 @permission_classes([permissions.IsAuthenticated, ])
 @parser_classes([MultiPartParser, FormParser])
-def upload_avatar(request):
+def upload_avatarphoto(request):
     if request.method == "POST":
         try:
             profile = Profile.objects.get(profileuser=request.user)
@@ -138,15 +92,16 @@ def upload_avatar(request):
             photo = AvatarPhoto(owner=profile, avatar=f)
             photo.save()
 
-            name = photo.avatar.name
-            url = photo.avatar.url
+            # avatar = photo.avatar
+            # name = photo.avatar.name
+            # url = photo.avatar.url
 
             serializer = AvatarPhotoSerializer(photo, context={'request': request})
             data = serializer.data
-            data["name"] = name
-            data["url"] = url
 
-            return Response(data, status=status.HTTP_201_CREATED)
+            data["avatarHasBaseUrl"] = 1
+
+            return Response(data=data, status=status.HTTP_201_CREATED)
 
 
         except Profile.DoesNotExist:
@@ -225,9 +180,10 @@ class AvatarUploadView(APIView):
                 aserializer = AvatarPhotoSerializer(photo, context={'request': request})
                 data = aserializer.data
                 data["name"] = name_on_s3
-                data["url"] = url_on_s3
+                data["avatar_url"] = url_on_s3
 
                 return Response(data, status=status.HTTP_201_CREATED)
+
             else:
                 return Response({"details": "request user != profileuser",
                              "id1":pk,
@@ -252,7 +208,8 @@ class AvatarPhotoList(APIView):
                                                  owner=profile,
                                                  context={'request': request})
         if serializer.is_valid():
-           serializer.save()
+           serializer.save() # 会保存并返回得到一个object
+
            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -275,20 +232,20 @@ class AvatarPhotoDetail(APIView):
         serializer = AvatarPhoto(photo)
         return Response(serializer.data)
 
-    # def put(self, request, pk, format=None):
-    #     photo = self.get_object(pk)
-    #     serializer = AvatarPhotoSerializer(photo, data=request.data, context={'request': request})
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    #
-    # def delete(self, request, pk, format=None):
-    #     photo = self.get_object(pk)
-    #     photo.delete()
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
-    #
-    # def pre_save(self, obj):
-    #     obj.owner = Profile.objects.get(profileuser=self.request.user)
+    def put(self, request, pk, format=None):
+        photo = self.get_object(pk)
+        serializer = AvatarPhotoSerializer(photo, data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        photo = self.get_object(pk)
+        photo.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def pre_save(self, obj):
+        obj.owner = Profile.objects.get(profileuser=self.request.user)
 
 

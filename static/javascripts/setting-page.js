@@ -3,6 +3,8 @@
  */
 'use strict';
 
+// var baseUrl = window.location.origin ;
+var baseUrl = window.location.protocol +"//"+window.location.host;
 
 // Use angular ui router to achieve tabs, add ui.router as module dependency
 var app = angular.module('myApp', ['ui.router']);
@@ -83,7 +85,7 @@ app.controller("accountController", function($scope, $http){
     url: urlPath
 
   }).then(function mySucces(response) {
-    console.log(JSON.stringify(response.data));
+    // console.log(JSON.stringify(response.data));
 
     if (response.data != null){
       $scope.username = response.data.username;
@@ -105,17 +107,17 @@ app.controller("addressController", function($scope, $http){
   // js.cookie可以产生csrftoken
   var csrftoken = Cookies.get('csrftoken');
 
-  var urlPath = '/exchcard/api/address/get/info';
+  var getAddressUrl = '/exchcard/api/address/get/info';
 
   $http({
     method:"GET",
     headers:{
       'X-CSRFToken': csrftoken
     },
-    url: urlPath
+    url: getAddressUrl
 
   }).then(function mySucces(response) {
-    console.log(JSON.stringify(response.data));
+    // console.log(JSON.stringify(response.data));
 
     if (response.data != null){
       $scope.name = response.data['name'];
@@ -212,67 +214,108 @@ app.controller("addressController", function($scope, $http){
   });
 
 
-
-
 });
 
 
-
+// -----------------------------------------------------------
 
 app.controller("avatarController", function($scope, $http) {
   // console.log("avatar ... ");
 
+  // var baseUrl = window.location.origin ;
+  var baseUrl = window.location.protocol +"//"+window.location.host;
+
   // js.cookie可以产生csrftoken
   var csrftoken = Cookies.get('csrftoken');
-  // 有关头像图片的URL
-  var urlAvatarUrl = "/exchcard/api/profiles/avatar/url/";
-  var urlUploadAvatar = "/exchcard/api/profiles/avatar/upload/";
 
+  // 有关头像图片的URL
+  var getAvatarUrl = "/exchcard/api/profiles/avatar/url/";
+  var uploadAvatarUrl = "/exchcard/api/profiles/avatar/upload/";
+  var defaultAvatarUrl = "/static/images/default-avatar.jpg";
+
+  // 下载头像图片
   $http({
     method:"GET",
     headers:{
       'X-CSRFToken': csrftoken
     },
-    url: urlAvatarUrl
+    url: getAvatarUrl
   }).then(function mySucces(response) {
-    console.log(JSON.stringify(response.data['avatar']));
 
-    if (response.data.avatar != null){
-      var avatarUrl = response.data['avatar'];
+    // method 1
+    // var avatarUrl = response.data['avatar_url'];
+    // var baseUrl = window.location.origin ;
+    // // window.location.protocol +"//"+window.location.host;
+    // var avatar = baseUrl + avatarUrl;
+
+    // method 2
+    var avatar= response.data['avatar'];
+    if(avatar != null){
+      $scope.avatar = avatar;
+    } else{
+      $scope.avatar = baseUrl + defaultAvatarUrl;
     }
+
 
   }, function myError(response) {
     // console.log(JSON.stringify(response));
 
   });
 
-
   $scope.upload_avatar = function(){
 
-    console.log("upload avatar ... ");
+    // console.log("upload avatar ... useing ajax + FormData ");
 
     // 检测是否有文件
     var avatarInput = $("#avatar");
+
     if(avatarInput.val() === ''){
-      console.log("avatar photo is empty!");
-      $("span.errorMessage").text("头像图片不能为空!")
+      // console.log("avatar photo input is empty!");
+      $(".form-row>div .errorMessage").show();
       return;
+    } else {
+      $(".form-row>div .errorMessage").hide();
     }
 
-    var formData = new FormData($( "#uploadAvatarForm" )[0]);
+    // method 2
+    // var file=$("#avatar")[0].files[0];
+    // if(file==null)
+    //   return;
+    // var formData=new FormData();
+    // formData.append('avatar',file);
+
+    var formData = new FormData($("#uploadAvatarForm")[0]);
+
+    // 在ajax前, 添加csrftoken
+    var csrftoken = Cookies.get('csrftoken');
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+      }
+    });
+
     $.ajax({
-      url: urlUploadAvatar,
+      url: uploadAvatarUrl,
       type: 'POST',
       data: formData,
+      dataType: 'json',
       async: false,
       cache: false,
       contentType: false,
       processData: false,
-      success: function (returndata) {
-        console.log(returndata);
+      success: function (response) {
+        // console.log("after uploading " + JSON.stringify(response));
+        var avatar= response['avatar'];
+        if(avatar != null){
+          $scope.avatar = avatar;
+        } else{
+          $scope.avatar = baseUrl + defaultAvatarUrl;
+        }
       },
-      error: function (returndata) {
-        // console.log(returndata);
+      error: function (response) {
+        // console.log(response);
       }
     });
 

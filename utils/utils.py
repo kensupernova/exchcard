@@ -108,5 +108,5 @@ def hash_email_to_username(email):
 # -------------------------------------------------
 # testing
 
-if "__name__" == "main":
+if __name__ == "main":
     print hash_file_name("20160607_190736.jpg")

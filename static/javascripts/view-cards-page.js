@@ -32,7 +32,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
     '<th class="cell-7">arrived time</th>'+
     '<th class="cell-8">isArrived</th>'+
     '</tr>'+
-    '<tr ng-show="sent_arrived == null"><th colspan ="8">空</th></tr>'+
+    '<tr ng-show="sent_arrived == null"><td colspan ="8">空</td></tr>'+
     '<tr ng-repeat="card in sent_arrived">'+
     '<td>{[{card.card_name}]}</td>'+
     '<td>{[{card.fromsender_email}]}</td>'+
@@ -129,7 +129,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
     '<td>{[{card.arrived_date}]}</td>'+
     '<td>{[{card.has_arrived}]}</td>'+
     '</tr>'+
-    '<tr ng-show="receive_travelling == null"><th colspan ="8">空</th></tr>'+
+    '<tr ng-show="receive_travelling == null"><td colspan ="8">空</td></tr>'+
     '</table>'
   };
 
