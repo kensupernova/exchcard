@@ -32,6 +32,7 @@
     height: 100px;
     float: left;
     margin-right: 10px;
+    margin-bottom: 10px;
     position: relative;
     overflow: hidden;
     /*等同于clear:both*/
@@ -95,9 +96,11 @@
   <div class="hobbyist-main-title">发烧友</div>
   <div class="h-container" ng-controller="myCtrl">
 
-    <div class="h-item" ng-repeat="h in hobbyists">
+    <div class="h-item" ng-repeat="h in hobbyists" >
+
       <div class="h-avatar">
-        <img src="{[{h.avatar_info.avatar_url}]}"/>
+        <img class="h-avatar-img" src="{[{h.avatar_info.avatar_url}]}"/>
+        <p style="display: none;" class="user-id-placeholder">{[{h.user_id}]}</p>
       </div>
       <div class="h-text-info">
         <div class="h-text-info-item">{[{h.text_info.name}]}</div>
@@ -107,7 +110,7 @@
       </div>
     </div>
 
-    <br style="clear: both"/>
+    <br style="clear: both; display: none;"/>
     <div class="clear"></div>
 
   </div>

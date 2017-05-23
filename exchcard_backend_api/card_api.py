@@ -3,7 +3,8 @@
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
-from exchcard.models_profile import Card, DianZan, CardPhoto, Profile
+from exchcard.models_profile import Card,CardPhoto, Profile
+from exchcard.models_activity import DianZan
 from exchcard_backend_api.permissions import IsSenderStaffOrReadOnly
 from exchcard_backend_api.serializers import CreateCardSerializer, CardSerializer
 from exchcard_backend_api.serializers import DianZanSerializer
@@ -166,26 +167,6 @@ def receive_a_card(request):
                         "id2:":recipient_profile_id },
                         status=status.HTTP_403_FORBIDDEN)
 
-@api_view(["GET"])
-@permission_classes([permissions.IsAuthenticated, ])
-def card_check_isarrived(request, pk):
-    """
-    Check whether a card has registered or not
-    :param request:
-    :return: true or false
-    """
-    try:
-        card = Card.objects.get(pk=pk)
-
-        return Response({
-            "hasArrived": card.has_arrived
-        })
-
-    except Card.DoesNotExist:
-        return Response({
-            "details": "card with %s does not exit" % pk
-        })
-
 
 
 @api_view(["POST", ])
@@ -199,14 +180,16 @@ def receive_a_card_with_photo(request):
     """
     if request.method == "POST":
         #### add photo
-        print request.data
-        print request.FILES
-
-        card_name = request.data["card_name"]
-        profile_from_request_user = Profile.objects.get(profileuser
+        # print request.data
+        # print request.FILES
+        from utils.utils import hash_file_name
+        card_name = hash_file_name(request.data["card_name"])
+        try:
+            profile_from_request_user = Profile.objects.get(profileuser
                                                    =request.user)
-        ## check whether the exchcard_backend_api id in the request response_data is the the same
-        ## with the one of the request
+        except Profile.DoesNotExist:
+            return Response({"details": "profile is invalid! not registered user or not address"},
+                            status=status.HTTP_404_NOT_FOUND)
 
         try:
             card = Card.objects.get(card_name=card_name)
@@ -258,6 +241,28 @@ def receive_a_card_with_photo(request):
                          "id1":profile_from_request_user.id ,
                         "id2:":recipient_profile_id },
                         status=status.HTTP_403_FORBIDDEN)
+
+
+
+@api_view(["GET"])
+@permission_classes([permissions.IsAuthenticated, ])
+def card_check_isarrived(request, pk):
+    """
+    Check whether a card has registered or not
+    :param request:
+    :return: true or false
+    """
+    try:
+        card = Card.objects.get(pk=pk)
+
+        return Response({
+            "hasArrived": card.has_arrived
+        })
+
+    except Card.DoesNotExist:
+        return Response({
+            "details": "card with %s does not exit" % pk
+        })
 
 
 @api_view(["GET", "PUT", "DELETE", ])

@@ -2,13 +2,16 @@
 
 {% block headinfo %}
 <style>
+  .receive-card-container {
+    width: 60%;
+    border: 1px solid red;
+  }
+
   label{
-    margin-right: 5px;
     padding: 2px;
   }
 
   .receive-card-title {
-    padding-left: 50px;
     font-size: 1.5em;
   }
 
@@ -16,14 +19,41 @@
     margin: 2px;
   }
 
-  .card-info-item{
-    margin-bottom: 1em;
-    padding: 5px;
-  }
-
   .card-id-container {
     margin-top: 20px;
   }
+
+  .card-info-item{
+    margin-bottom: 1em;
+    padding: 5px;
+    min-height: 1em;
+    overflow: hidden;
+    clear: both;
+  }
+
+  .card-info-item .item-title {
+    width: 25%;
+    float: left;
+    text-align: right;
+    padding-right: 1em;
+  }
+
+  .card-info-item .item-content {
+
+    width: 50%;
+    float: left;
+    text-align: left;
+  }
+
+  .card-info-item .item-error-msg {
+    border: 1px red solid;
+    min-height: inherit;
+    width: 20%;
+    float: left;
+    text-align: left;
+  }
+
+
 
   .btn-submit{
     margin-top:1.5em;
@@ -44,12 +74,16 @@
       <label class="receive-card-title">注册明信片</label>
     </div>
     <div class="card-id-container card-info-item">
-      <label>Postcard Id</label>
-      <input type="text" name="card_name" id="card_name" placeholder="postcard id">
+      <label class="item-title">Postcard Id</label>
+      <input class="item-content" type="text" name="card_name" id="card_name" placeholder="postcard id">
+      <label class="item-error-msg"></label>
+      <div style="display: none; clear: both"></div>
     </div>
     <div class="card-photo-container card-info-item">
-      <label>Postcard Photo</label>
-      <input type="file" name="card_photo" id="card_photo" placeholder="postcard photo">
+      <label class="item-title">Postcard Photo</label>
+      <input class="item-content" type="file" name="card_photo" id="card_photo" placeholder="postcard photo">
+      <label class="item-error-msg"></label>
+      <div style="display: none; clear: both"></div>
     </div>
     <div class="btn-submit">
       <button id="submit">Submit</button>

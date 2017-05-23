@@ -1,4 +1,7 @@
 #coding: utf-8
+"""
+主要负责与地址有关的数据model
+"""
 
 import datetime
 import time
@@ -14,13 +17,14 @@ from exchcard.manage import AddressManager, DetailedAddressManager
 from django.contrib.auth import get_user_model # If used custom user mode
 User = get_user_model() #  自定义用户模型
 
+
 from utils import datetime_helper
 
 
 
 class ProfileManager(Manager):
     def create_profile_with_ids(self, userid, addressid):
-        user = User.objects.get(pk=userid)
+        user = User.objects.get(pk=userid) ## 使用自定义的扩展的数据模型
         address = Address.objects.get(pk=addressid)
 
         profile = self.create(profileuser=user, profileaddress=address)
@@ -50,22 +54,7 @@ class CardManager(Manager):
         return None
 
 
-class DianZanManager(Manager):
-    def create_with_ids(self, card_by_dianzan_id,
-                        card_photo_by_dianzan_id, person_who_dianzan_id):
-        if Card.objects.filter(id=card_by_dianzan_id).exists():
-            dianzan = self.create(card_by_dianzan=Card.objects.get(id=card_by_dianzan_id),
-                                  card_photo_by_dianzan=CardPhoto.objects.get(id=card_photo_by_dianzan_id),
-                                  person_who_dianzan=Profile.objects.get(id=person_who_dianzan_id))
 
-            dianzan.save()
-
-            return dianzan
-
-        return None
-
-
-#-----------------------------------------------------------------------
 """
 数据模型model
 """
@@ -151,7 +140,7 @@ class Profile(models.Model):
         Address,
         on_delete=models.CASCADE,
         verbose_name="profileaddress",
-        null=True)
+        null=False)
 
     objects = ProfileManager()
 
@@ -181,6 +170,15 @@ class Profile(models.Model):
         ## *args表示任何多个无名参数，它是一个tuple；**kwargs表示关键字参数，它是一个dict。
 
 
+
+## exchcard_backend_api avatar photo
+class AvatarPhoto(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    owner = models.ForeignKey("Profile", related_name="avatars") ## related name is for Profile to use in serializer
+    avatar = models.ImageField(upload_to="avatar_photos")
+
+    def get_abs_path(self):
+        return os.path.join(settings.MEDIA_ROOT, self.avatar.name)
 
 
 class Card(models.Model):
@@ -288,52 +286,15 @@ class Card(models.Model):
 
 
 
-## exchcard_backend_api avatar photo
-class AvatarPhoto(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    owner = models.ForeignKey("Profile", related_name="avatars") ## related name is for Profile to use
-    avatar = models.ImageField(upload_to="avatar_photos")
-
-    def get_abs_path(self):
-        return os.path.join(settings.MEDIA_ROOT, self.avatar.name)
-
-
-
 class CardPhoto(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey("Profile", related_name="cardphotos_of_profile") ## related name is for Profile to use
     card_host = models.ForeignKey('Card', related_name='cardphotos_of_card', default=1)
-
     card_photo = models.ImageField(upload_to="card_photos")
 
     def get_abs_path(self):
         return os.path.join(settings.MEDIA_ROOT, self.card_photo.name)
 
 
-class DianZan(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-
-    # the card who is dianzaned
-    card_by_dianzan = models.ForeignKey('Card', related_name='dianzans_of_card', default=1)
-
-    # Photo which is dianzaned
-    card_photo_by_dianzan = models.ForeignKey('CardPhoto', related_name='dianzans_of_card_photo', default=1)
-
-    # the person who dianzan
-    person_who_dianzan = models.ForeignKey('Profile', related_name='dianzans_by_person', default=1)
-
-    objects = DianZanManager()
-
-    class Meta:
-        ordering = ['-created']
-
-    def as_json(self):
-        created_in_ms = self.created
-        return dict(
-            dianzan_id = self.id,
-            card_by_dianzan = self.card_by_dianzan.id,
-            person_who_dianzan = self.person_who_dianzan.id,
-            created = created_in_ms
-        )
 
 

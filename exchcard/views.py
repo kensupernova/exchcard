@@ -160,13 +160,19 @@ def view_cards_list(request):
 
 
 @login_required
-def view_others_public_profile(request, username):
+def eachs_public_profile(request, username):
     """
     浏览其他用户的主页
     :param request:
     :param username:
     :return:
     """
+    profile_from_request = Profile.objects.get(profileuser
+                                               =request.user)
+
+    context = {'profile': profile_from_request}
+
+    return render(request, 'exchcard/public-profile-page.html', context)
 
 def hobbyist(request):
     profile_from_request = Profile.objects.get(profileuser

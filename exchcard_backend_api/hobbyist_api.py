@@ -100,15 +100,12 @@ def getAvatarBasicTextByProfile(profile):
     avatar_info = getCurrentAvatarInfoByProfile(profile)
     text_info = getBasicTextInfoByProfile(profile)
 
-    # import json
-    # return {
-    #     "avatar_info": json.loads(JSONRenderer().render(avatar_info)),
-    #     "text_info": json.loads(JSONRenderer().render(text_info))
-    # }
-
     return {
         "avatar_info": avatar_info,
-        "text_info": text_info
+        "text_info": text_info,
+        "profile_id": profile.id,
+        "user_id": profile.profileuser.id,
+        "user_email": profile.profileuser.email
     }
 
 

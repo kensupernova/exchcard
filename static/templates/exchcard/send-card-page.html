@@ -5,19 +5,18 @@
   .sent-card-container{
     font-size: 1em;
     font-style: normal;
-    font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
   }
 
   .main-title {
-    padding-left: 50px;
     font-size: 1.5em;
   }
 
-  div.sent-card-container{
-    padding:10px;
-    margin:5px;
+  div.sent-card-container div:nth-child(1){
   }
 
+  div.sent-card-container div:nth-child(1),div.sent-card-container div:nth-child(2) {
+    width: 80%;
+  }
   div label.warning-title{
     font-size: 1.5em;
   }
@@ -29,20 +28,21 @@
 
   ul li {
     font-size: 1em;
+    text-align: left;
   }
 
-  label.send-postcard-wenzi{
-    font-size: 1em;
+  div#sendForm div {
+    text-align: left;
   }
 
-  #sendButton{
+  div#sendForm #sendButton{
     margin-top: 1em;
   }
 </style>
 {% endblock %}
 
 {% block content %}
-<div><label class="main-title">寄送明信片</label></div>
+<div class="main-title">寄送明信片</div>
 <div ng-app="myApp", ng-controller="myCtrl" class="sent-card-container">
   <div>
     <div><label class="warning-title">注意事项</label></div>

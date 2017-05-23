@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
                 ('full_text_address', models.CharField(max_length=510, null=True)),
             ],
             options={
-                'ordering': ['-name'],
+                'ordering': ['-created'],
             },
         ),
         migrations.CreateModel(
@@ -64,7 +64,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('card_name', models.CharField(default=None, max_length=50)),
-                ('sent_time', models.BigIntegerField(default=1495360915699)),
+                ('sent_time', models.BigIntegerField(default=1495509635684)),
                 ('sent_date', models.DateTimeField(auto_now_add=True)),
                 ('arrived_time', models.BigIntegerField(default=None)),
                 ('arrived_date', models.DateTimeField(default=None)),
@@ -102,6 +102,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('card_by_dianzan', models.ForeignKey(related_name='dianzans_of_card', default=1, to='exchcard.Card')),
                 ('card_photo_by_dianzan', models.ForeignKey(related_name='dianzans_of_card_photo', default=1, to='exchcard.CardPhoto')),
+                ('person_who_dianzan', models.ForeignKey(related_name='dianzans_by_person', default=1, to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'ordering': ['-created'],
@@ -112,17 +113,12 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
-                ('profileaddress', models.OneToOneField(null=True, verbose_name=b'profileaddress', to='exchcard.Address')),
-                ('profileuser', models.OneToOneField(default=1, verbose_name=b'profileuser', to=settings.AUTH_USER_MODEL)),
+                ('profileaddress', models.OneToOneField(verbose_name=b'profileaddress', to='exchcard.Address')),
+                ('profileuser', models.OneToOneField(verbose_name=b'profileuser', to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'ordering': ['-created'],
             },
-        ),
-        migrations.AddField(
-            model_name='dianzan',
-            name='person_who_dianzan',
-            field=models.ForeignKey(related_name='dianzans_by_person', default=1, to='exchcard.Profile'),
         ),
         migrations.AddField(
             model_name='cardphoto',

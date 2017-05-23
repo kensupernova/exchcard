@@ -21,10 +21,7 @@ urlpatterns = [
     url(r'^weibo/auth/callback/$', 'exchcard.weibo_auth_views.weibo_check'),
     url(r'^weibo/auth/cancel/$', 'exchcard.weibo_auth_views.weibo_auth_cancel'),
 
-
     url(r'^account/address/create/$', 'exchcard.views.address_create'),
-
-
     #设置
     url(r'^setting/$', 'exchcard.views.setting'),
 
@@ -45,13 +42,12 @@ urlpatterns = [
     # url(r'^profile/(?P<id>.+)/cards/$', 'exchcard.views.view_cards_list'),
     url(r'^profile/cards/$', 'exchcard.views.view_cards_list'),
 
-    # view other's public profile page
-    url(r'^u/(?P<username>.+)/cards/$', 'exchcard.views.view_others_public_profile'),
-
     # 发烧友圈子
     url(r'^moments/$', 'exchcard.views.view_shao_you_quan'),
-
+    # 发烧友
     url(r'^hobbyist/$', 'exchcard.views.hobbyist'),
+    # view other's public profile page
+    url(r'^hobbyist/u/(?P<user_id>[0-9]+)/$', 'exchcard.views.eachs_public_profile'),
 
     url(r'^about/$', 'exchcard.views.about'),
 

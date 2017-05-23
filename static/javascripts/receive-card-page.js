@@ -1,6 +1,7 @@
 /**
  * Created by Guanghui on 2017/1/5.
  */
+
 $(document).ready(function () {
   $("#submit").click(function () {
      receive_card();
@@ -13,12 +14,7 @@ $(document).ready(function () {
     var receive_card_with_photo_url = "/exchcard/api/cards/receive/photo/";
     var receive_card_url = "/exchcard/api/cards/receive/";
 
-    //// method 2
-    // var form = $("#register-card-form");
-    // form.action = url;
-    // form.submit();
-
-    //// 设置ajax
+    //// 设置ajax csrf
     var csrftoken = Cookies.get('csrftoken');
     $.ajaxSetup({
       beforeSend: function(xhr, settings) {
@@ -35,12 +31,13 @@ $(document).ready(function () {
 
     var formData;
 
+    ///// 分两种情况讨论。
     if(!card_photo || card_photo == null || card_photo == undefined){
       console.log("card photo is empty!")
 
-      var formData = {
+      formData = {
         card_name: card_name,
-      }
+      };
 
       // console.log("submit data  "+JSON.stringify(formData));
 
@@ -56,20 +53,21 @@ $(document).ready(function () {
         }
 
       }).done(function(data){
-        // console.log("receive card success : " + JSON.stringify(data));
+        console.log("receive card success : " + JSON.stringify(data));
 
       }).fail(function(data){
-        console.log(JSON.stringify(data));
-
-        console.log("receive card failed!");
+        // console.log(JSON.stringify(data));
+        //
+        // console.log("receive card failed!");
       });
 
     } else{
+
       ///////// 带图片的明信片
-      var formData = {
+      formData = {
         card_name: card_name,
         card_photo: card_photo
-      }
+      };
 
       // console.log("submit data  "+JSON.stringify(formData));
 
@@ -85,12 +83,9 @@ $(document).ready(function () {
           window.location.href=  "/profile/"
         }
 
-      }).done(function(data){
-        // console.log("receive card success : " + JSON.stringify(data));
-
       }).fail(function(data){
-        console.log(JSON.stringify(data));
-        console.log("receive card failed!");
+        // console.log(JSON.stringify(data));
+        // console.log("receive card failed!");
       });
 
     }

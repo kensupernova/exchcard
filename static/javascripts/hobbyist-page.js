@@ -2,11 +2,21 @@
  * Created by Guanghui on 2017/5/22.
  */
 // var baseUrl = window.location.origin ;
-var baseUrl = window.location.protocol +"//"+window.location.ho
+var baseUrl = window.location.protocol +"//"+window.location.host;
+
+var baseUrl2 = window.location.protocol +"//"+window.location.host+":"+window.location.port
 
 $(document).ready(function(){
-
   $("#hobbyist").addClass('active');
+
+  $(".h-avatar-img").click(function () {
+    var user_id = $(this).prev().text();
+
+    console.log("go to public profile with user id = " + user_id);
+
+    window.location.href = baseUrl + "hobbyist/u/" + user_id;
+
+  });
 
 
 });
@@ -21,22 +31,20 @@ app.config(function($interpolateProvider) {
   $interpolateProvider.endSymbol('}]}');
 });
 
-var getHListUrl = "/exchcard/api/hobbyist/list/page/1/";
-
 app.controller('myCtrl', function($rootScope, $scope, $http) {
 
+  var getHListUrl = "/exchcard/api/hobbyist/list/page/1/";
 
   $http({
     method: "GET",
     url: getHListUrl
   }).then(function mySucces(response) {
     var data = JSON.parse(response.data)
-    console.log(data[0]);
-
+    // console.log(data[0]);
     $scope.hobbyists = data;
 
   }, function myError(response) {
     // console.log(JSON.stringify(response));
-  })
+  });
 
 });

@@ -39,11 +39,32 @@
 
 /*账号信息页面格式*/
 .account-content-container {
-
+  border: 1px solid red;
+  width: 60%;
 }
 
+/*.account-info-item{*/
+  /*overflow: hidden;*/
+  /*clear: both;*/
+  /*padding: 0 auto;*/
+/*}*/
+/*.account-info-item .account-info-item-title {*/
+  /*width:30%;*/
+  /*float:left;*/
+/*}*/
+
+/*.account-info-item .account-info-item-content {*/
+  /*width:40%;*/
+  /*float:left;*/
+/*}*/
+
+/*.account-info-item .account-info-item-error-message {*/
+  /*width:30%;*/
+  /*float:right;*/
+/*}*/
+
 .account-content-container .account-info-main-title h3{
-  min-height: 30px;
+  min-height: 20px;
   text-align: center;
 }
 
@@ -52,42 +73,76 @@
   margin-right: 8px;
 }
 
-label.account-info-item-title {
+.account-info-item>label.account-info-item-title {
   padding:5px;
   margin-right: 1em;
   width:6em;
+  text-align: right;
 }
 
+.account-info-item>input.account-info-item-content {
+  text-align: left;
+  min-width:12em;
+}
+
+.account-info-item>label.account-info-item-error-message {
+  text-align: left;
+  width:6em;
+}
 /*地址信息页面格式*/
+.address-info-container{
+  border: 1px solid red;
+  width: 60%;
+}
 
 .address-info-container .address-info-main-title h3{
   text-align: center;
 }
 
-.address-info-content .address-info-item .address-info-item-title {
-  margin-right: 2em;
-  margin-left: 1em;
-  width:4em;
-  line-height: 100%;
-  height: 100%;
-  vertical-align: middle;
+.address-info-item.threeColumn{
+  overflow: hidden;
+  clear: both;
+  padding-bottom: 2em;
 }
 
-.address-info-content .address-info-item .address-info-item-content {
-  margin-left: 5px;
-  margin-right: 5px;
+.address-info-item {
+  min-height: 2em;
+  margin-bottom: 10px;
+}
+.address-info-content .address-info-item.threeColumn .address-info-item-title {
+  float:left;
+  width:calc(25% - 10px);
+  text-align: right;
+  padding-right:10px;
 }
 
-#address {
-  width:300px;
-  overflow-y:visible;
-  margin-top:5px;
-  margin-bottom: 5px;
+.address-info-content .address-info-item.threeColumn .address-info-item-content {
+  float:left;
+  width:50%;
+  text-align: left;
 }
 
-.address-info-item .error-message {
+.address-info-content .address-info-item.threeColumn .error-message {
   color: red;
+  float:right;
+  text-align: left;
+  width:calc(25% - 12px);
+  padding-left:10px;
+  border: solid 1px transparent;
+  min-height: 2em;
+
 }
+
+.address-info-item.threeColumn .address-info-item{
+  margin-top:10px;
+  margin-bottom: 10px;
+}
+
+.address-info-item #address {
+  overflow-y:visible;
+}
+
+
 
 .address-info-save {
   margin: 5px;
@@ -117,7 +172,7 @@ button#save-address.active span{
 
 /*头像信息页面*/
 .avatar-info-container{
-  padding: 5px;
+  border: 1px solid red;
   width: 60%;
 }
 
@@ -125,9 +180,7 @@ button#save-address.active span{
   border: solid red 1px;
 }
 
-
 .avatar-info-container .avatar-info-main-title{
-  min-height: 5em;
   text-align: center;
 
 }

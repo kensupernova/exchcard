@@ -24,14 +24,14 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
   var accountState = {
     url:'/account',
     name:'account',
-    templateUrl: '/static/templates/exchcard/angular_templates/account-page.html'
+    templateUrl: '/static/templates/exchcard/angular_templates/settings/account-page.html'
   };
 
   var addressState = {
     url:'/address',
     name:'address',
     templateUrl:
-      '/static/templates/exchcard/angular_templates/address-page.html'
+      '/static/templates/exchcard/angular_templates/settings/address-page.html'
   };
 
   // 注册各个状态
@@ -44,7 +44,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
     url:'/avatar',
     name:'avatar',
     templateUrl:
-      '/static/templates/exchcard/angular_templates/avatar-page.html'
+      '/static/templates/exchcard/angular_templates/settings/avatar-page.html'
 
   });
 

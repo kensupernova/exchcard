@@ -1,0 +1,26 @@
+{% extends "foundation.html" %}
+
+{% block headinfo %}
+{% endblock %}
+
+{% block content %}
+<div class="public-main-content-container">
+每个人的公开主页。功能包括:
+  主页上可以：
+  1. 给用户发私信，索要明信片，索要地址
+  2. 有一个时间轴，记录用户的活动。
+</div>
+
+{% endblock %}
+
+{% block jscontainer %}
+
+<script>
+  $(document).ready(function(){
+
+    $("#hobbyist").addClass('active');
+
+  });
+</script>
+
+{% endblock %}
