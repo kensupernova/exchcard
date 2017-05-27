@@ -4,7 +4,7 @@ from django.conf.urls import url, include
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from exchcard_backend_api import card_api, profile_api, address_api, user_api, upload_api
+from exchcard_backend_api import card_api, profile_api, address_api, user_api, upload_api, activity_api
 
 
 
@@ -151,26 +151,52 @@ urlpatterns = format_suffix_patterns([
 
     # 某张明信片的某张照片得到的某个点赞
     url(r"^cards/(?P<cardid>[0-9]+)/cardphotos/(?P<photoid>[0-9]+)/dianzan/$",
-        "exchcard_backend_api.card_api.card_dianzan",
+        "exchcard_backend_api.activity_api.card_dianzan",
         name="card-photo-dianzan-crud"),
     # 某张明信片的某张照片得到的所有的点赞
     url(r"^cards/(?P<cardid>[0-9]+)/cardphotos/(?P<photoid>[0-9]+)/dianzans/$",
-        "exchcard_backend_api.card_api.card_dianzans",
+        "exchcard_backend_api.activity_api.card_dianzans",
         name="card-photo-dianzans-all"),
     # 某张明信片的所有照片得到的所有的点赞
-    url(r"^cards/(?P<cardid>[0-9]+)/dianzans/$", card_api.DianzanListView.as_view(),
+    url(r"^cards/(?P<cardid>[0-9]+)/dianzans/$", activity_api.DianzanListView.as_view(),
         name="card-dianzans-all"),
 
+    # 明信片注册后，补上传图片
+    # TODO:
     url(r"^cards/(?P<pk>[0-9]+)/cardphoto/upload/$", 'exchcard_backend_api.upload_api.upload_card_photo',
         name="card-cardphoto-upload"),
     ## 明信片实时信息
     url(r"^cards/feeds/$", "exchcard_backend_api.card_api.cards_feeds",
         name="cards-feed"),
 
+    ## ---------------
     ## 发烧友
     url(r"^hobbyist/list/page/(?P<number>[0-9]+)/$",
-        "exchcard_backend_api.hobbyist_api.get_hobbyist_list_basic_info",
+        "exchcard_backend_api.hobbyist_api.get_basic_info_of_hobbyist_list",
         name="hobbyist-list"),
+
+    ## 某个用户的基本信息
+    url(r"^hobbyist/u/(?P<user_id>[0-9]+)/basic/info/$",
+        "exchcard_backend_api.hobbyist_api.get_all_basic_info_of_other_user",
+        name="get-basic-info-of-other-user"),
+    ## 某个用户所有活动
+    url(r"^hobbyist/u/(?P<user_id>[0-9]+)/activities/all/$",
+        "exchcard_backend_api.hobbyist_api.get_all_activities_of_other_user",
+        name="activities-all"),
+    # 某个用户的某条活动细节
+    url(r"^hobbyist/u/(?P<user_id>[0-9]+)/activity/(?P<action_id>[0-9]+)/$",
+        "exchcard_backend_api.hobbyist_api.get_single_activity_detail_of_other_user",
+        name="activity-detail"),
+
+    # 某条发送明信片的细节
+    url(r"^/hobbyist/activity/(?P<pk>[0-9]+)/$", activity_api.SentCardActionDetailView.as_view(),
+        name="sent-card-activity-detail"),
+    # 所有发送明信片的活动
+    url(r"^/hobbyist/activity/list/%", activity_api.SentCardActionListView.as_view(),
+        name="sent-card-activity-list"),
+
+    ## ---------------
+
 
     ## 其他
     url(r"^storage/sae/s3/$", "exchcard_backend_api.upload_api.sae_s3_storage"),

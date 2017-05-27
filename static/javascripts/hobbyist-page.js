@@ -9,14 +9,16 @@ var baseUrl2 = window.location.protocol +"//"+window.location.host+":"+window.lo
 $(document).ready(function(){
   $("#hobbyist").addClass('active');
 
-  $(".h-avatar-img").click(function () {
-    var user_id = $(this).prev().text();
-
-    console.log("go to public profile with user id = " + user_id);
-
-    window.location.href = baseUrl + "hobbyist/u/" + user_id;
-
-  });
+  // $(".h-item").click(function () {
+  //   console.log("clicked img ... ");
+  //
+  //   var user_id = $(this).prev().text();
+  //
+  //   console.log("go to public profile with user id = " + user_id);
+  //
+  //   window.location.href = baseUrl + "hobbyist/u/" + user_id;
+  //
+  // });
 
 
 });
@@ -46,5 +48,15 @@ app.controller('myCtrl', function($rootScope, $scope, $http) {
   }, function myError(response) {
     // console.log(JSON.stringify(response));
   });
+
+  $scope.visitPublic = function (target) {
+    // console.log("clicked item-ng-click ... ");
+    // console.log(target);
+    var holder = $(target).next();
+    // console.log("user id is "+holder.text());
+    var user_id = holder.text();
+
+    window.location.href = '/hobbyist/u/'+ user_id;
+  }
 
 });

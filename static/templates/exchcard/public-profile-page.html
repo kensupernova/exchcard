@@ -1,6 +1,7 @@
 {% extends "foundation.html" %}
 
 {% block headinfo %}
+<link href="{{STATIC_URL}}styles/public-profile-page.css" rel="stylesheet"/>
 {% endblock %}
 
 {% block content %}
@@ -9,18 +10,28 @@
   主页上可以：
   1. 给用户发私信，索要明信片，索要地址
   2. 有一个时间轴，记录用户的活动。
+
+  <div class="h-image-container">
+    <div>
+      <img id="h-img"  src="">
+    </div>
+
+  </div>
+  <div class="h-text-info">
+    <div id="text-info-email"></div>
+  </div>
+  <div class="action-btn-container">
+    <a href="">私信息</a>
+    <a href="">向他发明信片</a>
+  </div>
+  <div class="timeline-content-container">
+
+  </div>
 </div>
 
 {% endblock %}
 
 {% block jscontainer %}
-
-<script>
-  $(document).ready(function(){
-
-    $("#hobbyist").addClass('active');
-
-  });
-</script>
+<script src="{{STATIC_URL}}javascripts/public-profile-page.js" type="text/javascript"></script>
 
 {% endblock %}

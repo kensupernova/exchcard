@@ -31,6 +31,7 @@ urlpatterns = [
     # send a card
     url(r'^card/send/$', 'exchcard.views.card_send'),
     url(r'^card/send/confirm/$', 'exchcard.views.card_send_confirm'),
+
     # 查看还在路途中的某张明信片
     url(r'^card/travelling/(?P<cardname>.+)/$', 'exchcard.views.card_travelling'),
     # register a card
@@ -45,7 +46,7 @@ urlpatterns = [
     # 发烧友圈子
     url(r'^moments/$', 'exchcard.views.view_shao_you_quan'),
     # 发烧友
-    url(r'^hobbyist/$', 'exchcard.views.hobbyist'),
+    url(r'^hobbyist/$', 'exchcard.views.hobbyist_list'),
     # view other's public profile page
     url(r'^hobbyist/u/(?P<user_id>[0-9]+)/$', 'exchcard.views.eachs_public_profile'),
 

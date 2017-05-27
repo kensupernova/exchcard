@@ -84,7 +84,8 @@ class CreateAddressView(generics.CreateAPIView):
         permissions.IsAuthenticated
     ]
 
-class AddressDetail(APIView):
+
+class AddressDetailAPIView(APIView):
     """
     Retrieve, update or delete
     """

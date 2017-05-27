@@ -1,0 +1,20 @@
+<div ng-controller="postalInfoControl" class="postal-info-container">
+  <div class="spanner postcard-mail-title-container">
+    <div><h3>寄送地址</h3></div>
+    <div><p><label>请记住一定要把Postcard ID写在明信片上面</label>, 否则接收者无法登记收到, 你不会得到积分。</p></div>
+  </div>
+  <div class="postcard-mail-info-container" ng-show="postal_info != null">
+    <div>
+      <h3>明信片ID:</h3>
+      <p>{[{postal_info.card_name}]}</p>
+    </div>
+    <!--<h3>接收者的Email:</h3>-->
+    <!--<p>{{recipient_user.email}}</p>-->
+    <div>
+      <h3>接收者的地址:</h3>
+      <p>{[{postal_info.torecipient.name}]}</p>
+      <p>{[{postal_info.torecipient.address}]}</p>
+      <p>{[{postal_info.torecipient.postcode}]}</p>
+    </div>
+  </div>
+</div>

@@ -159,8 +159,19 @@ def view_cards_list(request):
 
 
 
+
+def hobbyist_list(request):
+    profile_from_request = Profile.objects.get(profileuser
+                                               =request.user)
+
+    context = {'profile': profile_from_request}
+
+    return render(request, 'exchcard/hobbyist-list-page.html', context=context)
+
+
+
 @login_required
-def eachs_public_profile(request, username):
+def eachs_public_profile(request, user_id):
     """
     浏览其他用户的主页
     :param request:
@@ -173,14 +184,6 @@ def eachs_public_profile(request, username):
     context = {'profile': profile_from_request}
 
     return render(request, 'exchcard/public-profile-page.html', context)
-
-def hobbyist(request):
-    profile_from_request = Profile.objects.get(profileuser
-                                               =request.user)
-
-    context = {'profile': profile_from_request}
-
-    return render(request, 'exchcard/hobbyist-page.html', context=context)
 
 
 @login_required

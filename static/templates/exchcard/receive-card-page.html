@@ -53,14 +53,21 @@
     text-align: left;
   }
 
-
-
   .btn-submit{
     margin-top:1.5em;
   }
 
   .btn-submit button {
     min-width: 6em;
+  }
+
+  .btn-submit .receive-card-result{
+    display: inline-block;
+    border: 1px solid red;
+    min-width: 6em;
+    min-height: 2em;
+    vertical-align: top;
+    color: red;
   }
 </style>
 {% endblock %}
@@ -87,6 +94,7 @@
     </div>
     <div class="btn-submit">
       <button id="submit">Submit</button>
+      <di class="receive-card-result"></di>
     </div>
 
     {% if errors %}

@@ -5,9 +5,9 @@ User = get_user_model()
 
 from rest_framework import serializers
 
-from exchcard.models_profile import Card, Profile, Address, AvatarPhoto, CardPhoto
-from exchcard.models_activity import DianZan
-
+from exchcard.models_profile import Card, Profile, Address, AvatarPhoto, CardPhoto, SentCardAction, ReceiveCardAction
+from exchcard.models_profile import DianZan
+from exchcard.models import XUser
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -126,13 +126,13 @@ class CreateCardSerializer(serializers.ModelSerializer):
                   )
 
     def create(self, validated_data):
-        # print validated_data
+        ## print validated_data
         ## card name should be generated from sever to avoid duplicates?
         ## print validated_data
         card = Card.objects.create_with_profile_ids(
             card_name=validated_data["card_name"],
-            torecipient_id=validated_data["torecipient"]["id"],
-            fromsender_id=validated_data["fromsender"]["id"]
+            torecipient_id=validated_data["torecipient_id"],
+            fromsender_id=validated_data["fromsender_id"]
         )
 
         if card != None:
@@ -343,3 +343,48 @@ class DianZanSerializer(serializers.ModelSerializer):
     class Meta:
         model = DianZan
         fields = ('card_by_dianzan', 'person_who_dianzan_id', 'created')
+
+
+class GetUserSendCardActionSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    用于得到用户数据以及所有SentCardAction
+    """
+    sent_card_actions_by_subject = serializers.HyperlinkedRelatedField(many=True,
+                                                                       read_only=True,
+                                                                       view_name = "sent-card-activity-detail")
+
+    class Meta:
+        model = XUser
+        fields = ("id",
+                  "username",
+                  "email",
+                  "sent_card_actions_by_subject")
+
+
+
+class SentCardActionSerializer(serializers.ModelSerializer):
+
+    subject_email = serializers.CharField(source='subject.email')
+    subject_id = serializers.CharField(source='subject.id')
+    card_sent_id = serializers.CharField(source='card_sent.id')
+    card_sent_cardname = serializers.CharField(source='card_sent.card_name')
+
+
+    class Meta:
+        model = SentCardAction
+        fileds = (
+            "id", "created", "subject_id", "subject_email", "card_sent_id","card_sent_cardname"
+        )
+
+class ReceivedActionSerializer(serializers.ModelSerializer):
+
+    subject_email = serializers.CharField(source='subject.email')
+    card_receive_id = serializers.CharField(source='card_receive.id')
+    card_receive_cardname = serializers.CharField(source='card_receive.card_name')
+
+
+    class Meta:
+        model = ReceiveCardAction
+        fileds = (
+            "id", "created", "subject_email", "card_receive_id","card_receive_cardname"
+        )

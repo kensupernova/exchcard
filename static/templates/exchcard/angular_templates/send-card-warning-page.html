@@ -1,0 +1,24 @@
+<div ng-controller="myCtrl" class="sent-card-container">
+  <div>
+    <div><label class="warning-title">注意事项</label></div>
+    <div>
+      <ul>
+        <li>你会得到一个地址, 请确定地址正确书写。</li>
+        <li>你会得到一个Postcard Id, <b>请Id号码写在明信片上面</b>, 接受者需要注册, 才算成功寄送明信片。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="sendForm">
+    <!--{% csrf_token %}-->
+    <div>
+      <input type="checkbox" name="send_postcard" value="" id="send-postcard">
+      <label for="send-postcard" class="send-postcard-wenzi">
+        我已经阅读了上面的文字, 我确定我会向地址发送一张明信片, 并且我确定我会把POST ID写到明信片上面。
+      </label><br>
+    </div>
+    <button id="sendButton" name="sendButton" class="button" ng-click="confirmGetPostal()">得到地址
+    </button>
+  </div>
+
+</div>

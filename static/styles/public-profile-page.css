@@ -1,0 +1,27 @@
+.h-image-container {
+  height: 120px;
+  width: 120px;
+  border: 1px solid red;
+}
+
+.h-image-container #h-img {
+  height: 100px;
+  width: 100px;
+  overflow: hidden;
+}
+
+.h-text-info{
+  min-height: 30px;
+  border: 1px solid red;
+}
+
+
+.action-btn-container{
+
+  min-height: 3em;
+  border: 1px solid red;
+}
+.timeline-content-container {
+  min-height: 400px;
+  border: 1px solid red;
+}

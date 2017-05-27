@@ -9,7 +9,6 @@ $(document).ready(function () {
 
 
   function receive_card(){
-    console.log("receive a card!");
 
     var receive_card_with_photo_url = "/exchcard/api/cards/receive/photo/";
     var receive_card_url = "/exchcard/api/cards/receive/";
@@ -46,18 +45,19 @@ $(document).ready(function () {
         url: receive_card_url,
         data: formData,
         success: function(data){
-          console.log("receive card success : " + JSON.stringify(data));
+          console.log("receive card success with no photo: " + JSON.stringify(data));
+
+          // 显示成功发送
 
           // redirect to profile page
           window.location.href=  "/profile/"
         }
 
       }).done(function(data){
-        console.log("receive card success : " + JSON.stringify(data));
+        // console.log("receive card success : " + JSON.stringify(data));
 
       }).fail(function(data){
         // console.log(JSON.stringify(data));
-        //
         // console.log("receive card failed!");
       });
 
@@ -77,7 +77,7 @@ $(document).ready(function () {
         data: formData,
         enctype: 'multipart/form-data',
         success: function(data){
-          console.log("receive card success : " + JSON.stringify(data));
+          console.log("receive card success with photo: " + JSON.stringify(data));
 
           // redirect to profile page
           window.location.href=  "/profile/"

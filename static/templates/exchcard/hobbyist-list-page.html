@@ -96,10 +96,10 @@
   <div class="hobbyist-main-title">发烧友</div>
   <div class="h-container" ng-controller="myCtrl">
 
-    <div class="h-item" ng-repeat="h in hobbyists" >
+    <div class="h-item" ng-repeat="h in hobbyists"  >
 
       <div class="h-avatar">
-        <img class="h-avatar-img" src="{[{h.avatar_info.avatar_url}]}"/>
+        <img class="h-avatar-img" src="{[{h.avatar_info.avatar_url}]}" ng-click="visitPublic($event.target)"/>
         <p style="display: none;" class="user-id-placeholder">{[{h.user_id}]}</p>
       </div>
       <div class="h-text-info">

@@ -224,14 +224,14 @@ app.controller("avatarController", function($scope, $http) {
 
   // var baseUrl = window.location.origin ;
   var baseUrl = window.location.protocol +"//"+window.location.host;
-
-  // js.cookie可以产生csrftoken
-  var csrftoken = Cookies.get('csrftoken');
-
   // 有关头像图片的URL
   var getAvatarUrl = "/exchcard/api/profiles/avatar/url/";
   var uploadAvatarUrl = "/exchcard/api/profiles/avatar/upload/";
   var defaultAvatarUrl = "/static/images/default-avatar.jpg";
+
+  // js.cookie可以产生csrftoken
+  var csrftoken = Cookies.get('csrftoken');
+
 
   // 下载头像图片
   $http({
@@ -249,11 +249,11 @@ app.controller("avatarController", function($scope, $http) {
     // var avatar = baseUrl + avatarUrl;
 
     // method 2
-    var avatar= response.data['avatar'];
-    if(avatar != null){
-      $scope.avatar = avatar;
+    var avatar_url= response.data['avatar_url'];
+    if(avatar_url != null){
+      $scope.avatar_url = avatar_url;
     } else{
-      $scope.avatar = baseUrl + defaultAvatarUrl;
+      $scope.avatar_url = baseUrl + defaultAvatarUrl;
     }
 
 

@@ -64,7 +64,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('card_name', models.CharField(default=None, max_length=50)),
-                ('sent_time', models.BigIntegerField(default=1495509635684)),
+                ('sent_time', models.BigIntegerField(default=1495767088084)),
                 ('sent_date', models.DateTimeField(auto_now_add=True)),
                 ('arrived_time', models.BigIntegerField(default=None)),
                 ('arrived_date', models.DateTimeField(default=None)),
@@ -115,6 +115,30 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('profileaddress', models.OneToOneField(verbose_name=b'profileaddress', to='exchcard.Address')),
                 ('profileuser', models.OneToOneField(verbose_name=b'profileuser', to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'ordering': ['-created'],
+            },
+        ),
+        migrations.CreateModel(
+            name='ReceiveCardAction',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created', models.DateTimeField(auto_now_add=True)),
+                ('card_received', models.OneToOneField(to='exchcard.Card')),
+                ('subject', models.ForeignKey(related_name='receive_card_actions_by_subject', to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'ordering': ['-created'],
+            },
+        ),
+        migrations.CreateModel(
+            name='SentCardAction',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created', models.DateTimeField(auto_now_add=True)),
+                ('card_sent', models.OneToOneField(to='exchcard.Card')),
+                ('subject', models.ForeignKey(related_name='sent_card_actions_by_subject', to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'ordering': ['-created'],

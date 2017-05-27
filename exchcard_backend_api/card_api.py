@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-
+import json
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
 from exchcard.models_profile import Card,CardPhoto, Profile
-from exchcard.models_activity import DianZan
+from exchcard.models_profile import DianZan
 from exchcard_backend_api.permissions import IsSenderStaffOrReadOnly
 from exchcard_backend_api.serializers import CreateCardSerializer, CardSerializer
 from exchcard_backend_api.serializers import DianZanSerializer
@@ -58,25 +58,7 @@ class CardDetail(generics.RetrieveAPIView):
     #     instance.delete()
 
 
-# All the dianzan of a postcard
-class DianzanListView(generics.ListAPIView):
-    serializer_class = DianZanSerializer
-    permission_classes = [permissions.IsAuthenticated, ]
 
-    def get_queryset(self):
-        """
-        This view should return a list of all the purchases
-        for the currently authenticated user.
-        """
-        cardid = self.kwargs['cardid']
-        card = Card.objects.filter(id=int(cardid))
-        return DianZan.objects.filter(card_by_dianzan=card)
-
-
-class DianzanRUDView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = DianZan.objects.all()
-    serializer_class =  DianZanSerializer
-    permission_classes = [permissions.IsAuthenticated, ]
 
 ################################################------------------------------------
 # API VIEWS
@@ -91,34 +73,54 @@ def add_new_card(request):
     """
     if request.method == "POST":
         ## the sender_id must be the current log in user exchcard_backend_api
-        profile_of_request_user = Profile.objects.get(profileuser = request.user)
+        try:
+            profile_of_request_user = Profile.objects.get(profileuser = request.user)
 
-        randomProfile = Profile.objects.order_by("?").first()
+            randomProfile = Profile.objects.order_by("?").first()
 
-        data = {}
-        data["card_name"] = utils.generatePostCardName()
-        data["torecipient_id"] = int(randomProfile.id)
-        data["fromsender_id"] = int(profile_of_request_user.id)
+            data = {}
+            data["card_name"] = utils.generatePostCardName()
+            data["torecipient_id"] = randomProfile.id
+            data["fromsender_id"] = profile_of_request_user.id
 
+            card = Card.objects.create_with_profile_ids(card_name=data["card_name"],
+                                                        torecipient_id=data["torecipient_id"],
+                                                        fromsender_id=data["fromsender_id"])
 
-
-        serializer = CreateCardSerializer(data = data)
-        if serializer.is_valid():
-            serializer.save() ## 创建了新明信片
+            print data
 
             data['torecipient'] = {}
             data['torecipient']['name'] = randomProfile.profileaddress.name
             data['torecipient']['address'] = randomProfile.profileaddress.address
             data['torecipient']['postcode'] = randomProfile.profileaddress.postcode
+            data['id'] = card.id
 
             print "new card information is {0}".format(data)
 
             return Response(data, status=status.HTTP_201_CREATED)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Profile.DoesNotExist:
+            Response({"details": "Profile of the request.user does not exit!"},
+                     status=status.HTTP_404_FORBIDDEN)
 
 
-@csrf_exempt
+        # serializer = CreateCardSerializer(data = data)
+        # if serializer.is_valid():
+        #     serializer.save() ## 创建了新明信片
+        #
+        #     data['torecipient'] = {}
+        #     data['torecipient']['name'] = randomProfile.profileaddress.name
+        #     data['torecipient']['address'] = randomProfile.profileaddress.address
+        #     data['torecipient']['postcode'] = randomProfile.profileaddress.postcode
+        #
+        #     print "new card information is {0}".format(data)
+        #
+        #     return Response(data, status=status.HTTP_201_CREATED)
+        #
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# @csrf_exempt
 @api_view(["POST", ])
 @permission_classes([permissions.IsAuthenticated, ])
 def receive_a_card(request):
@@ -194,7 +196,7 @@ def receive_a_card_with_photo(request):
         try:
             card = Card.objects.get(card_name=card_name)
         except Card.DoesNotExist:
-            return Response({"details":"card name is invalid"},
+            return Response({"details":"card with post id is invalid"},
                         status=status.HTTP_404_NOT_FOUND)
 
         ## has_arrived is true, respond with ok
@@ -302,83 +304,6 @@ def update_destrory_card(request, pk, format=None):
     if request.method == "DELETE":
         return Response({"detail":"Delete is not supported"},
                         status = status.HTTP_403_FORBIDDEN)
-
-##################################################
-### add dianzan to a card
-@api_view(["GET", "POST", "PUT", "DELETE",  ])
-@permission_classes([permissions.IsAuthenticated,])
-def card_dianzan(request, cardid, photoid):
-    profile_from_user = Profile.objects.get(profileuser=request.user)
-
-    try:
-        card = Card.objects.get(id=int(cardid))
-    except Card.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    try:
-        cardphoto = CardPhoto.objects.get(id=int(photoid))
-    except CardPhoto.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    data = request.data
-
-    if request.method == 'POST':
-        card_by_dianzan_id = card.id,
-        person_who_dianzan_id = profile_from_user.id
-
-        ## check whether had been dianzan already
-        if DianZan.objects.filter(person_who_dianzan = profile_from_user,
-                                  card_by_dianzan = card,
-                                  card_photo_by_dianzan = cardphoto).exists():
-            # DianZan.objects.filter(person_who_dianzan = profile_from_user, card_by_dianzan = card).delete()
-            return Response({"detail": "already dianzan"})
-
-        else:
-            zan = DianZan.objects.create_with_ids(card_by_dianzan_id=card.id,
-                                                  card_photo_by_dianzan_id=cardphoto.id,
-                                                person_who_dianzan_id=profile_from_user.id)
-            serializer = DianZanSerializer(zan)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    if request.method == "PUT":
-        ## check whether had been dianzan already
-        if DianZan.objects.filter(person_who_dianzan=profile_from_user, card_by_dianzan=card).exists():
-            # DianZan.objects.filter(person_who_dianzan=profile_from_user, card_by_dianzan=card).delete()
-            return Response({"detail": "Already dianzan"})
-
-        else:
-            zan = DianZan.objects.create_with_ids(card_by_dianzan_id=card.id,
-                                                  person_who_dianzan_id=profile_from_user.id)
-
-            serializer = DianZanSerializer(zan)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-    if request.method == "DELETE":
-        zan = DianZan.objects.filter(card_by_dianzan_id = data['card_by_dianzan_id'])
-        zan.delete()
-
-    if request.method == 'GET':
-        zan = DianZan.objects.filter(card_by_dianzan_id=data['card_by_dianzan_id'])
-        serializer = DianZanSerializer(zan)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-@api_view(["GET", ])
-@permission_classes([permissions.IsAuthenticated,])
-def card_dianzans(request, cardid):
-    cardid = int(cardid)
-    try:
-        card = Card.objects.get(id=cardid)
-    except Card.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        zans = DianZan.objects.filter(card_by_dianzan_id =cardid)
-        results = [obj.as_json() for obj in zans]
-        return Response(results, status= status.HTTP_200_OK)
-
-#
 
 
 @api_view(["GET", ])
