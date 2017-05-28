@@ -325,7 +325,7 @@ class Card(models.Model):
 
         ## create Receive action automaticallycard.save()
         ## TODO: check
-        ReceiveCardAction.objects.create(subject=self.torecipient, card = self)
+        ReceiveCardAction.objects.create(subject=self.torecipient.profileuser, card_received = self)
 
         super(Card, self).save(*args, **kwargs)
 

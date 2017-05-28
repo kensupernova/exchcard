@@ -1,0 +1,74 @@
+.sent-card-main-container{
+  font-size: 1em;
+  font-style: normal;
+  margin: 0 5px;
+  border: red 1px solid;
+}
+
+.sent-card-main-container .sent-card-main-title {
+  font-size: 1.5em;
+}
+
+.sent-card-main-container div.sent-warning-container {
+  border: red 1px solid;
+  width: 80%;
+  padding: 2px;
+}
+
+.sent-card-main-container div.sent-confirm-container{
+  border: red 1px solid;
+  width: 80%;
+  padding: 2px;
+}
+
+.sent-warning-container .warning-main-title{
+  font-size: 1.5em;
+}
+
+.sent-warning-container div div ul {
+  list-style: none;
+
+}
+
+.sent-warning-container ul li {
+  font-size: 1em;
+  text-align: left;
+}
+
+#sendForm div {
+  text-align: left;
+}
+
+#sendForm #sendButton{
+  margin-top: 1em;
+}
+
+/*---------------*/
+.sent-confirm-container{
+  font-size: 1em;
+  padding: 1px;
+}
+
+.sent-confirm-container div label {
+  font-weight:bold;
+}
+
+.postal-info-item {
+  overflow: hidden;
+  clear:both;
+  margin-bottom: 10px;
+}
+
+.postal-info-item .postal-info-title{
+  width:30%;
+  text-align: right;
+  float: left;
+
+}
+
+.postal-info-item .postal-info-content{
+  width: 65%;
+  text-align: left;
+  float: right;
+  margin-bottom:2px;
+}

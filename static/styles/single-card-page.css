@@ -1,0 +1,29 @@
+.postal-title-container {
+  margin-bottom: 0.5em;
+  font-weight:bold;
+}
+.postal-title-container .main-title{
+  font-size: 16px;
+  margin-bottom: 0.5em;
+  font-weight:bold;
+}
+
+.postal-info-item {
+  overflow: hidden;
+  clear:both;
+  margin-bottom: 5px;
+}
+
+.postal-info-item .postal-info-title{
+  width:30%;
+  text-align: right;
+  float: left;
+
+}
+
+.postal-info-item .postal-info-content{
+  width: 65%;
+  text-align: left;
+  float: right;
+  margin-bottom:2px;
+}

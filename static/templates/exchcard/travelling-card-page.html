@@ -2,49 +2,67 @@
 
 {% block headinfo %}
 <style>
-
-  .postcard-mail-title-container{
-    font-size: 1em;
-    padding: 5px;
+  .main-content-container {
+    border: red 1px solid;
+    margin-left: 5px;
+    margin-right: 5px;
   }
 
-  .postcard-mail-title-container div{
-    padding: 10px;
+  .postal-title-container {
+    margin-bottom: 0.5em;
+    font-weight:bold;
   }
-
-  .postcard-mail-title-container div label {
+  .postal-title-container .main-title{
+    font-size: 16px;
+    margin-bottom: 0.5em;
     font-weight:bold;
   }
 
-  .postcard-mail-info-container {
-    padding: 5px;
+  .postal-info-item {
+    overflow: hidden;
+    clear:both;
+    margin-bottom: 5px;
   }
 
-  .postcard-mail-info-container div {
-    padding: 10px;
+  .postal-info-item .postal-info-title{
+    width:30%;
+    text-align: right;
+    float: left;
+
+  }
+
+  .postal-info-item .postal-info-content{
+    width: 65%;
+    text-align: left;
+    float: right;
+    margin-bottom:2px;
   }
 
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="content-container">
-  <div class="spanner postcard-mail-title-container">
-    <div><h3>寄送地址</h3></div>
-    <div><p><label>请记住一定要把Postcard ID写在明信片上面</label>, 否则接收者无法登记收到, 你不会得到积分。</p></div>
+<div class="content-container main-content-container">
+  <div class="postal-title-container">
+    <div class="main-title">新明信片寄送地址</div>
+    <div><label>请记住一定要把Postcard ID写在明信片上面</label>, 否则接收者无法登记收到, 你不会得到积分。</div>
   </div>
-  <div class="postcard-mail-info-container">
-    <div>
-      <h3>Postcard Id:</h3>
-      <p>{{card_name}}</p>
+  <div class="postal-info-container" ng-show="postal_info != null">
+    <div class="postal-info-item twoColumn">
+      <div class="postal-info-title">明信片ID:</div>
+      <div class="postal-info-content">{{card.card_name}}</div>
+      <span style="display: none; clear:both"></span>
+
     </div>
-      <!--<h3>接收者的Email:</h3>-->
-      <!--<p>{{recipient_user.email}}</p>-->
-    <div>
-      <h3>接收者的地址:</h3>
-      <p>{{recipient_address.name}}</p>
-      <p>{{recipient_address.address}}</p>
-      <p>{{recipient_address.postcode}}</p>
+    <div class="postal-info-item twoColumn">
+      <div class="postal-info-title">接收者的地址:</div>
+      <div class="postal-info-content">
+        <div>{{card.torecipient.profileaddress.name}}</div>
+        <div>{{card.torecipient.profileaddress.address}}</div>
+        <div>{{card.torecipient.profileaddress.postcode}}</div>
+      </div>
+      <span style="display: none; clear:both"></span>
+
     </div>
   </div>
 </div>

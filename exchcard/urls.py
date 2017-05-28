@@ -32,10 +32,10 @@ urlpatterns = [
     url(r'^card/send/$', 'exchcard.views.card_send'),
     url(r'^card/send/confirm/$', 'exchcard.views.card_send_confirm'),
 
+    url(r'^card/receive/$', 'exchcard.views.card_receive'),
     # 查看还在路途中的某张明信片
     url(r'^card/travelling/(?P<cardname>.+)/$', 'exchcard.views.card_travelling'),
     # register a card
-    url(r'^card/receive/$', 'exchcard.views.card_receive'),
     # view a card with cardname
     url(r'^card/(?P<cardname>.+)/$', 'exchcard.views.view_single_card'),
 

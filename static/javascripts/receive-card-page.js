@@ -3,6 +3,10 @@
  */
 
 $(document).ready(function () {
+
+  $("#cards").addClass('active');
+
+
   $("#submit").click(function () {
      receive_card();
   });

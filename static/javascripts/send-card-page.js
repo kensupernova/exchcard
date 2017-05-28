@@ -1,3 +1,9 @@
+$(document).ready(function(){
+
+  $("#cards").addClass('active');
+
+});
+
 'use strict';
 
 var getAddress = "/exchcard/api/"+'cards/add/';
@@ -25,7 +31,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
   var confirmState = {
     url: '/confirm',
     name: 'confirm',
-    templateUrl: '/static/templates/exchcard/angular_templates/send-card-confirm-page.html'
+    templateUrl: '/static/templates/exchcard/angular_templates/send-card-address-success-page.html'
   };
 
   // 注册各个状态
@@ -65,12 +71,12 @@ app.controller('myCtrl', function($rootScope, $scope, $http) {
 
       $rootScope.postal_info = response.data;
 
-      // window.location.href = "/card/travelling/"+postcard_id+"/";
-      // window.location.href = "/card/send/card/confirm";
+      window.location.href = "/card/travelling/"+postcard_id+"/";
 
-      // 隐藏提示内容,呈现邮寄地址内容
-      // $('#tab-confirm').click();
-      document.getElementById("tab-confirm").click();
+      // METHOD 2
+      // // 隐藏提示内容,呈现邮寄地址内容
+      // // $('#tab-confirm').click();
+      // document.getElementById("tab-confirm").click();
 
 
     }, function myError(response) {

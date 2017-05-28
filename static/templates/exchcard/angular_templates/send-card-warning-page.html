@@ -1,6 +1,6 @@
-<div ng-controller="myCtrl" class="sent-card-container">
+<div ng-controller="myCtrl" class="sent-warning-container">
   <div>
-    <div><label class="warning-title">注意事项</label></div>
+    <div><label class="warning-main-title">注意事项</label></div>
     <div>
       <ul>
         <li>你会得到一个地址, 请确定地址正确书写。</li>
@@ -9,7 +9,7 @@
     </div>
   </div>
 
-  <div id="sendForm">
+  <div id="sendForm" class="sendForm">
     <!--{% csrf_token %}-->
     <div>
       <input type="checkbox" name="send_postcard" value="" id="send-postcard">

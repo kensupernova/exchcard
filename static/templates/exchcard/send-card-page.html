@@ -1,78 +1,17 @@
 {% extends "foundation.html" %}
 
 {% block headinfo %}
-<style>
-  .sent-card-container{
-    font-size: 1em;
-    font-style: normal;
-  }
-
-  .main-title {
-    font-size: 1.5em;
-  }
-
-  div.sent-card-container div:nth-child(1){
-  }
-
-  div.sent-card-container div:nth-child(1),div.sent-card-container div:nth-child(2) {
-    width: 80%;
-  }
-  div label.warning-title{
-    font-size: 1.5em;
-  }
-
-  ul {
-    list-style: none;
-
-  }
-
-  ul li {
-    font-size: 1em;
-    text-align: left;
-  }
-
-  div#sendForm div {
-    text-align: left;
-  }
-
-  div#sendForm #sendButton{
-    margin-top: 1em;
-  }
-
-  /*---------------*/
-  .postcard-mail-title-container{
-    font-size: 1em;
-    padding: 5px;
-  }
-
-  .postcard-mail-title-container div{
-    padding: 10px;
-  }
-
-  .postcard-mail-title-container div label {
-    font-weight:bold;
-  }
-
-  .postcard-mail-info-container {
-    padding: 5px;
-  }
-
-  .postcard-mail-info-container div {
-    padding: 10px;
-  }
-
-</style>
+<link href="{{STATIC_URL}}styles/send-card-page.css" rel="stylesheet">
 {% endblock %}
+
 
 {% block content %}
 <div ng-app="myApp", class="sent-card-main-container">
-  <div class="main-title">寄送明信片</div>
+  <div class="sent-card-main-title">寄送明信片</div>
   <div style="display: none;">
     <!--ui-sref为state name-->
-    <a type="button" ui-sref="send" ui-sref-active="active" id="tab-send" class="tab-btn"
-    >send</a>
-    <a type="button" ui-sref="confirm" ui-sref-active="active" id="tab-confirm" class="tab-btn"
-       >confirm</a>
+    <a ui-sref="send" ui-sref-active="active" id="tab-send" class="tab-btn">send</a>
+    <a ui-sref="confirm" ui-sref-active="active" id="tab-confirm" class="tab-btn">confirm</a>
   </div>
   <ui-view>
   </ui-view>

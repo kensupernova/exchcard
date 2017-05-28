@@ -14,9 +14,9 @@ config.yaml ： 配置部署在新浪云上面
 ### 本地运营
 运营环境python2.7 
 后端依赖包: 
-    - Django 
-    - Django-Rest-Framework
-    - MySQL-python
+    - Django v1.8.3
+    - Django-Rest-Framework v3.3.2
+    - MySQL-python v1.2.5
 
 ### 前端框架
  - jquery  v2.1.0   
@@ -40,10 +40,12 @@ config.yaml ： 配置部署在新浪云上面
        2. 有一个时间轴，记录用户的活动，包括发送一张明信片，接受一张明信片，评论点赞一条信息。
 
 2. 烧友圈
-   自己发送或者别人给自己一张明信片，将在这里显示一条信息。两人之间通过一张明信片建立关系。
-   可以评论，点赞。
-   
-### TASKS:
+   自己发送或者别人给自己一张明信片，将在这里显示一条信息。两人之间通过一张明信片建立朋友关系。
+   这里可以更新朋友的最新动态。
+  
+### Small tasks unfinished
+1. 邮箱找回秘密
+
 
 
 

@@ -111,7 +111,8 @@ def card_travelling(request, cardname):
     card = Card.objects.get(card_name=cardname)
     context = {'card_name':cardname,
                'recipient_user':card.torecipient.profileuser,
-               'recipient_address': card.torecipient.profileaddress
+               'recipient_address': card.torecipient.profileaddress,
+               'card': card
                }
     context['profile'] = Profile.objects.get(profileuser=request.user)
 
