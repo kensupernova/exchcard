@@ -1,13 +1,14 @@
 <meta charset="UTF-8">
-<div class="account-content-container" ng-controller="accountController">
+<div class="content-container account-content-container" ng-controller="accountController">
 
   <div class="account-info-main-title"><h3>账号信息</h3></div>
 
   <fieldset><h5>基本信息</h5></fieldset>
-  <!--<div class="row account-info-item">-->
-    <!--<label for="username" class="account-info-item-title">用户名</label>-->
-    <!--<input type="text" name="username" id="username" value="{[{username}]}">-->
-  <!--</div>-->
+  <div class="row account-info-item">
+    <label for="username" class="account-info-item-title">用户名</label>
+    <input type="text" class="account-info-item-content" name="username" id="username" value="{[{username}]}">
+    <label class="account-info-item-error-message"></label>
+  </div>
   <div class="row account-info-item">
     <label for="email" class="account-info-item-title">Email</label>
     <input type="text" class="account-info-item-content" name="email" id="email" value="{[{email}]}"

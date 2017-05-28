@@ -369,6 +369,32 @@ class CardPhoto(models.Model):
 """
 
 #-----------------------------------------------------------------------
+class Activity(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    ## 活动的种类
+    type = models.IntegerField(max_length=50,null=False)
+    ## 活动的简短名字："send postcard" "register postcard" "comment", "dianzan", "upload postcard photo"
+    short_name = models.CharField(max_length=20, null=False)
+    short_name_zh = models.CharField(max_length=20, null=True)
+
+    description = models.CharField(max_length=100, null=True)
+
+    class Meta:
+        ordering = ['-created']
+
+    def __unicode__(self):
+        return u'activty type: %s, short name: %s, description: %s' \
+               % (self.type, self.short_name, self.description)
+
+    def __str__(self):
+        return u'activty type: %s, short name: %s, description: %s' \
+               % (self.type, self.short_name, self.description)
+
+    def save(self, *args, **kwargs):
+        # type: (object, object) -> object
+        super(Activity, self).save(*args, **kwargs)
+
+
 
 
 class DianZan(models.Model):

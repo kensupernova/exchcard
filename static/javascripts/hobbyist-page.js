@@ -9,17 +9,6 @@ var baseUrl2 = window.location.protocol +"//"+window.location.host+":"+window.lo
 $(document).ready(function(){
   $("#hobbyist").addClass('active');
 
-  // $(".h-item").click(function () {
-  //   console.log("clicked img ... ");
-  //
-  //   var user_id = $(this).prev().text();
-  //
-  //   console.log("go to public profile with user id = " + user_id);
-  //
-  //   window.location.href = baseUrl + "hobbyist/u/" + user_id;
-  //
-  // });
-
 
 });
 

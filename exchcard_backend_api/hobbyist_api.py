@@ -3,26 +3,20 @@
 提供发烧友需要的各种REST API
 """
 
-import sys
 import json
 
 from django.contrib.auth import get_user_model # If used custom user mode
 User = get_user_model()
 
-from django.http import HttpResponse
 
-from exchcard_backend_api.serializers import AddressSerializer2, AvatarPhotoSerializer, SentCardActionSerializer
+from exchcard_backend_api.serializers import SentCardActionSerializer, ReceiveActionSerializer
 from rest_framework import permissions
 from rest_framework import status
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
-from exchcard.models_profile import Address, Profile, AvatarPhoto, SentCardAction
+from exchcard.models_profile import Address, Profile, AvatarPhoto, SentCardAction, ReceiveCardAction
 from exchcard.models import XUser
-from exchcard_backend_api.serializers import GetUserSendCardActionSerializer
-
 
 
 def getAvatarInfoByProfile(profile):
@@ -154,13 +148,26 @@ def get_all_activities_of_other_user(request, user_id):
         # serializer = GetUserSendActionSerializer(user, context={'request': request} )
         #Add `context={'request': request}` when instantiating the serializer.
 
-        actions = SentCardAction.objects.filter(subject=user)
+        sent_actions = SentCardAction.objects.filter(subject=user)
+        receive_actions = ReceiveCardAction.objects.filter(subject=user)
 
-        serializer = SentCardActionSerializer(actions, many=True)
+        s_serializer = SentCardActionSerializer(sent_actions, many=True)
+        r_serializer = ReceiveActionSerializer(receive_actions, many=True)
 
-        print "activities %s" % serializer.data
+        # print "activities 1 %s" % s_serializer.data
+        # print "activities 2 %s" % r_serializer.data
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        data1 = s_serializer.data
+
+        data2 = r_serializer.data
+
+        print "data1 type is %s" % type(data1)
+
+        return Response({
+            "sent_card_actions": data1,
+            "receive_card_actions": data2
+
+        }, status=status.HTTP_200_OK)
 
     except XUser.DoesNotExist:
         return Response({"details": "can not find user with user ID = %s" % user_id},

@@ -25,3 +25,25 @@
   min-height: 400px;
   border: 1px solid red;
 }
+
+.act-item-container {
+  border: red 1px solid ;
+  margin-bottom: 1em;
+
+}
+
+.act-item-container .act-short-container {
+
+}
+
+.act-item-container .act-short-container .act-subject{
+  display: inline-block;
+}
+
+.act-item-container .act-short-container .act-short-name{
+  display: inline-block;
+}
+
+.act-item-container .act-time-container{
+  color: gray;
+}

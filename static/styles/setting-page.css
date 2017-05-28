@@ -89,6 +89,10 @@
   text-align: left;
   width:6em;
 }
+
+.account-info-item input#email{
+  border: none;
+}
 /*地址信息页面格式*/
 .address-info-container{
   border: 1px solid red;

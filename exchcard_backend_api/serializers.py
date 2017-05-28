@@ -366,6 +366,8 @@ class SentCardActionSerializer(serializers.ModelSerializer):
 
     subject_email = serializers.CharField(source='subject.email')
     subject_id = serializers.CharField(source='subject.id')
+    subject_username = serializers.CharField(source='subject.username')
+
     card_sent_id = serializers.CharField(source='card_sent.id')
     card_sent_cardname = serializers.CharField(source='card_sent.card_name')
 
@@ -376,15 +378,17 @@ class SentCardActionSerializer(serializers.ModelSerializer):
             "id", "created", "subject_id", "subject_email", "card_sent_id","card_sent_cardname"
         )
 
-class ReceivedActionSerializer(serializers.ModelSerializer):
-
+class ReceiveActionSerializer(serializers.ModelSerializer):
+    subject_id = serializers.CharField(source='subject.id')
     subject_email = serializers.CharField(source='subject.email')
-    card_receive_id = serializers.CharField(source='card_receive.id')
-    card_receive_cardname = serializers.CharField(source='card_receive.card_name')
+    subject_username = serializers.CharField(source='subject.username')
+
+    card_receive_id = serializers.CharField(source='card_received.id')
+    card_receive_cardname = serializers.CharField(source='card_received.card_name')
 
 
     class Meta:
         model = ReceiveCardAction
         fileds = (
-            "id", "created", "subject_email", "card_receive_id","card_receive_cardname"
+            "id", "created", "subject_id", "subject_email", "subject_username","card_receive_id","card_receive_cardname"
         )

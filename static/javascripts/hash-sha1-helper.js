@@ -256,8 +256,8 @@ function reduceLength(sha1_result, maxLengh){
   for(var i = 0; i < result_length*2; i++, i++){
     // 如果是随机得到的用户是变动的不好
     // var pos = Math.round(Math.random()*length);
-    var pos = i;
-    result += sha1_result.charAt(pos);
+
+    result += sha1_result.charAt(i);
   }
 
   return result;
@@ -272,7 +272,7 @@ function convert_email_to_username_sha1(email, maxLength){
   return r;
 }
 
-function convert_email_to_username(email){
+function convert_email_to_username_fool(email){
   email = email.replace(/@/, "at");
   email = email.replace(/\./, "dot"); // Must excape .
   return email;
