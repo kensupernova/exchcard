@@ -30,9 +30,7 @@ $(document).ready(function(){
 
       var avatar_url= response['avatar_info']['avatar_url'];
       avatar_url = avatar_url.lastIndexOf("http", 0) === 0 ? avatar_url: response['avatar_info']['avatar'];
-      if(Number(avatar_url.lastIndexOf("http", 0)) != Number(0) ){
-        avatar_url = baseUrl + avatar_url;
-      }
+
       $("#h-img").attr('src', avatar_url);
 
       $("#text-info-email").text(response['user_email']);
@@ -103,9 +101,9 @@ $(document).ready(function(){
 
     var act_short_name = '';
 
-    if(act['activity_type'] == 1){
+    if(act['activity_id'] == 1){
       act_short_name = "发送了一张明信片";
-    } else if(act['activity_type'] == 2){
+    } else if(act['activity_id'] == 2){
       act_short_name = "注册了一张明信片";
     }
 

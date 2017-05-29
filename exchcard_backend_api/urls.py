@@ -20,6 +20,7 @@ urlpatterns = format_suffix_patterns([
     url(r"^user/address/register2/$", profile_api.RegisterUserAddressProfileView.as_view(),
         name="user-address-profile-register2"),
 
+## --------------------------------------------------------
     ## users
     url(r"^users/$", user_api.UserList.as_view(),
         name="user-list"),
@@ -33,7 +34,7 @@ urlpatterns = format_suffix_patterns([
     url(r'^users/get/info/$',
         "exchcard_backend_api.user_api.get_info_of_logged_user",
         name="user-get-info"),
-
+## --------------------------------------------------------
     ## addresss
     url(r'^address/$', address_api.GetAllAddressListView.as_view(),
         name="address-list"),
@@ -55,6 +56,7 @@ urlpatterns = format_suffix_patterns([
         "exchcard_backend_api.address_api.get_address_of_logged_user",
         name="address-of-logged-user"),
 
+## --------------------------------------------------------
     ## profiles
     url(r"^profiles/$", profile_api.GetProfileListView.as_view(),
         name="profile-list"),
@@ -82,7 +84,6 @@ urlpatterns = format_suffix_patterns([
         name="profile-avatarphoto-upload"),
     url(r'^profiles/(?P<pk>[0-9]+)/avatar/upload2/$', upload_api.AvatarUploadView.as_view(),
         name="profile-avatarphoto-upload2"),
-
     url(r"^profiles/photos/$",
         upload_api.AvatarPhotoList.as_view(),
         name="avatarphoto-list"),
@@ -123,6 +124,7 @@ urlpatterns = format_suffix_patterns([
         name="profile-get-cards-receive-arrived"),
 
 
+## --------------------------------------------------------
     ## cards
     url(r"^cards/$", card_api.CardList.as_view(),
         name="card-list"),
@@ -141,6 +143,19 @@ urlpatterns = format_suffix_patterns([
     url(r"^cards/receive/photo/$",
         "exchcard_backend_api.card_api.receive_a_card_with_photo",
         name="card-receive-with-photo"),
+
+    ## 单独为某明信片上传图片
+    url(r"^cards/upload/photo/$",
+        "exchcard_backend_api.card_api.upload_cardphoto",
+        name="card-upload-photo"
+        ),
+    url(r"^cards/(?P<card_name>.+)/upload/photo/$",
+        "exchcard_backend_api.card_api.upload_photo_for_card_cardname",
+        name="card-upload-photo-2"
+        ),
+    url(r"^cards/(?P<pk>[0-9]+)/upload/photo2/$",
+        'exchcard_backend_api.card_api.upload_photo_for_card_by_id',
+        name="card-photo-upload-by-id"),
 
     url(r"^cards/(?P<pk>[0-9]+)/update/$",
         "exchcard_backend_api.card_api.update_destrory_card",
@@ -161,15 +176,13 @@ urlpatterns = format_suffix_patterns([
     url(r"^cards/(?P<cardid>[0-9]+)/dianzans/$", activity_api.DianzanListView.as_view(),
         name="card-dianzans-all"),
 
-    # 明信片注册后，补上传图片
-    # TODO:
-    url(r"^cards/(?P<pk>[0-9]+)/cardphoto/upload/$", 'exchcard_backend_api.upload_api.upload_card_photo',
-        name="card-cardphoto-upload"),
+
+
     ## 明信片实时信息
     url(r"^cards/feeds/$", "exchcard_backend_api.card_api.cards_feeds",
         name="cards-feed"),
 
-    ## ---------------
+## ------------------------------------------------------------
     ## 发烧友
     url(r"^hobbyist/list/page/(?P<number>[0-9]+)/$",
         "exchcard_backend_api.hobbyist_api.get_basic_info_of_hobbyist_list",
@@ -200,9 +213,6 @@ urlpatterns = format_suffix_patterns([
 
     ## 其他
     url(r"^storage/sae/s3/$", "exchcard_backend_api.upload_api.sae_s3_storage"),
-
-
-
 
     ])
 

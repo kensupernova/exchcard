@@ -370,9 +370,17 @@ class CardPhoto(models.Model):
 
 #-----------------------------------------------------------------------
 class Activity(models.Model):
+    ACTIVITY_TYPES = (
+        ('SP', 'Sent a postcard'),
+        ('RP', 'Receive a postcard'),
+        ('MC', 'Make a comment'),
+        ('MDZ', 'Make a dianzan'),
+        ('UPP', 'Upload a postcard photo'),
+    )
+
     created = models.DateTimeField(auto_now_add=True)
     ## 活动的种类
-    type = models.IntegerField(max_length=50,null=False)
+    type = models.CharField(max_length=50,null=False, choices=ACTIVITY_TYPES)
     ## 活动的简短名字："send postcard" "register postcard" "comment", "dianzan", "upload postcard photo"
     short_name = models.CharField(max_length=20, null=False)
     short_name_zh = models.CharField(max_length=20, null=True)

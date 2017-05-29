@@ -6,13 +6,35 @@
 
 {% block content %}
 <div class="content-container">
-  <div class="postal-info-container" ng-show="postal_info != null">
+  <div class="postal-info-container" >
+    <div id="post-cardname-holder" style="display: none;">{{card.card_name}}</div>
+    <div id="post-id-holder" style="display: none;">{{card.id}}</div>
+
+    <div class="postal-info-item twoColumn">
+      <div class="postal-info-title">寄送者:</div>
+      <div class="postal-info-content">
+        <div>{{card.fromsender.profileuser.username}}</div>
+      </div>
+      <span style="display: none; clear:both"></span>
+    </div>
+
+    <div class="postal-info-item twoColumn">
+      <div class="postal-info-title">接收者:</div>
+      <div class="postal-info-content">
+        <div>{{card.torecipient.profileuser.username}}</div>
+      </div>
+      <span style="display: none; clear:both"></span>
+    </div>
+
+
     <div class="postal-info-item twoColumn">
       <div class="postal-info-title">明信片ID:</div>
       <div class="postal-info-content">{{card.card_name}}</div>
       <span style="display: none; clear:both"></span>
 
     </div>
+
+
     <div class="postal-info-item twoColumn">
       <div class="postal-info-title">接收者的地址:</div>
       <div class="postal-info-content">
@@ -21,9 +43,39 @@
         <div>{{card.torecipient.profileaddress.postcode}}</div>
       </div>
       <span style="display: none; clear:both"></span>
+    </div>
+
+    <div class="postal-info-item twoColumn">
+      <div class="postal-info-title">是否到达:</div>
+      <div class="postal-info-content">
+        <div>{{card.has_arrived}}</div>
+      </div>
+      <span style="display: none; clear:both"></span>
+    </div>
+
+    <div class="postal-info-item twoColumn">
+      <div class="postal-info-title">明信片的图片:</div>
+      <div class="postal-info-content">
+        <div class="card-photos-container" id="card-photos-container">
+          <div><img src="{{STATIC_URL}}images/ex-card-photo.jpg"></div>
+          {% for card_photo in card_photos %}
+            <div><img src="{{card_photo.card_photo.url}}"></div>
+          {% endfor %}
+        </div>
+        <div>
+          <div class="upload-photo-title">添加更多图片</div>
+          <input class="item-content" type="file" name="card_photo_file" id="card_photo_file" placeholder="postcard photo">
+          <input type="button" id="upload-btn" value="上传">
+          <label class="item-error-msg" id="upload-error-msg"></label>
+          <label class="item-error-msg" id="upload-result-msg"></label>
+        </div>
+      </div>
+      <span style="display: none; clear:both"></span>
 
     </div>
+
   </div>
+
 
 
 </div>
@@ -40,6 +92,8 @@
     $("#cards").addClass('active');
 
   });
-</script>
 
+
+</script>
+<script src="{{STATIC_URL}}javascripts/single-card-page.js" type="text/javascript"></script>
 {% endblock %}

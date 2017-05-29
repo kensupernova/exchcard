@@ -89,7 +89,7 @@ def hash_file_name(fname):
         now = datetime.datetime.now()
         ms = str(now.microsecond)
 
-        newName = ("{0}-{1}-{2}-{3}-{4}-{5}-{6}"+fileFormat).\
+        newName = ("{0}{1}{2}{3}{4}{5}{6}"+fileFormat).\
             format(now.year, now.month, now.day, now.hour, now.minute, now.second, ms)
 
     except:

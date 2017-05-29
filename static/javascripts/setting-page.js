@@ -224,10 +224,12 @@ app.controller("avatarController", function($scope, $http) {
 
   // var baseUrl = window.location.origin ;
   var baseUrl = window.location.protocol +"//"+window.location.host;
+  var defaultAvatarUrl = "/static/images/default-avatar.jpg";
+
   // 有关头像图片的URL
   var getAvatarUrl = "/exchcard/api/profiles/avatar/url/";
   var uploadAvatarUrl = "/exchcard/api/profiles/avatar/upload/";
-  var defaultAvatarUrl = "/static/images/default-avatar.jpg";
+
 
   // js.cookie可以产生csrftoken
   var csrftoken = Cookies.get('csrftoken');
@@ -241,12 +243,6 @@ app.controller("avatarController", function($scope, $http) {
     },
     url: getAvatarUrl
   }).then(function mySucces(response) {
-
-    // method 1
-    // var avatarUrl = response.data['avatar_url'];
-    // var baseUrl = window.location.origin ;
-    // // window.location.protocol +"//"+window.location.host;
-    // var avatar = baseUrl + avatarUrl;
 
     // method 2
     var avatar_url= response.data['avatar_url'];
@@ -262,6 +258,7 @@ app.controller("avatarController", function($scope, $http) {
 
   });
 
+  //// 上传avatar photo
   $scope.upload_avatar = function(){
 
     // console.log("upload avatar ... useing ajax + FormData ");
@@ -307,12 +304,10 @@ app.controller("avatarController", function($scope, $http) {
       processData: false,
       success: function (response) {
         // console.log("after uploading " + JSON.stringify(response));
-        var avatar= response['avatar'];
-        if(avatar != null){
-          $scope.avatar = avatar;
-        } else{
-          $scope.avatar = baseUrl + defaultAvatarUrl;
-        }
+        $("#avatar").empty();
+
+        $scope.avatar_url = response['avatar'];
+
       },
       error: function (response) {
         // console.log(response);

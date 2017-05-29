@@ -32,13 +32,15 @@ $(document).ready(function () {
 
     console.log("recieve card submited data: " + card_name +" " + card_photo);
 
-    var formData;
+    if(!card_name || card_name == '' || card_name == null || card_name == undefined){
+      return;
+    }
 
     ///// 分两种情况讨论。
     if(!card_photo || card_photo == null || card_photo == undefined){
-      console.log("card photo is empty!")
+      // console.log("card photo is empty!");
 
-      formData = {
+      var formData = {
         card_name: card_name,
       };
 
@@ -52,49 +54,72 @@ $(document).ready(function () {
           console.log("receive card success with no photo: " + JSON.stringify(data));
 
           // 显示成功发送
+          $("#receive-card-result").text("成功注册明信片!");
 
-          // redirect to profile page
-          window.location.href=  "/profile/"
+          redirectToProfile();
         }
-
-      }).done(function(data){
-        // console.log("receive card success : " + JSON.stringify(data));
 
       }).fail(function(data){
         // console.log(JSON.stringify(data));
         // console.log("receive card failed!");
+        $("#receive-card-result").text(data["responseJSON"]["details"]);
+        redirectToProfile();
       });
 
     } else{
 
       ///////// 带图片的明信片
-      formData = {
-        card_name: card_name,
-        card_photo: card_photo
-      };
+      var formData = new FormData();
+
+      formData.append("card_photo", $("#card_photo")[0].files[0]);
+      formData.append('card_name', card_name);
 
       // console.log("submit data  "+JSON.stringify(formData));
 
       $.ajax({
-        method:"post",
         url: receive_card_with_photo_url,
+        type: 'POST',
         data: formData,
-        enctype: 'multipart/form-data',
+        dataType: 'json',
+        async: false,
+        cache: false,
+        contentType: false,
+        processData: false,
         success: function(data){
           console.log("receive card success with photo: " + JSON.stringify(data));
 
-          // redirect to profile page
-          window.location.href=  "/profile/"
+          // 显示成功发送
+          $("#receive-card-result").text("成功注册明信片");
+
+          // 2s后,挑转
+          redirectToProfile();
+
+
+        },
+        error: function (data) {
+
         }
 
       }).fail(function(data){
         // console.log(JSON.stringify(data));
         // console.log("receive card failed!");
+        $("#receive-card-result").text(data["responseJSON"]["details"]);
+
+        redirectToProfile();
+
       });
 
     }
 
 
+  }
+
+  function redirectToProfile(){
+    // 5s后,挑转
+    setTimeout(function(){
+      // redirect to profile page
+      window.location.href=  "/profile/"
+    }, 2000);
   }
 
 

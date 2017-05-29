@@ -33,47 +33,40 @@ def sae_s3_storage(request, format=None):
 @api_view(["POST"])
 @permission_classes([permissions.IsAuthenticated, ])
 @parser_classes([MultiPartParser, FormParser])
-def upload_avatar_to_s3(request, pk, format=None):
+def upload_avatarphoto_by_profile_id(request, pk, format=None):
+    """
+    主要在settting中设置storage
+    :param request:
+    :param pk:
+    :param format:
+    :return:
+    """
     if request.method == "POST":
         try:
             profile_from_request = Profile.objects.get(profileuser=request.user)
-            if int(pk) == profile_from_request.id:
+            if int(pk) == int(profile_from_request.id):
                 profile = Profile.objects.get(pk=int(pk))
-
-                # photo = AvatarPhoto(owner=profile, avatar=request.data['avatar'])
-                photo = AvatarPhoto(owner=profile, avatar=request.FILES['avatar'])
+                photo = AvatarPhoto(owner=profile, avatar=request.data['avatar'])
                 photo.save()
 
-                name_on_s3 = photo.avatar.name
-                # sae s3 does not support path
-                # path_on_s3 = photo.avatar.path
-                url_on_s3 = photo.avatar.url
+                name = photo.avatar.name
+                url = photo.avatar.url
 
                 serializer = AvatarPhotoSerializer(photo, context={'request': request})
                 data = serializer.data
-                data["name"] = name_on_s3
-                data["url"] = url_on_s3
+                data["name"] = name
+                data["url"] = url
 
                 return Response(data, status=status.HTTP_201_CREATED)
-
             else:
                 return Response({"details": "request user != user from url",
-                                 "id1":pk,
-                                 "id2:":profile_from_request.id },
+                                 "id1": pk,
+                                 "id2:": profile_from_request.id },
                                  status=status.HTTP_403_FORBIDDEN)
 
-
         except Profile.DoesNotExist:
-
             return Response({"details": "profile of logged user does not exist"},
-
-                            status=status.HTTP_404_NOT_FOUND)
-
-        except AvatarPhoto.DoesNotExist:
-
-            return Response({"details": "avatar photo of logger user does not exist"},
-
-                            status=status.HTTP_404_NOT_FOUND)
+                          status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(["POST"])
@@ -84,6 +77,12 @@ def upload_avatarphoto(request):
         try:
             profile = Profile.objects.get(profileuser=request.user)
 
+            # print request.data
+            # print request.FILES
+            # print request.POST
+
+            ## 前端按照有表单Form, 文件在request.FILES里面, 也在request.data里面
+
             # 上传的文件
             f = request.FILES['avatar']
             # 改变文件名，注意不要改变文件格式后缀
@@ -92,10 +91,6 @@ def upload_avatarphoto(request):
             photo = AvatarPhoto(owner=profile, avatar=f)
             photo.save()
 
-            # avatar = photo.avatar
-            # name = photo.avatar.name
-            # url = photo.avatar.url
-
             serializer = AvatarPhotoSerializer(photo, context={'request': request})
             data = serializer.data
 
@@ -103,60 +98,11 @@ def upload_avatarphoto(request):
 
             return Response(data=data, status=status.HTTP_201_CREATED)
 
-
         except Profile.DoesNotExist:
             return Response({"details":"Internal server error! Can not find Profile object."},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-
-@api_view(["POST"])
-@permission_classes([permissions.IsAuthenticated, ])
-@parser_classes([MultiPartParser, FormParser])
-def upload_card_photo(request, pk, format=None):
-    if request.method == "POST":
-        try:
-            profile_from_request = Profile.objects.get(profileuser=request.user)
-
-            # pk为明信片的Id
-            card_host = Card.objects.get(pk=int(pk))
-
-            ### get the recipient and sender of the card
-            recipient = card_host.torecipient
-            sender = card_host.fromsender
-
-            # 确保目前登录用户就是明信片的接受者
-            if profile_from_request.id == recipient.id or profile_from_request.id == sender.id:
-                f = request.FILES['cardphoto']
-                f.name = utils.hash_file_name(f.name)
-
-                photo = CardPhoto(owner=profile_from_request,
-                                  card_host=card_host,
-                                  card_photo=f)
-                photo.save()
-
-                name = photo.card_photo.name
-                url = photo.card_photo.url
-
-                serializer = CardPhotoSerializer(photo, context={'request': request})
-                data = serializer.data
-                data["name_on_server"] = name
-                data["url_on_server"] = url
-
-                return Response(data, status=status.HTTP_201_CREATED)
-            else:
-                Response({"details": "card recipient!= profileuser, sender !=profileuser",
-                          "id1": recipient.id,
-                          "id2": profile_from_request.id},
-                         status= status.HTTP_200_OK)
-
-        except Profile.DoesNotExist:
-            return Response({"details":"Current logged user's profile does not exist"},
-                            status=status.HTTP_404_NOT_FOUND)
-
-        except Card.DoesNotExist:
-            return Response({"details": "Postcard with id %s does not exist" % pk},
-                            status=status.HTTP_404_NOT_FOUND)
 
 class AvatarUploadView(APIView):
     parser_classes = ([MultiPartParser, FormParser]) ## only key is file
@@ -169,18 +115,15 @@ class AvatarUploadView(APIView):
             if int(pk) == profile_from_request.id:
                 profile = Profile.objects.get(pk=int(pk))
                 photo = AvatarPhoto(owner=profile, avatar=request.data['avatar'])
-                ## photo = AvatarPhoto(owner=exchcard_backend_api, avatar=request.data["avatar"])
-                ## createSerializer = CreateAvatarPhotoSerializer(photo)
-                ## createSerializer.save()
                 photo.save()
 
-                name_on_s3 = photo.avatar.name
-                url_on_s3 = photo.avatar.url
+                name = photo.avatar.name
+                url = photo.avatar.url
 
                 aserializer = AvatarPhotoSerializer(photo, context={'request': request})
                 data = aserializer.data
-                data["name"] = name_on_s3
-                data["avatar_url"] = url_on_s3
+                data["name"] = name
+                data["avatar_url"] = url
 
                 return Response(data, status=status.HTTP_201_CREATED)
 

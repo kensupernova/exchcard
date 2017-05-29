@@ -16,13 +16,13 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = User
-        fields =('url', 'username', "email")
+        fields =('id', 'url', 'username', "email")
 
 
 class UserSerializer2(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields=("username", "email") ### password can not be read
+        fields=('id',"username", "email") ### password can not be read
 
 
 class RegisterUserSerializer1(serializers.ModelSerializer):
@@ -296,7 +296,7 @@ class AvatarPhotoSerializer(serializers.ModelSerializer):
     只有avatar 包含全地址
     avatar_url 仅仅包含path
     """
-    # owner_username = serializers.CharField(source='owner.profileuser.username')
+    owner_username = serializers.CharField(source='owner.profileuser.username')
     owner_email = serializers.CharField(source='owner.profileuser.email')
     owner_id = serializers.IntegerField(source="owner.id")
     avatar_url = serializers.CharField(source='avatar.url')
@@ -304,7 +304,7 @@ class AvatarPhotoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AvatarPhoto
-        fields = ('id', 'avatar', 'avatar_url',"owner_id", "owner_email")
+        fields = ('id', 'avatar', 'avatar_url',"owner_id", "owner_email", "owner_username")
 
 class ProfileWithAvatarPhotoSerializer(serializers.HyperlinkedModelSerializer):
     profileuser_username = serializers.CharField(source="profileuser.username")
@@ -326,15 +326,18 @@ class CreateAvatarPhotoSerializer(serializers.HyperlinkedModelSerializer):
         return AvatarPhoto(**validated_data)
 
 ###################################################################################
-class CardPhotoSerializer(serializers.HyperlinkedModelSerializer):
-    owner = serializers.CharField(source='owner.profileuser.username')
+class CardPhotoSerializer(serializers.ModelSerializer):
+    owner_email = serializers.CharField(source='owner.profileuser.email')
+    owner_username = serializers.CharField(source='owner.profileuser.username')
     owner_id = serializers.IntegerField(source="owner.id")
     card_host = serializers.CharField(source="card_host.card_name")
     card_host_id = serializers.IntegerField(source="card_host.id")
+    card_photo_url = serializers.CharField(source='card_photo.url')
 
     class Meta:
         model = CardPhoto
-        fields = ('id', 'owner', "owner_id", "card_host", "card_host_id")
+        fields = ('id', 'owner', "card_photo", "card_photo_url", "owner_id", "card_host", "card_host_id",
+                  "owner_email", "owner_username", "owner_id")
 
 
 #----------------------------------------------------------------------

@@ -27,3 +27,35 @@
   float: right;
   margin-bottom:2px;
 }
+
+.postal-info-content .card-photos-container div {
+  margin:2px;
+  border: 1px gray solid;
+  display: inline-block;
+}
+
+.card-photos-container div img{
+  width: 200px;
+  overflow: visible;
+}
+
+.postal-info-content #card_photo_file{
+  margin-top:0.5em;
+}
+
+.postal-info-content #upload-btn{
+  margin-top: 1em;
+  padding:0 1em;
+}
+
+.postal-info-content .item-error-msg{
+  min-width:6em;
+  min-height:2em;
+  /*border: red 1px solid;*/
+  vertical-align: top;
+  margin-top:0.5em;
+}
+
+.postal-info-content .upload-photo-title {
+  margin-top: 1em;
+}

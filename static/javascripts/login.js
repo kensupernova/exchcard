@@ -9,7 +9,7 @@ $(document).ready(function(){
     // var email = $("#form_email").val();
     // var password = $("#form_password").val();
 
-    var username = convert_email_to_username(email);
+    var username = convert_email_to_username_sha1(email);
 
     // console.log("username: " + username);
     // console.log("password: " + password);

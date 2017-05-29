@@ -135,15 +135,20 @@ def view_single_card(request, cardname):
 
     context = {'card_name':cardname,
                'recipient_user':card.torecipient.profileuser,
-               'recipient_address': card.torecipient.profileaddress}
+               'recipient_address': card.torecipient.profileaddress,
+               'card': card}
     context['profile'] = Profile.objects.get(profileuser=request.user)
 
+
+
     try:
-        cardphoto = CardPhoto.objects.get(card_host=card)
-        context["url"] = cardphoto.card_photo.url
+        card_photos = CardPhoto.objects.filter(card_host=card)
+        if(card_photos.count()>0):
+            context['card_photos'] = card_photos
     except:
-        ''
-    return render(request, 'exchcard/travelling-card-page.html', context)
+        print "not card photos of card %s" % cardname
+
+    return render(request, 'exchcard/single-card-page.html', context)
 
 
 """

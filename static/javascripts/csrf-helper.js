@@ -7,7 +7,7 @@ function csrfSafeMethod(method) {
   return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
 
-function addCSRFTokenPreAjax(){
+function addCSRFTokenBeforeAjax(){
   // csrf token
   // 解决403错误, 发送ajax post请求前, 添加X-CSRFTOKEN HEADER
   // 基于 js.cookie.js

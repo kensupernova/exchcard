@@ -21,7 +21,7 @@ $(document).ready(function() {
 
     // hashed username from email address
     // var username = convert_email_to_username_fool(email); // turn email to username, hash-sha1-helper.js
-    var username = convert_email_to_username_sha1(email, 10);
+    var username = convert_email_to_username_sha1(email);
 
     // console.log("new user " + username +" " + email +" " + password);
 

@@ -267,8 +267,8 @@ function reduceLength(sha1_result, maxLengh){
  * 终极把email变成sha1 code的函数
  */
 
-function convert_email_to_username_sha1(email, maxLength){
-  var r = reduceLength(hex_sha1(email), maxLength);
+function convert_email_to_username_sha1(email){
+  var r = reduceLength(hex_sha1(email), 10);
   return r;
 }
 
