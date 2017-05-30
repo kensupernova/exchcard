@@ -19,11 +19,11 @@ $(document).ready(function() {
       return false;
     }
 
-    // hashed username from email address
+    //// hashed username from email address
     // var username = convert_email_to_username_fool(email); // turn email to username, hash-sha1-helper.js
     var username = convert_email_to_username_sha1(email);
 
-    // console.log("new user " + username +" " + email +" " + password);
+    console.log("new user " + username +" " + email +" " + password);
 
 
     if(!validate_email(email)) {
@@ -86,19 +86,15 @@ $(document).ready(function() {
           data: {'email': email, 'password':password},
           success: function(data){
             // console.log("log in after register success!");
-
             result = 1;
-
             window.location.href = "/account/address/create/";
           }
         }).fail(function(){
           console.log("login failed!");
-
           result = 0;
         });
 
       }
-
 
     }).done(function(data){
       // console.log(JSON.stringify(data));

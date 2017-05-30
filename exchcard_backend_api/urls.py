@@ -14,7 +14,7 @@ urlpatterns = format_suffix_patterns([
     url(r"^auth/", "exchcard_backend_api.user_api.user_auth", name="auth"),
     url(r"^login/", "exchcard_backend_api.user_api.user_login_with_email_pw", name="login-email-pw"),
     url(r"^logout/", "exchcard_backend_api.user_api.user_logout", name="logout"),
-
+## --------------------------------------------------------
     url(r"^user/address/register/$", "exchcard_backend_api.profile_api.register_user_address_profile",
         name="user-address-profile-register"),
     url(r"^user/address/register2/$", profile_api.RegisterUserAddressProfileView.as_view(),
@@ -22,28 +22,40 @@ urlpatterns = format_suffix_patterns([
 
 ## --------------------------------------------------------
     ## users
-    url(r"^users/$", user_api.UserList.as_view(),
-        name="user-list"),
     url(r"^users/register/", user_api.RegisterUserView.as_view(),
         name="user-register"),
     url(r"^users/register2/", "exchcard_backend_api.user_api.register_new_user",
         name="user-register2"),
+    url(r"^users/$", user_api.UserList.as_view(),
+        name="user-list"),
     url(r"^users/(?P<pk>[0-9]+)/$", user_api.UserDetail.as_view(),
         name="user-detail"),
     ## 得到当前登录用户信息
     url(r'^users/get/info/$',
         "exchcard_backend_api.user_api.get_info_of_logged_user",
         name="user-get-info"),
+    ## 修改用户名
+    url(r'^users/update/username/$',
+        'exchcard_backend_api.user_api.update_username',
+        name='user-username-update'),
+    url(r'^users/check/password/$',
+        'exchcard_backend_api.user_api.check_password',
+        name='user-check-password'),
+    url(r'^users/update/password/$',
+        'exchcard_backend_api.user_api.update_password',
+        name='user-update-password'),
+
 ## --------------------------------------------------------
     ## addresss
-    url(r'^address/$', address_api.GetAllAddressListView.as_view(),
-        name="address-list"),
     url(r'^address/create/$', address_api.CreateAddressView.as_view(),
         name="address-create"),
     url(r'^address/profile/create/$', "exchcard_backend_api.address_api.address_profile_create",
         name="address-profile-create"),
+
     url(r'^address/getrandom/$', address_api.GetOneRandomAddressView.as_view(),
         name="address-random"),
+    url(r'^address/$', address_api.GetAllAddressListView.as_view(),
+        name="address-list"),
     url(r'^address/get/id/(?P<pk>[0-9]+)/$', address_api.GetAddressView.as_view(),
         name="address-detail-by-id"),
     url(r'^address/get/name/(?P<name>.+)/$', address_api.GetAddressViewWithNameField.as_view(),
@@ -208,9 +220,7 @@ urlpatterns = format_suffix_patterns([
     url(r"^/hobbyist/activity/list/%", activity_api.SentCardActionListView.as_view(),
         name="sent-card-activity-list"),
 
-    ## ---------------
-
-
+## ------------------------------------------------------------
     ## 其他
     url(r"^storage/sae/s3/$", "exchcard_backend_api.upload_api.sae_s3_storage"),
 

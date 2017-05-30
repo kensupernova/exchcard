@@ -4,7 +4,7 @@ $(document).ready(function(){
 	$(".btn-login-submit").click(function(){
     // get the input values for email and password
     var email = $("#form_email").val()|| "zgh1@126.com";
-    var password = $("#form_password").val()||"z111111";
+    var password = $("#form_password").val()||"zz1111";
 
     // var email = $("#form_email").val();
     // var password = $("#form_password").val();
@@ -17,11 +17,6 @@ $(document).ready(function(){
 
     if(!validate_email(email)){
       console.log("email is wrong")
-      return;
-    }
-
-    if(!validate_username(username)){
-      console.log("username is wrong")
       return;
     }
 
@@ -53,7 +48,7 @@ $(document).ready(function(){
       url: login_url,
       data: {'email': email, 'password':password},
       success: function(data){
-        console.log("login success!");
+        // console.log("login with email and password success!");
         result = 1;
         window.location.href = "/profile/";
 

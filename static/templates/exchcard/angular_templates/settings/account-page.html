@@ -4,29 +4,54 @@
   <div class="account-info-main-title"><h3>账号信息</h3></div>
 
   <fieldset><h5>基本信息</h5></fieldset>
-  <div class="row account-info-item">
+  <div class="row account-info-item threeColumn">
     <label for="username" class="account-info-item-title">用户名</label>
     <input type="text" class="account-info-item-content" name="username" id="username" value="{[{username}]}">
-    <label class="account-info-item-error-message"></label>
+    <div class="account-info-item-error-message" >
+      <input type="button" class="btn-save btn-username-save" id="btn-username-save"
+             value="保存" style="display: none; " ng-click="updateUsername()">
+      <div class="username-error-msg" id="username-error-msg"></div>
+
+    </div>
+
+
   </div>
-  <div class="row account-info-item">
+  <div class="row account-info-item threeColumn">
     <label for="email" class="account-info-item-title">Email</label>
     <input type="text" class="account-info-item-content" name="email" id="email" value="{[{email}]}"
            disabled="true" readonly="true">
-    <label class="account-info-item-error-message"></label>
+    <div class="account-info-item-error-message"></div>
+    <br style="display: none; clear:both;"/>
   </div>
 
   <fieldset><h5>密码</h5></fieldset>
-  <div class="row account-info-item">
-    <label for="password" class="account-info-item-title">当前密码</label>
-    <input type="text" class="account-info-item-content" name="password" id="password" value="">
-    <label class="account-info-item-error-message"></label>
+  <div class="row account-info-item threeColumn">
+    <label for="password-old" class="account-info-item-title">当前密码</label>
+    <input type="password" class="account-info-item-content" name="password" id="password-old" value="">
+    <div class="account-info-item-error-message pwd-old-error-msg-container">
+      <div class='loader' id ="loader" style="display: none;">
+        <img src="/static/images/5-121204193R0-50.gif" alt="checking ..."
+             style="width:25px; height:25px;">
+      </div>
+      <div class="pwd-old-error-msg" id="pwd-old-error-msg" style="color: red;"></div>
+    </div>
+    <br style="display: none; clear:both;"/>
   </div>
 
-  <div class="row account-info-item">
+  <div class="row account-info-item threeColumn">
     <label for="password-new" class="account-info-item-title">新的密码</label>
     <input type="text" class="account-info-item-content" name="password-new" id="password-new" value="">
-    <label class="account-info-item-error-message"></label>
+    <div class="account-info-item-error-message"></div>
+    <br style="display: none; clear:both;"/>
+  </div>
+  <div class="row account-info-item threeColumn">
+    <label for="password-new-2" class="account-info-item-title">重新输入</label>
+    <input type="text" class="account-info-item-content" name="password-new" id="password-new-2" value="">
+    <div class="account-info-item-error-message"></div>
+    <br style="display: none; clear:both;"/>
   </div>
 
+  <div>
+    <input type="button" value="确认" id="btn-confirm-change-pwd" ng-click="confirmChangePwd()"/>
+  </div>
 </div>

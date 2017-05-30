@@ -43,10 +43,10 @@ $("#upload-btn").click(function(){
       }, 5000)
     },
     error: function (response) {
-      console.log(JSON.stringify(response));
+      // console.log(JSON.stringify(response));
       // console.log("receive card failed!");
 
-      // $("#upload-error-msg").text(response["responseJSON"]["details"]);
+      $("#upload-error-msg").text(response["responseJSON"]["details"]);
     }
   });
 

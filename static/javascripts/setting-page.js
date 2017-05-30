@@ -51,24 +51,6 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
 
 }]);
 
-// app运行时
-// app.run(function($rootScope, $http) {
-//   var csrftoken = Cookies.get('csrftoken');
-//
-//   // 网络访问服务http
-//   $http({
-//     method: "GET",
-//     headers: {
-//       'X-CSRFToken': csrftoken
-//     },
-//     url: "/"
-//   }).then(function mySucces(response) {
-//
-//   }, function myError(response) {
-//
-//   });
-//
-// });
 
 // 注册accountController
 app.controller("accountController", function($scope, $http){
@@ -92,12 +74,157 @@ app.controller("accountController", function($scope, $http){
       $scope.email = response.data.email;
     }
 
-
-
   }, function myError(response) {
     console.log(JSON.stringify(response));
 
   });
+
+
+  // 监控用户名的变化
+  $("#username").bind("input propertychange", function () {
+    $("#btn-username-save").show();
+    // var elem = $("#username");
+    // alert('你改变了用户名!' + elem.val());
+    // 再服务器上
+  });
+
+  // 在服务器上更新用户名。
+  $scope.updateUsername = function(){
+    var new_username = $("#username").val();
+    if(!new_username || new_username == null || new_username == undefined){
+      return;
+    }
+
+    var update_username_url = "/exchcard/api/users/update/username/";
+
+    var data = {"username": new_username};
+
+    // addCSRFTokenBeforeAjax();
+    var csrftoken = Cookies.get('csrftoken');
+
+    $http({
+      method: "POST",
+      url:update_username_url,
+      headers:{
+        'X-CSRFToken': csrftoken
+      },
+      data: data
+    }).then(function mySucess(response){
+        // alert("update success");
+        // console.log(JSON.stringify(response));
+        $("#btn-username-save").hide();
+        $("#username-error-msg").text("成功修改该用户名!").show();
+        // $("#username-error-msg").show();
+
+        setTimeout(function(){
+          $("#username-error-msg").fadeOut(1000);
+        }, 3000);
+
+    },
+      function myError(response) {
+        // console.log(JSON.stringify(response));
+        $("#username-error-msg").text(response["responseJSON"]["details"]);
+    });
+
+  };
+
+  //-----------------
+  // 监控旧密码输入的变化
+  $("input#password-old").change(function () {
+    // alert("输入完, 失去焦点。");
+    var pwd_old = $("#password-old").val();
+    // console.log("pwd old is " + pwd_old);
+
+    // 显示查询loading animation
+    $("#loader").show();
+
+    // check with server
+    var check_pwd_url = "/exchcard/api/users/check/password/";
+    var csrftoken = Cookies.get('csrftoken');
+    $http({
+      method: "POST",
+      url:check_pwd_url,
+      headers:{
+        'X-CSRFToken': csrftoken
+      },
+      data: {
+        "password": pwd_old
+      }
+    }).then(function mySucess(response){
+      // alert("update success");
+      // console.log(JSON.stringify(response));
+      var is_correct = response.data['is_correct'];
+
+      $("#loader").hide();
+
+      if(is_correct || is_correct == 1 || is_correct == '1'){
+        $("#pwd-old-error-msg").text("密码正确").show();
+      } else{
+        $("#pwd-old-error-msg").text("密码错误").show();
+
+        // 移动光标到旧密码后面
+        var e = $("#password-old");
+        e.focus();
+        var r =e.createTextRange();
+        r.moveStart('character',e.value.length);
+        r.collapse(true);
+        r.select();
+      }
+
+    },
+      function myError(response) {
+        // console.log(JSON.stringify(response));
+        $("#pwd-old-error-msg").text(response["responseJSON"]["details"]);
+    }
+    );
+
+  });
+
+
+  $scope.confirmChangePwd = function () {
+    var password = $("#password-new").val() ;
+    var password2 = $("#password-new-2").val() ;
+
+    if(password2!=password){
+      $("#password-error-2").text("第二次输入秘密与第一次不一致。")
+      return false;
+    }
+
+    if(!validate_password(password)) {
+      $("#password-error").text("密码不满足要求!");
+      return false;
+    }
+
+    // console.log("update pwd "+ password +", " + password2);
+    // check with server
+    var update_pwd_url = "/exchcard/api/users/update/password/";
+    var csrftoken = Cookies.get('csrftoken');
+    $http({
+      method: "POST",
+      url: update_pwd_url,
+      headers:{
+        'X-CSRFToken': csrftoken
+      },
+      data: {
+        "new_password": password
+      }
+    }).then(function mySucess(response){
+
+      // alert("update success");
+      console.log(JSON.stringify(response.data));
+      var isSuccess = response.data["update_pwd_is_succuss"];
+      // var isSuccessInt = response.data["update_pwd_is_succuss_int"];
+      if(isSuccess || isSuccess == 1 || isSuccess == '1'){
+        window.location.href = "/account/login/";
+      }
+
+      },
+      function myError(response) {
+        // console.log(JSON.stringify(response));
+      }
+    );
+
+  }
 
 });
 

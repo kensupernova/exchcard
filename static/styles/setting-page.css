@@ -40,28 +40,8 @@
 /*账号信息页面格式*/
 .account-content-container {
   border: 1px solid red;
-  width: 60%;
+  width: 80%;
 }
-
-/*.account-info-item{*/
-  /*overflow: hidden;*/
-  /*clear: both;*/
-  /*padding: 0 auto;*/
-/*}*/
-/*.account-info-item .account-info-item-title {*/
-  /*width:30%;*/
-  /*float:left;*/
-/*}*/
-
-/*.account-info-item .account-info-item-content {*/
-  /*width:40%;*/
-  /*float:left;*/
-/*}*/
-
-/*.account-info-item .account-info-item-error-message {*/
-  /*width:30%;*/
-  /*float:right;*/
-/*}*/
 
 .account-content-container .account-info-main-title h3{
   min-height: 20px;
@@ -71,28 +51,86 @@
 .account-content-container .account-info-item{
   margin-left: 8px;
   margin-right: 8px;
+  margin-bottom: 1em;
+  margin-top: 1em;
+
+  overflow: hidden;
+  clear: both;
 }
 
 .account-info-item>label.account-info-item-title {
   padding:5px;
   margin-right: 1em;
-  width:6em;
+  width: 40%;
+  float: left;
   text-align: right;
+  margin-bottom: 0px;
+
 }
 
 .account-info-item>input.account-info-item-content {
   text-align: left;
-  min-width:12em;
+  vertical-align: top;
+  width: 20%;
+  float: left;
 }
 
-.account-info-item>label.account-info-item-error-message {
+.account-info-item .account-info-item-error-message {
+  display: inline-block;
   text-align: left;
-  width:6em;
+  width: 30%;
+  float: left;
+
+  min-height: 2em;
+  margin-left: 5px;
 }
 
-.account-info-item input#email{
+.account-info-item .account-info-item-error-message .username-error-msg {
+  display: inline-block;
+  min-width: 6em;
+  height: 2em;;
+  color: red;
+  /*border: red 1px solid;*/
+}
+
+.account-info-item .account-info-item-error-message #btn-username-save {
+  vertical-align: top;
+  width: 6em;
+  height: 2em;
+  border: 1px solid red;
+}
+
+.account-info-item .account-info-item-error-message #btn-username-save:hover {
+  box-shadow: red 3px 3px 3px;
+  background: red;
+  color: white;
+}
+
+.account-info-item .account-info-item-error-message #btn-username-save.active,
+.account-info-item .account-info-item-error-message #btn-username-save:active{
+  box-shadow: red 3px 3px 3px;
+  background: red;
+  color: white;
+}
+
+
+.account-info-item #email{
   border: none;
 }
+
+.pwd-old-error-msg-container #pwd-old-error-msg{
+  display: inline-block;
+}
+
+.pwd-old-error-msg-container .loader{
+  display: inline-block;
+}
+
+/*---------------------------------------------------*/
+
+
+/*---------------------------------------------------*/
+
 /*地址信息页面格式*/
 .address-info-container{
   border: 1px solid red;

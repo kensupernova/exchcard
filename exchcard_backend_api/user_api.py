@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import django.contrib.auth as auth
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 # from django.contrib.auth.models import User
 # from exchcard.models import XUser as User
@@ -110,9 +110,11 @@ def user_login_with_email_pw(request):
         email = request.data['email']
         password = request.data['password']
 
-        print "login with {0}: {1}".format(email, password)
+        # print "login with {0}:{1}".format(email, password)
 
-        user = authenticate(username=email, password=password)
+        # user = authenticate(username=email, password=password)
+        user = authenticate(email=email, password=password)
+
         if user is not None:
             if user.is_active:
                 login(request, user)
@@ -176,7 +178,7 @@ def user_logout(request):
     :param request:
     :return:
     """
-    if auth.logout(request):
+    if logout(request):
         return Response(
                         { "isauth": False,
                           "next": "/"
@@ -190,3 +192,93 @@ def user_logout(request):
              },
             status=status.HTTP_200_OK
         )
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def update_username(request):
+    """
+    update username
+    :param request:
+    :return:
+    """
+    # check whether already exist
+    newusername = request.data['username']
+    dusers = User.objects.filter(username=newusername)
+    if dusers.count() > 1:
+        return Response({
+            "details": "username already exists! choose a new one.",
+            "error_msg": "username already exists! choose a new one."
+        })
+
+    user = request.user
+    user.username = newusername
+    user.save()
+    return Response(UserSerializer(user).data,
+                    status=status.HTTP_202_ACCEPTED)
+
+
+@api_view(['POST', 'GET'])
+@permission_classes([permissions.IsAuthenticated])
+def check_password(request):
+    """
+    check the password of user correct or not
+    :param request:
+    :return:
+    """
+    try:
+        pwd = request.data['password']
+    except:
+        return Response({
+            "description": "no pwd in the request!",
+            "details": "no pwd in the request!"
+        }, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'POST':
+        user = authenticate(email=request.user.email, password=pwd)
+        if user is not None:
+            return Response({
+                "is_correct": 1,
+                "is_correct_int": 1,
+                "description": "password is correct!"
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                "is_correct": 0,
+                "is_correct_int": 0,
+                "description": "password is wrong!"
+            }, status=status.HTTP_200_OK)
+
+
+@api_view(['POST', 'GET'])
+@permission_classes([permissions.IsAuthenticated])
+def update_password(request):
+    """
+    check the password of user correct or not
+    :param request:
+    :return:
+    """
+    try:
+        new_pwd = request.data['new_password']
+        user = request.user
+    except:
+        return Response({
+            "description": "no pwd in the request!",
+            "details": "no pwd in the request!"
+        }, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'POST':
+        try:
+            user.set_password(new_pwd)
+            user.save()
+
+            logout(request)
+
+            return Response({
+                "update_pwd_is_succuss": 1,
+                "update_pwd_is_succuss_int": 1,
+                "description": "password is updated successfully!"
+            }, status=status.HTTP_200_OK)
+        except:
+            return Response({
+                "details": "no errors found"
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

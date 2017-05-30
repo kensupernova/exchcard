@@ -31,6 +31,12 @@
 {% endblock %}
 
 {% block jscontainer %}
+<script>
+  $(document).ready(function(){
+    $("#setting").css("background", "red");
+  });
+
+</script>
 <script src="{{STATIC_URL}}lib/angular.js" type="text/javascript" ></script>
 <script src="{{STATIC_URL}}lib/angular-ui-router.min.js" type="text/javascript" ></script>
 <script src="{{STATIC_URL}}javascripts/validator.js"></script>
