@@ -14,9 +14,9 @@ config.yaml ： 配置部署在新浪云上面
 ### 本地运营
 运营环境python2.7 
 后端依赖包: 
-    - Django v1.8.3
-    - Django-Rest-Framework v3.3.2
-    - MySQL-python v1.2.5
+    - Django v1.8.3   
+    - Django-Rest-Framework v3.3.2   
+    - MySQL-python v1.2.5    
 
 ### 前端框架
  - jquery  v2.1.0   
