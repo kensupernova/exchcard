@@ -108,7 +108,7 @@
 
 .account-info-item .account-info-item-error-message #btn-username-save.active,
 .account-info-item .account-info-item-error-message #btn-username-save:active{
-  box-shadow: red 3px 3px 3px;
+  box-shadow: red 2px 2px 1px;
   background: red;
   color: white;
 }

@@ -75,7 +75,7 @@ app.controller('myCtrl', function($rootScope, $scope, $http) {
 
       // METHOD 2
       // // 隐藏提示内容,呈现邮寄地址内容
-      // // $('#tab-confirm').click();
+      // // $('#tab-confirm').click(); // 在angular中无效
       // document.getElementById("tab-confirm").click();
 
 

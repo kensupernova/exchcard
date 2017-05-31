@@ -1,0 +1,23 @@
+<table class="table-cards" ng-controller="receiveTravellingCtrl">
+  <tr>
+    <th class="cell-1">Post Id</th>
+    <th class="cell-2">From user</th>
+    <th class="cell-3">From address</th>
+    <th class="cell-4">Sent time</th>
+    <th class="cell-5">To user</th>
+    <th class="cell-6">To address</th>
+    <th class="cell-7">Arrived time</th>
+    <th class="cell-8">isArrived</th>
+  </tr>
+  <tr ng-repeat="card in receive_travelling">
+    <td><a href="/card/{[{card.card_name}]}/">{[{card.card_name}]}</a></td>
+    <td>{[{card.fromsender_email}]}</td>
+    <td>{[{card.from_address}]}</td>
+    <td>{[{card.sent_date | date:"yyyy-MM-dd HH:mm:ss"}]}</td>
+    <td>{[{card.torecipient_email}]}</td>
+    <td>{[{card.to_address}]}</td>
+    <td>{[{card.arrived_date | date:"yyyy-MM-dd HH:mm:ss"}]}</td>
+    <td>{[{card.has_arrived}]}</td>
+    </tr>
+  <tr ng-show="receive_travelling == null"><th colspan ="8">空</th></tr>
+</table>
