@@ -1,13 +1,48 @@
-#form-password {
-  display: block;
+.section-register {
+  lear: both;
+  overflow: hidden;
 }
 
-#form-password-2 {
-  display: block;
+.section-register .register-form {
+  margin-left: 33%;
+  margin-right: 33%;
+}
+
+.threeColumn {
+
+
+}
+
+.threeColumn .item {
+  clear: both;
+  overflow: hidden;
+  margin-bottom: 2em;;
+}
+
+.threeColumn .item .inp-item{
+  float:left;
+  width:32%;
+  height: 2em;
+  margin-bottom: 0;
+}
+
+.threeColumn .item .inp-requirement{
+  width:32%;
+  float:left;
+  height: 2em;
+  line-height: 100%;
+  margin-bottom: 0;
+}
+
+.threeColumn .item .inp-error{
+  width:32%;
+  height: 2em;
+  float:left;
+  margin-bottom: 0;
 }
 
 
-#btn-register-submit {
+.threeColumn .item #btn-register-submit {
   background: white;
   color: black;
   border: black 1px solid;
@@ -15,6 +50,7 @@
   padding-left: 1em;
   padding-right: 1em;
   min-width: 5em;
+  float:left;
 }
 
 #btn-register-submit:hover{
@@ -28,10 +64,6 @@
   box-shadow: red 2px 2px 2px;
 }
 
-.input-error {
-  margin-left: 5px;
-  color: red;
-}
 .hide {
   display: none;
 }

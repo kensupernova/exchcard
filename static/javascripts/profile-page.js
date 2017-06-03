@@ -251,15 +251,17 @@ app.run(function($rootScope, $http) {
     $rootScope.sent_travelling = response.data['sent_travelling'];
     $rootScope.receive_travelling = response.data['receive_travelling'];
 
-    console.log("sucessfully get total cards data!")
+    // console.log("sucessfully get total cards data!")
     // console.log(JSON.stringify(response.data['sent_arrived'].length));
     // console.log(JSON.stringify(response.data['receive_arrived'].length));
     // console.log(JSON.stringify(response.data['sent_travelling'].length));
     // console.log(JSON.stringify(response.data['receive_travelling'].length));
 
-    // TODO: Refresh the ui-view
+    // Refresh the ui-view
     // 点击第一个tab, 相当于点击shref
     document.getElementById("tab-receive-arrived").click();
+
+
     document.getElementById("tab-sent-arrived").click();
     // // angular里面无效
     // $('#tab-receive-arrived').click();

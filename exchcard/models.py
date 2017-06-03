@@ -141,6 +141,13 @@ class XUser(AbstractBaseUser):
         # Simplest possible answer: All admins are staff
         return self.is_admin
 
+    # def is_authenticated(self):
+    #     """
+    #     If is_anonymous() == false, return true
+    #     :return:
+    #     """
+    #     return not self.is_anonymous()
+
     class Meta:
         db_table = 'exchcard_xuser'
 

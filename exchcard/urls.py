@@ -28,6 +28,10 @@ urlpatterns = [
     # view the current logged user's profile
     url(r'^profile/$', 'exchcard.views.profile'),
 
+    # view current logged user's cards list
+    # url(r'^profile/(?P<id>.+)/cards/$', 'exchcard.views.view_cards_list'),
+    url(r'^profile/cards/$', 'exchcard.views.view_cards_list'),
+
     # send a card
     url(r'^card/send/$', 'exchcard.views.card_send'),
     url(r'^card/send/confirm/$', 'exchcard.views.card_send_confirm'),
@@ -39,9 +43,7 @@ urlpatterns = [
     # view a card with cardname
     url(r'^card/(?P<cardname>.+)/$', 'exchcard.views.view_single_card'),
 
-    # view current logged user's cards list
-    # url(r'^profile/(?P<id>.+)/cards/$', 'exchcard.views.view_cards_list'),
-    url(r'^profile/cards/$', 'exchcard.views.view_cards_list'),
+
 
     # 发烧友圈子
     url(r'^moments/$', 'exchcard.views.view_shao_you_quan'),

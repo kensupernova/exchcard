@@ -119,9 +119,9 @@ def user_login_with_email_pw(request):
             if user.is_active:
                 login(request, user)
                 return Response({"username": email,
-                         "isauth": True,
-                         "accessToken": generateToken(email)},
-                        status= status.HTTP_200_OK
+                                 "isAuth": True,
+                                 "accessToken": generateToken(email)},
+                                 status= status.HTTP_200_OK
                     )
                 # Redirect to a success page.
             else:
@@ -145,7 +145,7 @@ def user_auth(request):
 
                 return Response(
                     {
-                     "isauth": True,
+                     "isAuth": True,
                      },
                     status= status.HTTP_200_OK
                 )
@@ -153,7 +153,7 @@ def user_auth(request):
         else:
             return Response(
                     {
-                     "isauth": False,
+                     "isAuth": False,
                      "next": "/login"
                     },
                     status= status.HTTP_200_OK
@@ -162,7 +162,7 @@ def user_auth(request):
     except:
         return Response(
                     {
-                     "isauth": False,
+                     "isAuth": False,
                      "next": "/login"
                     },
                     status= status.HTTP_404_NOT_FOUND
@@ -180,14 +180,14 @@ def user_logout(request):
     """
     if logout(request):
         return Response(
-                        { "isauth": False,
+                        { "isAuth": False,
                           "next": "/"
                         },
                         status= status.HTTP_200_OK
                     )
     else:
         return Response(
-            {"isauth": False,
+            {"isAuth": False,
              "next": "/profile"
              },
             status=status.HTTP_200_OK

@@ -1,6 +1,24 @@
+.login-main-content-container{
+
+}
+
+.login-main-content-container .login-form{
+  margin:0 33%;
+}
+
+
 .login-form {
     float:right;
 }
+
+.login-form .item {
+  margin-bottom: 2em;
+}
+
+.login-form .item .item-passwd #find-passwd{
+  display: inline-block;
+}
+
 .third-party-login{
 
 }

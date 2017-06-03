@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "foundation.html" %}
 
 {% block title %}
 <title>用户注册</title>
@@ -12,30 +12,41 @@
 
 {% block content%}
 <div class="section-register">
-	<div id="registerform" name="registerform" class="register-form col-md-4">
+	<div id="registerform" name="registerform" class="register-form col-md-4 threeColumn">
     <fieldset>
       <!--为了得到csrf token-->
-      <form action="" method="post">{% csrf_token %}</form>
+      {% csrf_token %}
       <legend>注册新用户</legend>
+
       <div class="item item-account">
-          <input type="text" name="form-email" id="form-email" class="inp" placeholder="邮箱" tabindex="1">
-          <label id="email-requirement" class="requirement"></label>
-          <label id="email-error" class="input-error"></label>
+          <input type="text" name="form-email" id="form-email" class="inp-item" placeholder="邮箱">
+          <label id="email-requirement" class="inp-requirement"></label>
+          <label id="email-error" class="inp-error"></label>
+          <br style="display: none; clear:both"/>
       </div>
+
       <div class="item item-passwd">
-        <input name="form-password" placeholder="密码" id="form-password" class="inp" type="password" tabindex="3">
-        <label id="password-requirement" class="requirement"></label>
-        <label id="password-error" class="input-error"></label>
+        <input name="form-password" placeholder="密码" id="form-password" class="inp-item" type="password">
+        <label id="password-requirement" class="inp-requirement"></label>
+        <label id="password-error" class="inp-error"></label>
+        <br style="display: none; clear:both"/>
+      </div>
+
+      <div class="item item-passwd item-passwd-2">
         <input name="form-password-2" placeholder="重新输入密码" id="form-password-2"
-               class="inp" type="password" tabindex="4">
-        <label id="password-error-2" class="input-error"></label>
+               class="inp-item" type="password" >
+        <label id="password-requirement-2" class="inp-requirement"></label>
+        <label id="password-error-2" class="inp-error"></label>
+        <br style="display: none; clear:both"/>
       </div>
 
       <div class="item item-submit">
-          <div id="btn-register-submit" tabindex="4">提交</div>
+          <div id="btn-register-submit">提交</div>
+        <br style="display: none; clear:both"/>
       </div>
       <div class="item item-server-error">
         <label id="server-error-message"></label>
+        <br style="display: none; clear:both"/>
       </div>
 
     </fieldset>

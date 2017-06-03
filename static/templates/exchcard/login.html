@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "foundation.html" %}
 
 {% block headinfo %}
  <title>登录</title>
@@ -11,25 +11,25 @@
 {% endblock %}
 
 {% block content%}
-    <div class="col-md-12 login">
+    <div class="col-md-12 login-main-content-container content-container">
         <div id="lzform" name="loginform" class="login-form col-md-4">
-            <form action="" method="post">{% csrf_token %}</form>
+            {% csrf_token %}
             <fieldset>
-                <legend>登录</legend>
+                <legend>本地登录</legend>
                 <div class="item item-account">
                     <input type="text" name="form_email" id="form_email" class="inp" placeholder="邮箱" tabindex="1">
                 </div>
                 <div class="item item-passwd">
                     <input name="form_password" placeholder="密码" id="form_password" class="inp" type="password" tabindex="2">
-                    <div class="opt">
-                        <a href="/account/findpassword">找回密码？</a>
-                    </div>
+
                 </div>
                 <div class="item item-submit">
                     <button class="btn-login-submit" tabindex="4">登录</button>
                     <button class="btn-register"><a href="/account/register/" target="_blank">注册</a></button>
                 </div>
-
+                <div class="item" id="find-passwd">
+                    <a href="/account/findpassword">找回密码？</a>
+                </div>
                 <!--微博登录-->
                 <!--<div class="third-party-login">-->
                     <!--<ul class="col-md-6 row">-->
@@ -61,7 +61,6 @@
 
 {% block jscontainer %}
     <script type="text/javascript" src="{{STATIC_URL}}javascripts/hash-sha1-helper.js" ></script>
-<!--<script type="text/javascript" src="{{STATIC_URL}}javascripts/login-helper.js"></script>-->
     <script type="text/javascript" src="{{STATIC_URL}}javascripts/login.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}javascripts/validator.js" ></script>
 {% endblock %}

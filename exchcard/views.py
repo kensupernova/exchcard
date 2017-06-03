@@ -9,11 +9,15 @@ from exchcard.models_profile import Card, CardPhoto, Profile
 
 
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'exchcard/index.html')
+
+
+def about(request):
+    return render(request, 'exchcard/about-page.html')
 
 
 def user_login(request):
-    return render(request, 'login.html')
+    return render(request, 'exchcard/login.html')
 
 
 def user_register(request):
@@ -24,13 +28,25 @@ def user_register(request):
 def address_create(request):
     if request.user.is_authenticated():
         context = {
-            "user": request.user
+            "user": request.user,
+            "isAuth": True
         }
 
         return render(request, 'exchcard/address-create-page.html', context)
     else:
         return Http404
 
+
+## 注入登录验证
+@login_required
+def profile(request):
+    try:
+        profile = Profile.objects.get(profileuser=request.user)
+        context = {'profile': profile, 'user': request.user}
+        context['isAuth'] = True
+        return render(request, 'exchcard/profile-page.html', context)
+    except Profile.DoesNotExist:
+        return HttpResponseRedirect(redirect_to="/account/address/create/")
 
 @login_required
 def setting(request):
@@ -40,7 +56,8 @@ def setting(request):
     :return:
     """
     profile = Profile.objects.get(profileuser=request.user)
-    context = {'profile': profile}
+    context = {"profile": profile, "user": request.user}
+    context['isAuth'] = True
     return render(request, 'exchcard/setting-page.html', context)
 
 
@@ -52,47 +69,38 @@ def account_setting(request):
     :return:
     """
     profile = Profile.objects.get(profileuser=request.user)
-    context = {'profile': profile}
+    context = {'profile': profile, 'user': request.user}
+    context['isAuth'] = True
     return render(request, 'exchcard/account-setting-page.html', context)
 
 
-## 注入登录验证
-@login_required
-def profile(request):
-    try:
-        profile_from_request = Profile.objects.get(profileuser=request.user)
-        context = {'profile': profile_from_request}
-        return render(request, 'exchcard/profile-page.html', context)
-    except Profile.DoesNotExist:
-        return HttpResponseRedirect(redirect_to="/account/address/create/")
+
 
 
 @login_required(login_url="/account/login")
 def card_send(request):
-    logged_profile = Profile.objects.get(profileuser=request.user)
-    context = {'profile': logged_profile}
-
+    profile = Profile.objects.get(profileuser=request.user)
+    context = {'profile': profile, 'user': request.user}
+    context['isAuth'] = True
     return render(request, 'exchcard/send-card-page.html', context)
 
 
 @login_required
 def card_send_confirm(request):
-    profile_from_request = Profile.objects.get(profileuser
+    profile = Profile.objects.get(profileuser
                                             =request.user)
 
-    context = {}
-
-    if request.data["send_postcard"]:
-        context['profile']= profile_from_request
+    context = {'profile': profile, 'user': request.user}
+    context['isAuth'] = True
 
     return render(request, 'exchcard/send-card-page.html', context)
 
 
 @login_required
 def card_receive(request):
-    profile_of_request = Profile.objects.get(profileuser=request.user)
-    context = {'profile': profile_of_request}
-
+    profile = Profile.objects.get(profileuser=request.user)
+    context = {'profile': profile, 'user': request.user}
+    context['isAuth'] = True
     if request.method == "GET":
         return render(request, 'exchcard/receive-card-page.html', context)
 
@@ -115,7 +123,8 @@ def card_travelling(request, cardname):
                'card': card
                }
     context['profile'] = Profile.objects.get(profileuser=request.user)
-
+    context['user'] = request.user
+    context['isAuth'] = True
     return render(request, 'exchcard/travelling-card-page.html', context)
 
 
@@ -137,9 +146,10 @@ def view_single_card(request, cardname):
                'recipient_user':card.torecipient.profileuser,
                'recipient_address': card.torecipient.profileaddress,
                'card': card}
+
     context['profile'] = Profile.objects.get(profileuser=request.user)
-
-
+    context['user'] = request.user
+    context['isAuth'] = True
 
     try:
         card_photos = CardPhoto.objects.filter(card_host=card)
@@ -156,22 +166,24 @@ def view_single_card(request, cardname):
 """
 @login_required
 def view_cards_list(request):
-    profile_from_request = Profile.objects.get(profileuser
+    profile = Profile.objects.get(profileuser
                                             =request.user)
-
-    context = {'profile': profile_from_request}
-
+    context= {}
+    context['profile'] = profile
+    context['user'] = request.user
+    context['isAuth'] = True
     return render(request, 'exchcard/view-cards-page.html', context)
 
 
 
-
+@login_required
 def hobbyist_list(request):
-    profile_from_request = Profile.objects.get(profileuser
+    profile = Profile.objects.get(profileuser
                                                =request.user)
 
-    context = {'profile': profile_from_request}
-
+    context = {'profile':profile }
+    context['user'] = request.user
+    context['isAuth'] = True
     return render(request, 'exchcard/hobbyist-list-page.html', context=context)
 
 
@@ -184,11 +196,13 @@ def eachs_public_profile(request, user_id):
     :param username:
     :return:
     """
-    profile_from_request = Profile.objects.get(profileuser
-                                               =request.user)
+    profile = Profile.objects.get(profileuser
+                                  =request.user)
 
-    context = {'profile': profile_from_request}
-
+    context = dict
+    context['profile'] = profile
+    context['user'] = request.user
+    context['isAuth'] = True
     return render(request, 'exchcard/public-profile-page.html', context)
 
 
@@ -199,18 +213,13 @@ def view_shao_you_quan(request):
     :param request:
     :return:
     """
-    profile_from_request = Profile.objects.get(profileuser
-                                               =request.user)
+    profile = Profile.objects.get(profileuser
+                                  =request.user)
 
-    context = {'profile': profile_from_request}
-
+    context = dict
+    context['profile'] = profile
+    context['user'] = request.user
+    context['isAuth'] = True
     return render(request, 'exchcard/moments-page.html', context=context)
 
 
-def about(request):
-    profile_from_request = Profile.objects.get(profileuser
-                                               =request.user)
-
-    context = {'profile': profile_from_request}
-
-    return render(request, 'exchcard/about-page.html', context=context)

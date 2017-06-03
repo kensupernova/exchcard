@@ -34,14 +34,38 @@
       <div class="row spanner">
         <div class="logo-container"><a href="/profile">明信片交换网</a></div>
         <div class="profile-setting right">
-          {% if profile %}
-            <div >{{profile.profileuser.email}}</div>
-          {%endif%}
-          <div id="setting"><a href="/setting">设置</a></div>
-          {% if profile.profileuser.weibo_uid %}
-            <div id="wb_connect_btn"></div>
+          {% if isAuth %}
+            {% if profile %}
+              <div >{{profile.profileuser.email}}</div>
+              <div id="setting"><a href="/setting">设置</a></div>
+            {% else %}
+              <div>
+                登录用户: {{user.email}}
+              </div>
+              <div>
+                <a href="/account/address/create">创建地址</a>
+              </div>
+
+            {% endif %}
+
+            {% if profile.profileuser.weibo_uid %}
+              <div id="wb_connect_btn"></div>
+            {% else %}
+              <div id="logout">退出</div>
+            {% endif %}
+
           {% else %}
-            <div id="logout">退出</div>
+            <div>
+              <a href="/account/login">登录</a>
+            </div>
+            <div>
+              <a href="/account/register">注册</a>
+            </div>
+            <!--第一方法WBML-->
+            <div>
+              <wb:login-button type="3,2" id="wb_connect_btn" onlogin="weibo_login"
+                             onlogout="weibo_logout"></wb:login-button>
+            </div>
           {% endif %}
 
         </div>
