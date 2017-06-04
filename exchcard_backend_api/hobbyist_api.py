@@ -8,16 +8,14 @@ import json
 from django.contrib.auth import get_user_model # If used custom user mode
 User = get_user_model()
 
-
-from exchcard_backend_api.serializers import SentCardActionSerializer, ReceiveActionSerializer
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
-from exchcard.models_profile import Address, Profile, AvatarPhoto, SentCardAction, ReceiveCardAction
+from exchcard.models_profile import Address, Profile, AvatarPhoto, SentCardAction, ReceiveCardAction, Follow
 from exchcard.models import XUser
-
+from exchcard_backend_api.serializers import SentCardActionSerializer, ReceiveActionSerializer
 
 def getAvatarInfoByProfile(profile):
     """
@@ -72,7 +70,8 @@ def getAvatarBasicTextByProfile(profile):
         "text_info": text_info,
         "profile_id": profile.id,
         "user_id": profile.profileuser.id,
-        "user_email": profile.profileuser.email
+        "user_email": profile.profileuser.email,
+        "username": profile.profileuser.username
     }
 
 
@@ -90,6 +89,8 @@ def get_basic_info_of_hobbyist_list(request, number, format=None):
     :param format:
     :return: 包括邮寄地址的名字，城市，国家名，明信片指数，用户等级, 已经头像
     """
+
+    logged_user = request.user
 
     profiles = Profile.objects.all().order_by('created')
 
@@ -114,16 +115,33 @@ def get_basic_info_of_hobbyist_list(request, number, format=None):
 @api_view(["GET", ])
 @permission_classes([permissions.IsAuthenticated, ])
 def get_all_basic_info_of_other_user(request, user_id):
-    """"""
+    """
+    得到访问用户页面的所有基本信息，包括头像信息，文字信息
+    :param request: data is null
+    :param user_id: user id of the other user who logged user visit.
+    :return:
+    """
     if request.user.id == user_id:
         print "你在访问自己的页面"
 
     try:
-        user = XUser.objects.get(id=user_id)
-
-        profile_of_other_user = Profile.objects.get(profileuser=user)
-
+        other_user = XUser.objects.get(id=user_id)
+        profile_of_other_user = Profile.objects.get(profileuser=other_user)
         data = getAvatarBasicTextByProfile(profile_of_other_user)
+
+        logged_user = request.user ## 登录用户就是自己
+        # 登录用户关注了此另外用户
+        # 另外用户就是自己现在访问的用户hobbyist
+        # VERY IMPORTANT
+        # 不要用count来确认是否存在
+        if Follow.objects.filter(subject=logged_user, user_being_followed=other_user).exists():
+            data["isFollowingHim"] = True
+            data["isFollowingHimInt"] = 1
+            data["isFollowingHimBool"] = True
+        else:
+            data["isFollowingHim"] = False
+            data["isFollowingHimInt"] = 0
+            data["isFollowingHimBool"] = False
 
         return Response(data, status=status.HTTP_200_OK)
 
@@ -145,8 +163,6 @@ def get_all_activities_of_other_user(request, user_id):
 
     try:
         user = XUser.objects.get(id=user_id)
-        # serializer = GetUserSendActionSerializer(user, context={'request': request} )
-        #Add `context={'request': request}` when instantiating the serializer.
 
         sent_actions = SentCardAction.objects.filter(subject=user)
         receive_actions = ReceiveCardAction.objects.filter(subject=user)
@@ -158,11 +174,10 @@ def get_all_activities_of_other_user(request, user_id):
         # print "activities 2 %s" % r_serializer.data
 
         data1 = s_serializer.data
-
         data2 = r_serializer.data
 
-        print "data1 type is %s" % type(data1)
-
+        # TODO: 扁平化
+        # TODO: sort by created
         return Response({
             "sent_card_actions": data1,
             "receive_card_actions": data2
@@ -178,13 +193,16 @@ def get_all_activities_of_other_user(request, user_id):
                         status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-
-
-
 @api_view(["GET", ])
 @permission_classes([permissions.IsAuthenticated, ])
 def get_single_activity_detail_of_other_user(request, user_id, action_id):
-    """"""
+    """
+    get the activity detail of other user
+    :param request:
+    :param user_id:
+    :param action_id:
+    :return:
+    """
 
 
 

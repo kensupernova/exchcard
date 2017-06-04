@@ -77,7 +77,10 @@ def upload_avatarphoto(request):
         try:
             profile = Profile.objects.get(profileuser=request.user)
 
+            # DJANGO REST, parse request.body
             # print request.data
+
+            # DJANGO
             # print request.FILES
             # print request.POST
 

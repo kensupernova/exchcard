@@ -10,3 +10,32 @@
 }
 
 
+.moments-container {
+
+}
+
+.moments-container .act-item-container {
+  width: 80%;
+  border: 1px red solid;
+  margin-bottom: 1em;
+  clear: both;
+  overflow: hidden;
+}
+
+.moments-container .act-item-container .left{
+  width: 30%;
+  float: left;
+}
+
+.moments-container .act-item-container .right{
+  width: 68%;
+  float: left;
+  min-height: 5em;
+  text-align: left;
+}
+
+.moments-container .act-item-container .act-subject-avatar-container img{
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+}

@@ -247,7 +247,6 @@ def get_avatar_url(request, format=None):
 
             # count = AvatarPhoto.objects.filter(owner=profile).count()
             # print "头像图片总数为{0}".format(count)
-
             # print "头像图片总数为{0}".format(len(photos))
 
             if len(photos)>1:

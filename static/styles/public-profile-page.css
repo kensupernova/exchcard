@@ -21,6 +21,42 @@
   min-height: 3em;
   border: 1px solid red;
 }
+
+
+.action-btn-container .action-btn {
+  border: solid 1px red;
+  width: 7em;
+  display: inline-block;
+}
+
+.action-btn-container .action-btn:hover{
+  background: red;
+  color: white;
+  cursor: pointer;
+}
+
+.action-btn-container .action-btn:active{
+  background: red;
+  color: white;
+  cursor: pointer
+}
+
+
+.action-btn-container .action-btn#btn-follow-him.following{
+  background: gainsboro;
+  color: red;
+}
+
+.action-btn-container .action-btn#btn-follow-him.btn-inactive{
+  color: red;
+  background: gainsboro;
+}
+
+
+.action-btn-container .action-btn#btn-follow-him.following:hover{
+  cursor: no-drop;
+}
+
 .timeline-content-container {
   min-height: 400px;
   border: 1px solid red;
@@ -29,7 +65,24 @@
 .act-item-container {
   border: red 1px solid ;
   margin-bottom: 1em;
+  clear: both;
+  overflow: hidden;
+  width: 80%;
+}
 
+.act-item-container .left {
+  width: 40%;
+  float: left;
+  text-align: right;
+  padding-right: 1em;
+}
+
+.act-item-container .right {
+  width: 58%;
+  float: left;
+  text-align: left;
+  min-height: 5em;
+  border: red 1px solid ;
 }
 
 .act-item-container .act-short-container {

@@ -35,6 +35,7 @@ class AddressManager(Manager):
         obj = self.create(name=name, address=address, postcode=postcode, full_text_address=full_text_address)
         obj.save()
         return obj
+
     def create_address_all_information(self, name, address, postcode, city, country, full_text_address):
         obj = self.create(name=name, address=address, postcode=postcode,
                           city = city,
@@ -49,7 +50,6 @@ class ProfileManager(Manager):
         address = Address.objects.get(pk=addressid)
 
         profile = self.create(profileuser=user, profileaddress=address)
-        profile.save()
         return profile
 
     def update_profile_address_with_ids(self, userid, addressid):
@@ -63,14 +63,25 @@ class ProfileManager(Manager):
 
 class CardManager(Manager):
     def create_with_profile_ids(self, card_name, torecipient_id, fromsender_id):
-        if Profile.objects.filter(id=torecipient_id).exists() and \
-                Profile.objects.filter(id=fromsender_id).exists():
-
-            card = Card.objects.create(card_name=card_name,
+        if Profile.objects.get(id=torecipient_id).exists() and \
+                Profile.objects.get(id=fromsender_id).exists():
+            card = self.create(card_name=card_name,
                                torecipient_id=torecipient_id,
                                fromsender_id=fromsender_id,
                                has_arrived=False)
 
+            # card = Card.objects.create(card_name=card_name,
+            #                    torecipient_id=torecipient_id,
+            #                    fromsender_id=fromsender_id,
+            #                    has_arrived=False)
+            # card = Card(card_name=card_name,
+            #                    torecipient_id=torecipient_id,
+            #                    fromsender_id=fromsender_id,
+            #                    has_arrived=False)
+            # card.save()
+
+            ## very important
+            ## create sent card action or activity
             action = SentCardAction(subject=card.fromsender.profileuser, card_sent=card)
             action.save()
 
@@ -78,17 +89,18 @@ class CardManager(Manager):
 
         return None
 
-    def create_with_card_action_returns(self, *args, **kwargs):
+    def create_with_card_action_objs_returned(self, *args, **kwargs):
         """
         sent card action shall be created automatically
         :return:
         """
         card = Card.objects.create(self, *args, **kwargs)
         action = SentCardAction(subject=card.fromsender, card_sent=card, *args, **kwargs).save()
-        return (card, action)
+        return card, action
 
     def create(self, *args, **kwargs):
-        ## 重新定义create
+        # type: (object, object) -> object
+        # 重新定义create
         # kwargs['order_no'] = datetime.datetime.now.strftime('%Y%m%d' + seq)
         return super(CardManager, self).create(*args, **kwargs)
 
@@ -107,12 +119,29 @@ class DianZanManager(Manager):
 
         return None
 
+
+class FollowManager(Manager):
+    def create_with_ids(self, subject_id, object_being_followed_id):
+        if not Follow.objects.filter(object_being_followed_id=object_being_followed_id).exists():
+            obj = self.create(subject_id=subject_id,
+                                        object_being_followed_id=object_being_followed_id)
+            return obj
+        return None
+
+
 class SentCardActionManager(Manager):
     """"""
 
 class ReceiveCardActionManager(Manager):
     """"""
 
+class UploadCardPhotoActionManager(Manager):
+    """
+    Upload postcard photo action manage
+    """
+    def create_with_ids(self, subject_id, card_host_id):
+        obj = self.create(subject_id=subject_id, card_host_id=card_host_id)
+        return obj
 
 
 """
@@ -224,14 +253,12 @@ class Profile(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        save the newly created Object
+        save the newly created Object when it is like: Profle(...).save(),
         """
         super(Profile, self).save(*args, **kwargs)
-        ## *args表示任何多个无名参数，它是一个tuple；**kwargs表示关键字参数，它是一个dict。
+        # *args表示任何多个无名参数，它是一个tuple；**kwargs表示关键字参数，它是一个dict。
 
 
-
-## exchcard_backend_api avatar photo
 class AvatarPhoto(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey("Profile", related_name="avatars") ## related name is for Profile to use in serializer
@@ -244,6 +271,7 @@ class AvatarPhoto(models.Model):
 class Card(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
+    # 在前端显示时cardname就是postcard id，而不是card.id
     card_name = models.CharField(max_length=50, default=None)
 
     #exchcard_backend_api of recipient
@@ -323,7 +351,7 @@ class Card(models.Model):
         self.arrived_time = int(round(time.time()*1000))
         self.arrived_date = datetime.datetime.now()
 
-        ## create Receive action automaticallycard.save()
+        ## create Receive action automatically card.save()
         ## TODO: check
         ReceiveCardAction.objects.create(subject=self.torecipient.profileuser, card_received = self)
 
@@ -371,11 +399,13 @@ class CardPhoto(models.Model):
 #-----------------------------------------------------------------------
 class Activity(models.Model):
     ACTIVITY_TYPES = (
-        ('SP', 'Sent a postcard'),
-        ('RP', 'Receive a postcard'),
-        ('MC', 'Make a comment'),
-        ('MDZ', 'Make a dianzan'),
-        ('UPP', 'Upload a postcard photo'),
+        ('SP', 'Sent Postcard'),
+        ('RP', 'Receive Postcard'),
+        ('SPP', 'Sent Postcard with Photo'),
+        ('RPP', 'Receive postcard with photo'),
+        ('MC', 'Make comment'),
+        ('MDZ', 'Make dian Zan'),
+        ('UPP', 'Upload postcard photo'),
     )
 
     created = models.DateTimeField(auto_now_add=True)
@@ -384,7 +414,7 @@ class Activity(models.Model):
     ## 活动的简短名字："send postcard" "register postcard" "comment", "dianzan", "upload postcard photo"
     short_name = models.CharField(max_length=20, null=False)
     short_name_zh = models.CharField(max_length=20, null=True)
-
+    # EX: sent a postcard to others by get a postal mailling address
     description = models.CharField(max_length=100, null=True)
 
     class Meta:
@@ -403,6 +433,28 @@ class Activity(models.Model):
         super(Activity, self).save(*args, **kwargs)
 
 
+class Follow(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    ## the user who make the follow
+    subject = models.ForeignKey('XUser', related_name='follows_user_make', default=1, null=False)
+    ## the user who is being followed by the subject
+    user_being_followed = models.ForeignKey('XUser', related_name='followers_of_user', default=1, null=False)
+
+    is_active = models.BooleanField(default=True)
+    class Meta:
+        ordering = ['-created']
+
+    def __unicode__(self):
+        return u'%s following %s' \
+               % (self.subject, self.user_being_followed)
+
+    def __str__(self):
+        return u'%s following %s' \
+               % (self.subject, self.user_being_followed)
+
+    def save(self, *args, **kwargs):
+        # type: (object, object) -> object
+        super(Follow, self).save(*args, **kwargs)
 
 
 class DianZan(models.Model):
@@ -441,8 +493,11 @@ class SentCardAction(models.Model):
 
     # 用户是行为的subject
     subject = models.ForeignKey('XUser', related_name='sent_card_actions_by_subject', null=False)
+    # 是行为的object
+    card_sent = models.OneToOneField('Card') #  一张明信片只有一个sent action
 
-    card_sent = models.OneToOneField('Card') #  一张明信片只有一个action
+    ## 新加的！
+    has_photo = models.BooleanField(default=False) # 默认没有photo
 
     objects = SentCardActionManager
 
@@ -471,6 +526,9 @@ class ReceiveCardAction(models.Model):
 
     card_received = models.OneToOneField('Card')  # 一张明信片只有一个action
 
+    ## 新加的！
+    has_photo = models.BooleanField(default=False)  # 默认没有photo
+
     objects = ReceiveCardActionManager
 
     class Meta:
@@ -484,3 +542,29 @@ class ReceiveCardAction(models.Model):
 
     def save(self, *args, **kwargs):
         super(ReceiveCardAction, self).save(*args, **kwargs)
+
+
+class UploadCardPhotoAction(models.Model):
+    """
+    用户给某张自己发送或者接收的明信片上传一张明信片
+    """
+    created = models.DateTimeField(auto_now_add=True)
+
+    # 用户是行为的subject
+    subject = models.ForeignKey('XUser', related_name='upload_actions_by_subject', null=False)
+    # 这种图片所属的明信片
+    card_host = models.ForeignKey('Card', related_name='upload_actions_of_card', null=False)
+
+    objects = UploadCardPhotoActionManager
+
+    class Meta:
+        ordering = ['-created']
+
+    def __unicode__(self):
+        return u'%s upload a photo for postcard id %s; ' % (self.subject, self.card_host.card_name)
+
+    def __str__(self):
+        return u'%s upload a photo for postcard id %s; ' % (self.subject, self.card_host.card_name)
+
+    def save(self, *args, **kwargs):
+        super(UploadCardPhotoAction, self).save(*args, **kwargs)

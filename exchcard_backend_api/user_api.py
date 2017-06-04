@@ -6,9 +6,14 @@ from django.contrib.auth import authenticate, login, logout
 # from django.contrib.auth.models import User
 # from exchcard.models import XUser as User
 from django.contrib.auth import get_user_model # If used custom user mode
+from rest_framework.serializers import Serializer
+
+from exchcard.models_profile import Follow
+
 User = get_user_model()
 
 from exchcard_backend_api.serializers import UserSerializer, UserSerializer2, RegisterUserSerializer2
+from exchcard_backend_api.serializers import FollowSerializer
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
@@ -250,7 +255,7 @@ def check_password(request):
 
 
 @api_view(['POST', 'GET'])
-@permission_classes([permissions.IsAuthenticated])
+@permission_classes([permissions.IsAuthenticated, ])
 def update_password(request):
     """
     check the password of user correct or not
@@ -282,3 +287,39 @@ def update_password(request):
             return Response({
                 "details": "no errors found"
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST', ])
+@permission_classes([permissions.IsAuthenticated, ])
+def make_a_follow_to_him(request):
+    """
+    用户关注其他人
+    :param request: request.data is not empty, {'user_being_followed_id': int }
+    :return: {'isFollowSuccess': True}
+    """
+    if request.method == "POST":
+        user = request.user
+        user_being_followed_id = request.data["user_being_followed_id"]
+
+        # VERY IMPORTANT !!!
+        # CHECK WHETHER ALREADY FOLLOWING HIM!!!
+        if Follow.objects.filter(subject_id=user.id).\
+                filter(object_being_followed_id=user_being_followed_id).\
+                exists():
+            return Response({"details":"You had already followed him",
+                             "error_msg": "You had already followed him",
+                             "isFollowSuccessBool": False,
+                             "isFollowSuccessInt": 0,
+                             "isAlreadyFollowingHimBool": True,
+                             "isAlreadyFollowingHimInt": 1,
+                             })
+
+        follow = Follow(subject_id=user.id, object_being_followed_id=user_being_followed_id)
+        follow.save()
+
+        serializer = FollowSerializer(follow)
+        data = serializer.data
+        data['isFollowSuccessBool'] = True
+        data['isFollowSuccessInt'] = 1
+
+        return Response(data, status=status.HTTP_201_CREATED)

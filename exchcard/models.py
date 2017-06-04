@@ -79,7 +79,6 @@ class XUser(AbstractBaseUser):
     Extended User Model, customize user model,
     AbstractBaseUser already has:
     - password,
-
     - get_username()
     - is_anonymous()
     - is_authenticated()

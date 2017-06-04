@@ -1,11 +1,13 @@
 #coding: utf-8
+
 from django.contrib.auth import get_user_model # If used custom user mode
 User = get_user_model()
-# from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
-from exchcard.models_profile import Card, Profile, Address, AvatarPhoto, CardPhoto, SentCardAction, ReceiveCardAction
+from exchcard.models_profile import Card, Profile, Address, AvatarPhoto, CardPhoto,\
+    SentCardAction, ReceiveCardAction, \
+    Follow
 from exchcard.models_profile import DianZan
 from exchcard.models import XUser
 
@@ -151,15 +153,18 @@ class AddressSerializer(serializers.ModelSerializer):
         model = Address
         fields = ("id", "name", "address", "postcode")
 
+
 class SimpleAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields = ("id", "name", "address", "postcode")
 
+
 class AddressSerializer2(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields = ("id", "name", "city", "country")
+
 
 class FullTextAddressSerializer(serializers.ModelSerializer):
     class Meta:
@@ -188,7 +193,6 @@ class CreateProfileSerializer(serializers.ModelSerializer):
         return profile
 
 
-
 class CreateProfileSerializerWithIds(serializers.ModelSerializer):
     class Meta:
         model = Profile
@@ -205,7 +209,6 @@ class CreateProfileSerializerWithIds(serializers.ModelSerializer):
         profile.save()
 
         return profile
-
 
 
 class GetProfileSerializer(serializers.HyperlinkedModelSerializer):
@@ -266,7 +269,6 @@ class GetProfileWithCardSerializer(serializers.HyperlinkedModelSerializer):
         related_fields = ["user", "address"]
 
 
-
 class GetUserAddressProfileSerializer(serializers.ModelSerializer):
     """
     address, exchcard_backend_api id,address Id, user id, user name serializer
@@ -306,6 +308,7 @@ class AvatarPhotoSerializer(serializers.ModelSerializer):
         model = AvatarPhoto
         fields = ('id', 'avatar', 'avatar_url',"owner_id", "owner_email", "owner_username")
 
+
 class ProfileWithAvatarPhotoSerializer(serializers.HyperlinkedModelSerializer):
     profileuser_username = serializers.CharField(source="profileuser.username")
     profileuser_email = serializers.CharField(source="profileuser.email")
@@ -317,6 +320,7 @@ class ProfileWithAvatarPhotoSerializer(serializers.HyperlinkedModelSerializer):
         model = Profile
         fields=("id", "profileuser_username", "profileuser_email", "avatars")
 
+
 class CreateAvatarPhotoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = AvatarPhoto
@@ -324,6 +328,7 @@ class CreateAvatarPhotoSerializer(serializers.HyperlinkedModelSerializer):
 
     def create(self, validated_data):
         return AvatarPhoto(**validated_data)
+
 
 ###################################################################################
 class CardPhotoSerializer(serializers.ModelSerializer):
@@ -345,7 +350,7 @@ class DianZanSerializer(serializers.ModelSerializer):
     person_who_dianzan_id = serializers.IntegerField(source='person_who_dianzan.id')
     class Meta:
         model = DianZan
-        fields = ('card_by_dianzan', 'person_who_dianzan_id', 'created')
+        fields = ('id', 'card_by_dianzan', 'person_who_dianzan_id', 'created')
 
 
 class GetUserSendCardActionSerializer(serializers.HyperlinkedModelSerializer):
@@ -366,6 +371,7 @@ class GetUserSendCardActionSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class SentCardActionSerializer(serializers.ModelSerializer):
+    sent_card_action_id = serializers.CharField(source='id')
 
     subject_email = serializers.CharField(source='subject.email')
     subject_id = serializers.CharField(source='subject.id')
@@ -377,11 +383,17 @@ class SentCardActionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SentCardAction
-        fileds = (
-            "id", "created", "subject_id", "subject_email", "card_sent_id","card_sent_cardname"
+        fields = (
+            "sent_card_action_id", "created", "has_photo",
+            "subject_id", "subject_email", "subject_username",
+            "card_sent_id","card_sent_cardname"
         )
 
+
 class ReceiveActionSerializer(serializers.ModelSerializer):
+
+    receive_card_action_id = serializers.CharField(source='id')
+
     subject_id = serializers.CharField(source='subject.id')
     subject_email = serializers.CharField(source='subject.email')
     subject_username = serializers.CharField(source='subject.username')
@@ -389,9 +401,35 @@ class ReceiveActionSerializer(serializers.ModelSerializer):
     card_receive_id = serializers.CharField(source='card_received.id')
     card_receive_cardname = serializers.CharField(source='card_received.card_name')
 
-
     class Meta:
         model = ReceiveCardAction
-        fileds = (
-            "id", "created", "subject_id", "subject_email", "subject_username","card_receive_id","card_receive_cardname"
+        fields = (
+            "receive_card_action_id", "created", "has_photo",
+            "subject_id", "subject_email", "subject_username",
+            "card_receive_id","card_receive_cardname"
+        )
+
+
+class FollowSerializer(serializers.ModelSerializer):
+    """
+    serialize follow object
+    """
+    subject_id = serializers.CharField(source='subject.id')
+    subject_username = serializers.CharField(source='subject.username')
+    subject_email = serializers.CharField(source='subject.email')
+
+    user_being_followed_id = serializers.CharField(source='user_being_followed.id')
+    user_being_followed_username = serializers.CharField(source='user_being_followed.username')
+    user_being_followed_email = serializers.CharField(source='user_being_followed.email')
+
+    class Meta:
+        model = Follow
+        fields = ('id',
+                  'created',
+                  'subject_id',
+                  'subject_username',
+                  'subject_email',
+                  'user_being_followed_id',
+                  'user_being_followed_username',
+                  'user_being_followed_email'
         )

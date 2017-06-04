@@ -12,6 +12,48 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
+class AddressDetailAPIView(APIView):
+    """
+    Create, Retrieve, update or delete
+    """
+
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
+
+    def get_object(self, pk):
+        try:
+            return Address.objects.get(pk=pk)
+        except Address.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        obj = self.get_object(pk)
+        serializer = AddressSerializer(obj)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = AddressSerializer(data=request.data) # create a object when save
+        if serializer.is_valid():
+            obj = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, pk, format=None):
+        obj = self.get_object(pk)
+        serializer = AddressSerializer(obj, data=request.data) ## update object when save
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        obj = self.get_object(pk)
+        obj.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class GetAllAddressListView(generics.ListAPIView):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
@@ -85,45 +127,7 @@ class CreateAddressView(generics.CreateAPIView):
     ]
 
 
-class AddressDetailAPIView(APIView):
-    """
-    Retrieve, update or delete
-    """
 
-    permission_classes = [
-        permissions.IsAuthenticated
-    ]
-    def get_object(self, pk):
-        try:
-            return Address.objects.get(pk=pk)
-        except Address.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        obj = self.get_object(pk)
-        serializer = AddressSerializer(obj)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = AddressSerializer(data=request.data) # create a object when save
-        if serializer.is_valid():
-            obj = serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def put(self, request, pk, format=None):
-        obj = self.get_object(pk)
-        serializer = AddressSerializer(obj, data=request.data) ## update object when save
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        obj = self.get_object(pk)
-        obj.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # -----------------------------------------------------------------------

@@ -13,30 +13,30 @@
 
   </div>
   <div class="h-text-info">
+    <input type="hidden" id="text-info-user-id-inp" value=""/>
+    <div style="display: none" id="text-info-user-id-holder" ></div>
     <div id="text-info-email"></div>
+    <div id="text-info-username"></div>
   </div>
   <div class="action-btn-container">
-    <a href="">私信息</a>
-    <a href="">向他发明信片</a>
+    <div class="action-btn">给他私信</div>
+    <div class="action-btn">向他发明信片</div>
+    <div class="action-btn btn-active" id="btn-follow-him">关注他</div>
   </div>
 
-  <div class="timeline-content-container"  >
+  <div class="timeline-main-title">最新活动</div>
+  <div class="timeline-content-container" id="timeline-content-container" >
+
     <div class="act-item-container act-item-container-1" id="act-item-container-1">
-      <div class="act-short-container">
+      <div class="act-time-container left">2017.5.17 5:10 UTC</div>
+      <div class="act-short-container right">
         <div class="act-subject">example man</div>
         <div class="act-short-name">发送了一张明信片</div>
       </div>
-      <div class="act-time-container">2017.5.17 5:10 UTC</div>
+      <br style="clear: both; display: none;" />
     </div>
 
   </div>
-
-  <!--<div class="timeline-content-container"  ng-app="myApp"  ng-controller="myCtrl" >-->
-    <!--<div ng-repeat="act in activities">-->
-      <!--<div>{[{act.created}]}</div>>-->
-    <!--</div>-->
-
-  <!--</div>-->
 
 </div>
 

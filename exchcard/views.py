@@ -199,7 +199,7 @@ def eachs_public_profile(request, user_id):
     profile = Profile.objects.get(profileuser
                                   =request.user)
 
-    context = dict
+    context = {}
     context['profile'] = profile
     context['user'] = request.user
     context['isAuth'] = True
@@ -216,7 +216,7 @@ def view_shao_you_quan(request):
     profile = Profile.objects.get(profileuser
                                   =request.user)
 
-    context = dict
+    context = {}
     context['profile'] = profile
     context['user'] = request.user
     context['isAuth'] = True

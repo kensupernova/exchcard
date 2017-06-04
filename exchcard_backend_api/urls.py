@@ -44,6 +44,9 @@ urlpatterns = format_suffix_patterns([
     url(r'^users/update/password/$',
         'exchcard_backend_api.user_api.update_password',
         name='user-update-password'),
+    # 关注某人
+    url(r"^users/follow/him/$", "exchcard_backend_api.user_api.make_a_follow_to_him",
+        name="user-follow-him"),
 
 ## --------------------------------------------------------
     ## addresss
@@ -214,12 +217,14 @@ urlpatterns = format_suffix_patterns([
         name="activity-detail"),
 
     # 某条发送明信片的细节
-    url(r"^/hobbyist/activity/(?P<pk>[0-9]+)/$", activity_api.SentCardActionDetailView.as_view(),
+    url(r"^hobbyist/sent-card/(?P<pk>[0-9]+)/$", activity_api.SentCardActionDetailView.as_view(),
         name="sent-card-activity-detail"),
     # 所有发送明信片的活动
-    url(r"^/hobbyist/activity/list/%", activity_api.SentCardActionListView.as_view(),
+    url(r"^hobbyist/sent-card/list/$", activity_api.SentCardActionListView.as_view(),
         name="sent-card-activity-list"),
-
+## ------------------------------------------------------------
+    url(r"^moments/followings/activities/$", "exchcard_backend_api.moments_api.get_all_activities_of_my_followings",
+        name="get-all-activities-of-my-followings"),
 ## ------------------------------------------------------------
     ## 其他
     url(r"^storage/sae/s3/$", "exchcard_backend_api.upload_api.sae_s3_storage"),

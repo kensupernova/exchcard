@@ -50,9 +50,11 @@ $("#upload-btn").click(function(){
     }
   });
 
-  // var formData;
+  //// -----------------
+  //-- USE enctype: multipart/form-data, 在后端django rest提取数据时候request.data拿到的文件数据不能改名字
+  // var data;
   //
-  // formData = {
+  // data = {
   //   card_name: card_name,
   //   card_photo: card_photo
   // };
@@ -64,7 +66,7 @@ $("#upload-btn").click(function(){
   // $.ajax({
   //   method:"post",
   //   url: upload_photo_afterwards_url,
-  //   data: formData,
+  //   data: data,
   //   enctype: 'multipart/form-data',
   //   success: function(response){
   //     console.log("upload photo success: " + JSON.stringify(response));

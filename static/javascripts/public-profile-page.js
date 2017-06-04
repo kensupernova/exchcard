@@ -18,15 +18,15 @@ $(document).ready(function(){
   // 有关头像图片的URL
   // var getAvatarUrl = "/exchcard/api/profiles/avatar/url/";
 
-  var getHBasicTextInfo = "/exchcard/api/hobbyist/u/"+user_id + "/basic/info/";
+  var getHBasicInfo = "/exchcard/api/hobbyist/u/"+user_id + "/basic/info/";
   var getActivitiesAll = "/exchcard/api/hobbyist/u/"+user_id + "/activities/all/";
 
-  // 下载头像图片等基本信息
+  // 下载头像图片, 文字信息, 与之关系等基本信息
   $.ajax({
     method:"GET",
-    url: getHBasicTextInfo,
+    url: getHBasicInfo,
     success: function (response) {
-      // console.log(JSON.stringify(response));
+      console.log(JSON.stringify(response));
 
       var avatar_url= response['avatar_info']['avatar_url'];
       avatar_url = avatar_url.lastIndexOf("http", 0) === 0 ? avatar_url: response['avatar_info']['avatar'];
@@ -34,10 +34,24 @@ $(document).ready(function(){
       $("#h-img").attr('src', avatar_url);
 
       $("#text-info-email").text(response['user_email']);
+      $("#text-info-username").text(response['username']);
+      $("#text-info-user-id-inp").val(response['user_id']);
+      $("#text-info-user-id-holder").text(response['user_id']);
+
+      var isFollowingHimBool = response['isFollowingHimBool'];
+      if(isFollowingHimBool){
+        // var ele = $("#btn-follow-him");
+        // ele.addClass("btn-inactive");
+        // ele.addClass("following");
+        // ele.removeClass("btn-active");
+        // ele.text("你已经关注他");
+        make_follow_him_btn_inactive();
+      }
+
 
     }
   }).fail(function (response) {
-    console.log(JSON.stringify(response));
+    // console.log(JSON.stringify(response));
 
   });
 
@@ -83,7 +97,7 @@ $(document).ready(function(){
       // console.log(JSON.stringify(acts));
 
       acts.forEach(function(act){
-        $("#act-item-container-1").append(createActItem(act));
+        $("#timeline-content-container").append(createActItem(act));
       });
 
     }
@@ -112,24 +126,119 @@ $(document).ready(function(){
       (created.getMonth() + 1) +"." +
       created.getDate() +" " +
       created.getHours() +":" +
-      created.getMinutes();
+      created.getMinutes() +
+      " UTC";
 
-    var mainText = '<div class="act-item-container">' +
-      '<div class="act-short-container">' +
-      '<div class="act-subject">'+ act['subject_username'] +'</div>' +
-      '<div class="act-short-name">'+ act_short_name +'</div>' +
-      '</div>' +
-      '<div class="act-time-container">'+ created_str  +'</div>' +
-    '</div>';
+    var mainText =
+      '<div class="act-item-container">' +
+      '  <div class="act-time-container left">'+ created_str  +'</div>' +
+      '  <div class="act-short-container right">' +
+      '    <div class="act-subject">'+ act["subject_username"] +'</div>' +
+      '    <div class="act-short-name">'+ act_short_name +'</div>' +
+      '  </div>' +
+      '  <br style="clear: both; display: none;" />'+
+      '</div>';
 
     return mainText;
   }
 
 
+  // --------------
+  // follow him, make a follow
+  $("#btn-follow-him.btn-active").click(function(){
+    // 如果按钮失效, 就不能点击!
+    if($(this).hasClass("btn-inactive")){
+      return;
+    }
+    // ele.removeClass("btn-active");// ele.removeClass("btn-active");
+    // alert("You clicked follow button");
+    var followHimUrl = "/exchcard/api/users/follow/him/";
+
+    // var id1 =  $("#text-info-user-id-inp").val();
+    // var id2 = $("#text-info-user-id-holder").text();
+
+    var user_id_of_the_hobbyist = $("#text-info-user-id-inp").val();
+
+    // VERY IMPORTANT IN AJAX REQUEST, GET OR POST
+    addCSRFTokenBeforeAjax();
+    $.ajax({
+      url: followHimUrl,
+      method: 'POST',
+      data: {
+        'user_being_followed_id': user_id_of_the_hobbyist
+      },
+      success: function (response) {
+        console.log(JSON.stringify(response));
+        var isFollowSuccess1 = response['isFollowSuccessBool'];
+        var isFollowSuccess2 = response['isFollowSuccessInt'];
+        //
+        // alert(typeof isFollowSuccess1); // boolean
+        // alert(typeof isFollowSuccess2); // number
+
+        // 成功关注此用户
+        if(isFollowSuccess1 || isFollowSuccess2 == 1){
+          var ele = $("#btn-follow-him");
+          // ele.addClass("btn-inactive");
+          // ele.addClass("following");
+          // ele.removeClass("btn-active");
+          // ele.text("你已经关注他");
+          make_follow_him_btn_inactive()
+        }
+
+        //
+        // 如果已经关注了此用户, 此次关注将不成功, 是个错误。
+        // METHOD 1: 第一种处理错误方法, 但是服务器没有报错。
+        if(! isFollowSuccess1 || isFollowSuccess2 == 0){
+          var isAlreadyFollowingHimInt = response['isAlreadyFollowingHimInt'];
+          if(isAlreadyFollowingHimInt == 1){
+            alert(response["error_msg"]);
+          }
+        }
+
+
+
+      },
+      error: function (response) {
+        // METHOD 2: 第二种处理错误方法, 服务器报错了。
+        // console.log(JSON.stringify(response));
+        data = response["responseJSON"];
+        // console.log(JSON.stringify(data));
+        //
+        var isFollowSuccess1 = data['isFollowSuccessBool'];
+        var isFollowSuccess2 = data['isFollowSuccessInt'];
+        if(! isFollowSuccess1 || isFollowSuccess2 == 0){
+          var isAlreadyFollowingHimInt = data['isAlreadyFollowingHimInt'];
+          if(isAlreadyFollowingHimInt == 1){
+            alert(data["error_msg"]);
+          }
+        }
+      }
+    });
+
+  });
+
+  function make_follow_him_btn_inactive() {
+    var ele = $("#btn-follow-him");
+    ele.addClass("btn-inactive");
+    ele.addClass("following");
+    ele.removeClass("btn-active");
+    ele.text("你已经关注他");
+  }
+
+  function make_follow_him_btn_active() {
+    var ele = $("#btn-follow-him");
+    ele.removeClass("btn-inactive");
+    ele.removeClass("following");
+    ele.addClass("btn-active");
+    ele.text("关注他");
+  }
+
 
 
 });
 
+////////////--------------------
+//---- USE ANGULAR 1
 // 'use strict';
 //
 // var baseUrl = window.location.protocol +"//"+window.location.host;
