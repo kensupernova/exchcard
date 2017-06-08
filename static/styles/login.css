@@ -23,6 +23,11 @@
   width: 9em;
 }
 
+.login-form .item .btn-login-submit:hover{
+  background: red;
+  color: white;
+}
+
 .third-party-login{
 
 }

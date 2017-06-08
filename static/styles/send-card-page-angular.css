@@ -15,11 +15,6 @@
   padding: 2px;
 }
 
-.sent-card-main-container div.sent-confirm-container{
-  border: red 1px solid;
-  width: 80%;
-  padding: 2px;
-}
 
 .sent-warning-container .warning-main-title{
   font-size: 1.5em;
@@ -35,21 +30,28 @@
   text-align: left;
 }
 
-#sendForm div {
+#get-address-container div {
   text-align: left;
 }
 
-#sendForm #sendButton{
+#get-address-container #btn-get-address{
   margin-top: 1em;
 }
 
-/*---------------*/
-.sent-confirm-container{
+
+/*!*---------------*!*/
+
+.sent-card-main-container div.address-success-container{
+  border: red 1px solid;
+  width: 80%;
+  padding: 2px;
+}
+.address-success-container{
   font-size: 1em;
   padding: 1px;
 }
 
-.sent-confirm-container div label {
+.address-success-container div label {
   font-weight:bold;
 }
 

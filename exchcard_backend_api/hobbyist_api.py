@@ -6,6 +6,9 @@
 import json
 
 from django.contrib.auth import get_user_model # If used custom user mode
+from django.http import HttpResponse
+from django.http import JsonResponse
+
 User = get_user_model()
 
 from rest_framework import permissions
@@ -15,7 +18,9 @@ from rest_framework.response import Response
 
 from exchcard.models_profile import Address, Profile, AvatarPhoto, SentCardAction, ReceiveCardAction, Follow
 from exchcard.models import XUser
-from exchcard_backend_api.serializers import SentCardActionSerializer, ReceiveActionSerializer
+from exchcard_backend_api.serializers import SentCardActionSerializer, ReceiveCardActionSerializer
+
+from utils.utils import compare_created_early_to_late
 
 def getAvatarInfoByProfile(profile):
     """
@@ -168,21 +173,38 @@ def get_all_activities_of_other_user(request, user_id):
         receive_actions = ReceiveCardAction.objects.filter(subject=user)
 
         s_serializer = SentCardActionSerializer(sent_actions, many=True)
-        r_serializer = ReceiveActionSerializer(receive_actions, many=True)
+        r_serializer = ReceiveCardActionSerializer(receive_actions, many=True)
 
         # print "activities 1 %s" % s_serializer.data
         # print "activities 2 %s" % r_serializer.data
 
-        data1 = s_serializer.data
-        data2 = r_serializer.data
+        s_data = s_serializer.data
+        r_data = r_serializer.data
 
         # TODO: 扁平化
         # TODO: sort by created
-        return Response({
-            "sent_card_actions": data1,
-            "receive_card_actions": data2
 
-        }, status=status.HTTP_200_OK)
+        response_data = []
+        for item in s_data:
+            item["activity_id"] = 1
+            item["activity_type_id"] = 1
+            item["activity_type"] = "SP"
+            item["activity_short_name"] = "Sent a postcard"
+
+            response_data.append(item)
+
+        for item in r_data:
+            item["activity_id"] = 2
+            item["activity_type_id"] = 2
+            item["activity_type"] = "RP"
+            item["activity_short_name"] = "Receive a postcard"
+
+            response_data.append(item)
+
+        sorted_response = sorted(response_data, cmp=compare_created_early_to_late)
+
+        return HttpResponse(json.dumps(sorted_response), content_type="application/json")
+        # return JsonResponse(sorted_response)
 
     except XUser.DoesNotExist:
         return Response({"details": "can not find user with user ID = %s" % user_id},

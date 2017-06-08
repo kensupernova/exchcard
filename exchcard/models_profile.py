@@ -5,7 +5,7 @@
 
 import datetime
 import time
-
+from django.utils import timezone
 import os
 
 from django.db import models
@@ -63,8 +63,9 @@ class ProfileManager(Manager):
 
 class CardManager(Manager):
     def create_with_profile_ids(self, card_name, torecipient_id, fromsender_id):
-        if Profile.objects.get(id=torecipient_id).exists() and \
-                Profile.objects.get(id=fromsender_id).exists():
+        if Profile.objects.filter(id=torecipient_id).exists() and \
+                Profile.objects.filter(id=fromsender_id).exists():
+
             card = self.create(card_name=card_name,
                                torecipient_id=torecipient_id,
                                fromsender_id=fromsender_id,
@@ -82,6 +83,7 @@ class CardManager(Manager):
 
             ## very important
             ## create sent card action or activity
+
             action = SentCardAction(subject=card.fromsender.profileuser, card_sent=card)
             action.save()
 
@@ -89,14 +91,49 @@ class CardManager(Manager):
 
         return None
 
-    def create_with_card_action_objs_returned(self, *args, **kwargs):
+    def create_with_card_action_objs_returned(self,
+                                              card_name, torecipient_id, fromsender_id,
+                                              *args, **kwargs):
         """
-        sent card action shall be created automatically
-        :return:
+        objects card, sent card action, shall be created automatically and sync
+        :return: card, sentcardaction,
         """
-        card = Card.objects.create(self, *args, **kwargs)
-        action = SentCardAction(subject=card.fromsender, card_sent=card, *args, **kwargs).save()
+        card = self.create(card_name=card_name,
+                               torecipient_id=torecipient_id,
+                               fromsender_id=fromsender_id,
+                               has_arrived=False, *args, **kwargs)
+
+        action = SentCardAction(subject=card.fromsender.profileuser,
+                                card_sent=card,
+                                has_photo=False)
+        action.save()
+
         return card, action
+
+    def create_with_card_action_photo_objs_returned(self,
+                                                    card_name, torecipient_id, fromsender_id, card_photo_file,
+                                                    *args, **kwargs):
+        """
+        objects card, sent card action, card photo;shall be created automatically and sync
+        :return: card, sentcardaction,
+        """
+        card = self.create(card_name=card_name,
+                           torecipient_id=torecipient_id,
+                           fromsender_id=fromsender_id,
+                           has_arrived=False, *args, **kwargs)
+
+        action = SentCardAction(subject=card.fromsender.profileuser,
+                                card_sent=card,
+                                has_photo=True)
+        action.save()
+
+        photo = CardPhoto(owner=card.fromsender,
+                          card_host=card,
+                          card_photo=card_photo_file)
+        photo.save()
+
+        return card, action, photo
+
 
     def create(self, *args, **kwargs):
         # type: (object, object) -> object
@@ -206,8 +243,7 @@ class DetailedAddress(models.Model):
 
 
 
-
-
+#----------------------------------------------------------------
 class Profile(models.Model):
     """
     It combines information for:
@@ -281,6 +317,7 @@ class Card(models.Model):
     fromsender = models.ForeignKey('Profile', related_name='sent_cards', default=1)
 
     sent_time = models.BigIntegerField(default=int(round(time.time()*1000)))
+    # int(round(time.time()*1000), microseconds ==> millseconds!!!
     sent_date = models.DateTimeField(auto_now_add=True)
 
     arrived_time = models.BigIntegerField(default=None)
@@ -325,6 +362,7 @@ class Card(models.Model):
         """
         save the newly created Object
         """
+        # 重新定义save
         # self.order_no = datetime.datetime.now.strftime('%Y%m%d' + seq)
         super(Card, self).save(*args, **kwargs)
 
@@ -339,22 +377,28 @@ class Card(models.Model):
         self.sent_time  =sent_time
         super(Card, self).save(*args, **kwargs)
 
-    def update_with_cardname(self, *args, **kwargs):
-        """
-        save the newly created Object
-        """
-        super(Card, self).save(*args, **kwargs)
-
-    def mark_arrived(self, *args, **kwargs):
+    def mark_arrived(self, has_photo, *args, **kwargs):
         self.has_arrived = True
-        ## save arrived time as current time in mill seconds
+        # save arrived time as current time in mill seconds
         self.arrived_time = int(round(time.time()*1000))
-        self.arrived_date = datetime.datetime.now()
 
-        ## create Receive action automatically card.save()
-        ## TODO: check
-        ReceiveCardAction.objects.create(subject=self.torecipient.profileuser, card_received = self)
+        # self.arrived_date = datetime.datetime.now()
+        # RuntimeWarning: DateTimeField Card.arrived_date received a naive datetime
+        # (2017-06-06 16:18:43.939844) while time zone support is active.
 
+        self.arrived_date = timezone.now()
+
+        # objects.create() Receive action automatically card.save()
+        ReceiveCardAction.objects.create(subject=self.torecipient.profileuser,
+                                         card_received=self,
+                                         has_photo =has_photo)
+        # 接收明信片有图片
+        if has_photo:
+            print "Receive postcard with photo , SPP, activity_type_id = 4"
+        else:
+            print "Receive postcard, SP, SPP, activity_type_id = 3"
+
+        # 保存明信片到达等信息
         super(Card, self).save(*args, **kwargs)
 
     def update_date_with_timestamp(self, *args, **kwargs):
@@ -378,8 +422,6 @@ class Card(models.Model):
 
 
 
-
-
 class CardPhoto(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey("Profile", related_name="cardphotos_of_profile") ## related name is for Profile to use
@@ -395,17 +437,18 @@ class CardPhoto(models.Model):
 """
 主要是用户活动的数据模型, 与地址无关，不用Profile关联，而用正常的User
 """
-
 #-----------------------------------------------------------------------
 class Activity(models.Model):
     ACTIVITY_TYPES = (
-        ('SP', 'Sent Postcard'),
-        ('RP', 'Receive Postcard'),
-        ('SPP', 'Sent Postcard with Photo'),
-        ('RPP', 'Receive postcard with photo'),
-        ('MC', 'Make comment'),
-        ('MDZ', 'Make dian Zan'),
-        ('UPP', 'Upload postcard photo'),
+        #------- user make action initially, each action has a subject, and something being done
+        ('SP', 'Sent Postcard'), # activity_type_id = 1
+        ('SPP', 'Sent Postcard with Photo'), # activity_type_id = 2
+        ('RP', 'Receive Postcard'), # activity_type_id = 3
+        ('RPP', 'Receive postcard with photo'), # activity_type_id = 4
+        ('UPP', 'Upload postcard photo'), # activity_type_id = 5
+        #-------- Feedback on above actions, each has a subject, and an aboved actions being done
+        ('MC', 'Make comment'), #
+        ('MDZ', 'Make dian Zan'), #
     )
 
     created = models.DateTimeField(auto_now_add=True)
@@ -457,37 +500,13 @@ class Follow(models.Model):
         super(Follow, self).save(*args, **kwargs)
 
 
-class DianZan(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-
-    # the card who is dianzaned
-    card_by_dianzan = models.ForeignKey('Card', related_name='dianzans_of_card', default=1)
-
-    # Photo which is dianzaned
-    card_photo_by_dianzan = models.ForeignKey('CardPhoto', related_name='dianzans_of_card_photo', default=1)
-
-    ## the user who dianzan, not profile
-    person_who_dianzan = models.ForeignKey('XUser', related_name='dianzans_by_person', default=1)
-
-
-    objects = DianZanManager()
-
-    class Meta:
-        ordering = ['-created']
-
-    def as_json(self):
-        created_in_ms = self.created
-        return dict(
-            dianzan_id = self.id,
-            card_by_dianzan = self.card_by_dianzan.id,
-            person_who_dianzan = self.person_who_dianzan.id,
-            created = created_in_ms
-        )
-
+#------------------------------------------------------------------------
+# 用户的主要活动
 
 class SentCardAction(models.Model):
     """
     用户发送明信片这样一个action
+    Note: Sorry, it is typo to use Sent instead of Send
     """
     created = models.DateTimeField(auto_now_add=True)
 
@@ -517,14 +536,14 @@ class SentCardAction(models.Model):
 
 class ReceiveCardAction(models.Model):
     """
-    用户发送明信片这样一个action
+    用户接收到明信片这样一个action
     """
     created = models.DateTimeField(auto_now_add=True)
 
     # 用户是行为的subject
     subject = models.ForeignKey('XUser', related_name='receive_card_actions_by_subject', null=False)
 
-    card_received = models.OneToOneField('Card')  # 一张明信片只有一个action
+    card_received = models.OneToOneField('Card')  # 一张明信片只有一个receive action
 
     ## 新加的！
     has_photo = models.BooleanField(default=False)  # 默认没有photo
@@ -546,14 +565,14 @@ class ReceiveCardAction(models.Model):
 
 class UploadCardPhotoAction(models.Model):
     """
-    用户给某张自己发送或者接收的明信片上传一张明信片
+    用户给某张自己发送或者接收的明信片之后, 补上传一张明信片图片
     """
     created = models.DateTimeField(auto_now_add=True)
 
     # 用户是行为的subject
     subject = models.ForeignKey('XUser', related_name='upload_actions_by_subject', null=False)
     # 这种图片所属的明信片
-    card_host = models.ForeignKey('Card', related_name='upload_actions_of_card', null=False)
+    card_actioned = models.ForeignKey('Card', related_name='upload_actions_to_card', null=False)
 
     objects = UploadCardPhotoActionManager
 
@@ -561,10 +580,40 @@ class UploadCardPhotoAction(models.Model):
         ordering = ['-created']
 
     def __unicode__(self):
-        return u'%s upload a photo for postcard id %s; ' % (self.subject, self.card_host.card_name)
+        return u'%s upload a photo for postcard id %s; ' % (self.subject, self.card_actioned.card_name)
 
     def __str__(self):
-        return u'%s upload a photo for postcard id %s; ' % (self.subject, self.card_host.card_name)
+        return u'%s upload a photo for postcard id %s; ' % (self.subject, self.card_actioned.card_name)
 
     def save(self, *args, **kwargs):
         super(UploadCardPhotoAction, self).save(*args, **kwargs)
+
+
+#--------------------------------------------
+# Feedback on Actions: ReceiveCardAction, SentCardAction,
+class DianZan(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+
+    # the card who is dianzaned
+    card_by_dianzan = models.ForeignKey('Card', related_name='dianzans_of_card', default=1)
+
+    # Photo which is dianzaned
+    card_photo_by_dianzan = models.ForeignKey('CardPhoto', related_name='dianzans_of_card_photo', default=1)
+
+    ## the user who dianzan, not profile
+    person_who_dianzan = models.ForeignKey('XUser', related_name='dianzans_by_person', default=1)
+
+
+    objects = DianZanManager()
+
+    class Meta:
+        ordering = ['-created']
+
+    def as_json(self):
+        created_in_ms = self.created
+        return dict(
+            dianzan_id = self.id,
+            card_by_dianzan = self.card_by_dianzan.id,
+            person_who_dianzan = self.person_who_dianzan.id,
+            created = created_in_ms
+        )

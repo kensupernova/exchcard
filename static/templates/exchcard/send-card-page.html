@@ -1,27 +1,227 @@
 {% extends "foundation.html" %}
 
 {% block headinfo %}
-<link href="{{STATIC_URL}}styles/send-card-page.css" rel="stylesheet">
+<style>
+  .sent-card-main-container{
+    font-size: 1em;
+    font-style: normal;
+    margin: 0 5px;
+    border: red 1px solid;
+  }
+
+  .sent-card-main-container .sent-card-main-title {
+    font-size: 1.5em;
+  }
+
+  .sent-card-main-container div.sent-warning-container {
+    border: red 1px solid;
+    width: 80%;
+    padding: 2px;
+  }
+
+
+  .sent-warning-container .warning-main-title{
+    font-size: 1.5em;
+  }
+
+  .sent-warning-container div div ul {
+    list-style: none;
+
+  }
+
+  .sent-warning-container ul li {
+    font-size: 1em;
+    text-align: left;
+  }
+
+  #get-address-container div {
+    text-align: left;
+  }
+
+  #get-address-container #btn-get-address{
+    margin-top: 1em;
+  }
+
+  /*#---------send card container create a new create--------------*/
+  .create-card-container {
+    border: red 1px solid;
+  }
+
+  .postal-title-container {
+    margin-bottom: 0.5em;
+    font-weight:bold;
+  }
+  .postal-title-container .main-title{
+    font-size: 16px;
+    margin-bottom: 0.5em;
+    font-weight:bold;
+  }
+
+  .postal-title-container .warning {
+    font-size: 16px;
+    font-weight:bolder;
+  }
+
+  .postal-title-container .warning label{
+    font-size: 16px;
+    font-weight:bolder;
+  }
+
+  .postal-info-item {
+    overflow: hidden;
+    clear :both;
+    margin-bottom: 5px;
+  }
+
+  .postal-info-item .postal-info-title{
+    width:30%;
+    text-align: right;
+    float: left;
+
+  }
+
+  .postal-info-item .postal-info-content{
+    width: 65%;
+    text-align: left;
+    float: right;
+    margin-bottom:2px;
+  }
+
+  .upload-card-photo-container{
+    padding-top: 1em;
+    border: 1px solid red;
+  }
+
+  .upload-card-photo-container .explain {
+    font-size: 14px;
+    font-weight: bolder;
+    margin-bottom: 0.5em;
+  }
+
+  /*.upload-card-photo-container #btn-upload-card-photo{*/
+    /*margin-top: 1em;*/
+  /*}*/
+
+  /*.upload-card-photo-container #btn-upload-card-photo:hover{*/
+    /*background: red;*/
+    /*color: white;*/
+  /*}*/
+
+  .upload-card-photo-container .item-error-msg {
+    height: 1em;
+    min-width: 10em;
+    /*border: red 1px solid;*/
+  }
+
+  .shown-content {
+    display: block;
+  }
+  .hidden-content {
+    display: none;
+  }
+
+
+</style>
 {% endblock %}
 
 
 {% block content %}
-<div ng-app="myApp", class="sent-card-main-container">
-  <div class="sent-card-main-title">寄送明信片</div>
-  <div style="display: none;">
-    <!--ui-sref为state name-->
-    <a ui-sref="send" ui-sref-active="active" id="tab-send" class="tab-btn">send</a>
-    <a ui-sref="confirm" ui-sref-active="active" id="tab-confirm" class="tab-btn">confirm</a>
-  </div>
-  <ui-view>
-  </ui-view>
-</div>
 
+<div class="content-container sent-card-main-container">
+  <div class="sent-card-main-title">寄送明信片</div>
+
+  <div class="sent-warning-container shown-content" id="sent-warning-container">
+    <div>
+      <div><label class="warning-main-title">注意事项</label></div>
+      <div>
+        <ul>
+          <li>你会得到一个地址, 请确定地址正确书写。</li>
+          <li>你会得到一个Postcard Id, <b>请Id号码写在明信片上面</b>, 接受者需要注册, 才算成功寄送明信片。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="get-address-container" class="get-address-container">
+      <div>
+        <input type="checkbox" name="check-confirm-warning" value="" id="check-confirm-warning">
+        <label for="check-confirm-warning" class="confirm-warning-wenzi">
+          我已经阅读了上面的文字, 我确定我会向地址发送一张明信片, 并且我确定我会把POST ID写到明信片上面。
+        </label><br>
+      </div>
+      <button id="btn-get-address" name="btn-get-address" class="button">得到地址
+      </button>
+    </div>
+
+  </div>
+
+  <div class="create-card-container hidden-content" id="create-card-container">
+    <div id="torecipient-id-holder" style="display: none;">{{pre_card.torecipient_id}}</div>
+    <div class="postal-title-container">
+      <div class="main-title">新明信片寄送地址</div>
+      <div class="warning"><label>请记住一定要把Postcard ID写在明信片上面</label>, 否则接收者无法登记收到, 你不会得到积分。</div>
+    </div>
+    <div class="postal-info-container">
+      <div class="postal-info-item twoColumn">
+        <div class="postal-info-title">明信片ID:</div>
+        <div class="postal-info-content" id="card-name-holder">{{pre_card.card_name}}</div>
+        <span style="display: none; clear:both"></span>
+      </div>
+      <div class="postal-info-item twoColumn">
+        <div class="postal-info-title">接收者的地址:</div>
+        <div class="postal-info-content">
+          <div id="postal-name-holder">{{pre_card.torecipient.profileaddress.name}}</div>
+          <div id="postal-address-holder">{{pre_card.torecipient.profileaddress.address}}</div>
+          <div id="postal-postcode-holder">{{pre_card.torecipient.profileaddress.postcode}}</div>
+          <div id="postal-country-holder">{{pre_card.torecipient.profileaddress.postcode}}</div>
+
+          <div>
+            <input type="checkbox" name="check-confirm-send" value="" id="check-confirm-send">
+            <label for="check-confirm-send" class="confirm-send-wenzi">
+              我已经记下地址和Postcard Id。
+            </label><br>
+          </div>
+
+        </div>
+        <span style="display: none; clear:both"></span>
+
+      </div>
+
+
+      <div class="postal-info-item twoColumn upload-card-photo-container">
+        <div class="postal-info-title">可选任务:</div>
+        <div class="postal-info-content">
+          <div class="has-photo">
+            <input type="checkbox" name="check-has-photo" value="" id="check-has-photo">
+            <label for="check-has-photo" class="check-has-photo">
+              上传一张明信片图片
+            </label>
+            <br>
+          </div>
+          <div class="upload-action-container">
+            <input class="item-content" type="file" name="card_photo_file" id="card_photo_file"
+                   placeholder="postcard photo when sent">
+            <label class="item-error-msg" id="item-error-msg"></label>
+          </div>
+        </div>
+        <span style="display: none; clear:both"></span>
+      </div>
+      <div class="postal-info-item twoColumn">
+        <div class="postal-info-title"></div>
+        <div class="postal-info-content">
+          <button id="btn-confirm-send-card" name="btn-confirm-sent-card" class="button">确定发送明信片
+          </button>
+          <label class="item-error-msg" id="send-card-result-msg"></label>
+        </div>
+        <span style="display: none; clear:both"></span>
+      </div>
+    </div>
+  </div>
+
+
+</div>
 
 {% endblock %}
 
 {% block jscontainer %}
-<script type="text/javascript" src="{{STATIC_URL}}lib/angular.js"></script>
-<script src="{{STATIC_URL}}lib/angular-ui-router.min.js" type="text/javascript" ></script>
 <script type="text/javascript" src="{{STATIC_URL}}javascripts/send-card-page.js"></script>
 {% endblock %}

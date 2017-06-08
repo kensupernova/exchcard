@@ -1,3 +1,7 @@
+.public-main-content-container{
+  border: 1px solid red;
+}
+
 .h-image-container {
   height: 120px;
   width: 120px;
@@ -25,7 +29,8 @@
 
 .action-btn-container .action-btn {
   border: solid 1px red;
-  width: 7em;
+  min-width: 7em;
+  padding: 0 2px;
   display: inline-block;
 }
 

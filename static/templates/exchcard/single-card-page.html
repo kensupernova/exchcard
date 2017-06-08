@@ -5,11 +5,12 @@
 {% endblock %}
 
 {% block content %}
-<div class="content-container">
+<div class="content-container single-card-content-container">
   <div class="postal-info-container" >
-    <div id="post-cardname-holder" style="display: none;">{{card.card_name}}</div>
+    <div id="post-card-name-holder" style="display: none;">{{card.card_name}}</div>
     <div id="post-id-holder" style="display: none;">{{card.id}}</div>
 
+    <div class="single-card-main-title">单张明信片</div>
     <div class="postal-info-item twoColumn">
       <div class="postal-info-title">寄送者:</div>
       <div class="postal-info-content">
@@ -54,19 +55,22 @@
     </div>
 
     <div class="postal-info-item twoColumn">
-      <div class="postal-info-title">明信片的图片:</div>
+      <div class="postal-info-title">明信片的图片墙:</div>
       <div class="postal-info-content">
         <div class="card-photos-container" id="card-photos-container">
-          <div><img src="{{STATIC_URL}}images/ex-card-photo.jpg"></div>
-          {% for card_photo in card_photos %}
-            <div><img src="{{card_photo.card_photo.url}}"></div>
-          {% endfor %}
+          {% if card_photos %}
+            {% for card_photo in card_photos %}
+          <div><img src="{{card_photo.card_photo.url}}"></div>
+            {% endfor %}
+          {% else %}
+          <div>空</div>
+          {% endif %}
         </div>
-        <div>
-          <div class="upload-photo-title">添加更多图片</div>
-          <input class="item-content" type="file" name="card_photo_file" id="card_photo_file" placeholder="postcard photo">
-          <input type="button" id="upload-btn" value="上传">
-          <label class="item-error-msg" id="upload-error-msg"></label>
+        <div class="upload-card-photo-container">
+          <div class="upload-photo-title">我要添加这张明信片的图片</div>
+          <input class="item-content" type="file" name="card_photo_file" id="card_photo_file"
+                 placeholder="postcard photo">
+          <input type="button" id="upload-btn" value="上传明信片图片">
           <label class="item-error-msg" id="upload-result-msg"></label>
         </div>
       </div>

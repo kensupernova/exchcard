@@ -1,0 +1,27 @@
+{% extends "foundation.html" %}
+
+{% block headinfo %}
+<link href="{{STATIC_URL}}styles/send-card-page-angular.css" rel="stylesheet"/>
+{% endblock %}
+
+
+{% block content %}
+<div ng-app="myApp", class="sent-card-main-container">
+  <div class="sent-card-main-title">寄送明信片</div>
+  <div style="display: none;">
+  <!--ui-sref为state name-->
+  <a ui-sref="warning" ui-sref-active="active" id="tab-warnning" class="tab-btn">Get Address</a>
+  <a ui-sref="address" ui-sref-active="active" id="tab-address" class="tab-btn">Address Got</a>
+  </div>
+  <ui-view>
+  </ui-view>
+</div>
+
+
+{% endblock %}
+
+{% block jscontainer %}
+<script type="text/javascript" src="{{STATIC_URL}}lib/angular.js"></script>
+<script src="{{STATIC_URL}}lib/angular-ui-router.min.js" type="text/javascript" ></script>
+<script type="text/javascript" src="{{STATIC_URL}}javascripts/send-card-page-angular.js"></script>
+{% endblock %}

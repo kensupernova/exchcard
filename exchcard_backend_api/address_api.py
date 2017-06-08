@@ -72,9 +72,7 @@ class GetOneRandomAddressView(generics.RetrieveAPIView):
     def get_object(self):
         ## get one randomly
         obj = Address.objects.order_by("?").first()
-
         ## print AddressSerializer(obj).data
-
         return obj
 
 
@@ -104,7 +102,8 @@ class GetAddressViewWithNameField(generics.ListAPIView):
         # query params are like ?sortby=some_parameter
         # sortby = self.request.query_params.get('sortby', None) ## query是?sortby=
 
-        return Address.objects.filter(name=name)[0]
+        return Address.objects.filter(name=name)
+
 
 class GetAddressViewWithNameQuery(generics.ListAPIView):
     serializer_class = AddressSerializer

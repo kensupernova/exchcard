@@ -35,11 +35,10 @@ urlpatterns = [
     # send a card
     url(r'^card/send/$', 'exchcard.views.card_send'),
     url(r'^card/send/confirm/$', 'exchcard.views.card_send_confirm'),
-
+    # receive a card
     url(r'^card/receive/$', 'exchcard.views.card_receive'),
     # 查看还在路途中的某张明信片
     url(r'^card/travelling/(?P<cardname>.+)/$', 'exchcard.views.card_travelling'),
-    # register a card
     # view a card with cardname
     url(r'^card/(?P<cardname>.+)/$', 'exchcard.views.view_single_card'),
 
@@ -54,16 +53,11 @@ urlpatterns = [
 
     url(r'^about/$', 'exchcard.views.about'),
 
-
     # 后台管理
     url(r'^admin/', include(admin.site.urls)),
 
     # 前后端分离设计，这是后端API设计，基于rest framework
     url(r'^exchcard/api/', include('exchcard_backend_api.urls')),
-    url(r'^oneverse/api/', include('oneverse_api.urls')),
-
-    # oneverse的url
-    url(r'^oneverse/', include('oneverse.urls')),
 
     # 服务静态HTML文件
     url(r'^html/$', TemplateView.as_view(template_name='index.html')),
@@ -77,5 +71,8 @@ urlpatterns = [
     # 其他
     url(r'^search/$', 'exchcard.views_search.search'),
     url(r'^upload/file/$', 'exchcard.views_upload_file.uploadFile'),
+
+    # url(r'^oneverse/api/', include('oneverse_api.urls')),
+    # url(r'^oneverse/', include('oneverse.urls')),
 
 ]

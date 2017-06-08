@@ -1,3 +1,4 @@
+# coding: utf-8
 def foo(x, *args, **kwargs):
     print "------------------"
     print "x=", x

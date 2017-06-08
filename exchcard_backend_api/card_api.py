@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 import json
+
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
-from exchcard.models_profile import Card,CardPhoto, Profile
+from exchcard.models_profile import Card,CardPhoto, Profile, ReceiveCardAction, UploadCardPhotoAction
 from exchcard.models_profile import DianZan
 from exchcard_backend_api.permissions import IsSenderStaffOrReadOnly
-from exchcard_backend_api.serializers import CreateCardSerializer, CardSerializer, CardPhotoSerializer
+from exchcard_backend_api.serializers import CreateCardSerializer, CardSerializer, CardPhotoSerializer, \
+    SentCardActionSerializer, ReceiveCardActionSerializer, UploadCardPhotoActionSerializer
 from exchcard_backend_api.serializers import DianZanSerializer
 from rest_framework import generics
 from rest_framework import permissions
@@ -63,12 +66,241 @@ class CardDetail(generics.RetrieveAPIView):
 
 ################################################------------------------------------
 # API VIEWS
+@api_view(["GET"])
+@permission_classes([permissions.IsAuthenticated, ])
+def get_address_before_confirm_send_card(request):
+    """
+    仅仅得到一个地址，在用户发送请求寄送明信片时，不创建明信片
+    :param request:
+    :return:
+    """
+    if request.method == "GET":
+        # the sender_id must be the current log in user exchcard_backend_api
+        try:
+            profile_of_request_user = Profile.objects.get(profileuser=request.user)
+
+            # TODO: COMMENT OUT FOR DEBUG FINISHED
+            # randomProfile = Profile.objects.order_by("?").first()
+            randomProfile = profile_of_request_user # FOR DEBUG
+
+            response_data= {}
+            response_data["card_name"] = utils.generateUniquePostcardName()
+            response_data["torecipient_id"] = randomProfile.id
+            response_data['name'] = randomProfile.profileaddress.name
+            response_data['address'] = randomProfile.profileaddress.address
+            response_data['postcode'] = randomProfile.profileaddress.postcode
+            response_data['country'] = randomProfile.profileaddress.country
+
+            # print "pre postal address information is {0}".format(response_data)
+
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+        except Profile.DoesNotExist:
+            return Response({"details": "Profile of the request.user does not exit!"})
+
+
+@api_view(["POST"])
+@permission_classes([permissions.IsAuthenticated, ])
+def confirm_send_card_no_photo(request):
+    """
+    用户确定发送，创建明信片, 可以有图片， 或者没有
+    :param request:
+    :return:
+    """
+
+    try:
+        profile_of_logged_user = Profile.objects.get(profileuser=request.user)
+    except Profile.DoesNotExist:
+        return HttpResponse(json.dumps({
+            "details": "Can not find profile of the logger user, possibly not address"
+        }), status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == "POST":
+        # print request.data ## <QueryDict
+        # print request.FILES # <MultiValueDict: {}>
+        # if not key, raise MultiValueDictKeyError
+
+        # has_photo_int = request.data["has_photo_int"]
+        #
+        # if has_photo_int == 1 or has_photo_int == "1":
+        #     print "has photo"
+        # else:
+        #     print "not photo"
+
+        card_name = request.data["card_name"]
+        torecipient_id = request.data["torecipient_id"]
+
+        # create a card, sent postcard action, no photo
+        # activity_type_id = 1, SP
+
+        # card = Card.objects.create_with_profile_ids(card_name=card_name,
+        #                                             torecipient_id=torecipient_id,
+        #                                             fromsender_id=profile_of_logged_user.id)
+        #
+
+        card, sent_card_no_photo_action = Card.objects.create_with_card_action_objs_returned(
+            card_name=card_name,
+            torecipient_id=torecipient_id,
+            fromsender_id=profile_of_logged_user.id
+        )
+
+
+        card_s = CardSerializer(card, context={'request': request})
+        action_s = SentCardActionSerializer(sent_card_no_photo_action, context={'request': request})
+
+        return Response(
+            {"card": card_s.data,
+            "sent_card_action": action_s.data},
+            status=status.HTTP_201_CREATED
+        )
+
+
+@api_view(["POST"])
+@permission_classes([permissions.IsAuthenticated, ])
+def confirm_send_card_with_photo(request):
+    """
+    用户确定发送，创建明信片, 可以有图片， 或者没有
+    :param request:
+    :return:
+    """
+    try:
+        profile_of_logged_user = Profile.objects.get(profileuser=request.user)
+    except Profile.DoesNotExist:
+        return HttpResponse(json.dumps({
+            "details": "Can not find profile of the logger user, possibly not address"
+        }), status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == "POST":
+        # print request.data ## <QueryDict
+        # print request.FILES # <MultiValueDict: {}>
+
+        # has_photo_int = request.data["has_photo_int"]
+        #
+        # if has_photo_int == 1 or has_photo_int == "1":
+        #     print "has photo"
+        # else:
+        #     print "not photo"
+
+        card_name = request.data["card_name"]
+        torecipient_id = request.data["torecipient_id"]
+
+        # create a card, cardphoto; sent postcard action with photo
+        # activity_type_id = 2, SPP
+        card_photo_file = request.FILES['card_photo']
+        card_photo_file.name = hash_file_name(card_photo_file.name)
+
+        # photo = CardPhoto(owner=profile_of_logged_user,
+        #                   card_host=card,
+        #                   card_photo=card_photo_file)
+        # photo.save()
+
+        card, sent_card_has_photo_action, card_photo = \
+            Card.objects.create_with_card_action_photo_objs_returned(
+            card_name=card_name, torecipient_id=torecipient_id, fromsender_id=profile_of_logged_user.id,
+            card_photo_file=card_photo_file
+        )
+
+        card_s = CardSerializer(card, context={'request': request})
+        action_s = SentCardActionSerializer(sent_card_has_photo_action)
+        card_photo_s = CardPhotoSerializer(card_photo)
+
+        return Response(
+            {
+                "card": card_s.data,
+                 "sent_card_photo_action": action_s.data,
+                 "card_photo": card_photo_s.data
+             },
+            status=status.HTTP_201_CREATED
+        )
+
+
+@api_view(["POST"])
+@permission_classes([permissions.IsAuthenticated, ])
+def confirm_send_card(request):
+    """
+    用户确定发送，创建明信片, 可以有图片， 或者没有
+    :param request:
+    :return:
+    """
+    try:
+        profile_of_logged_user = Profile.objects.get(profileuser=request.user)
+    except Profile.DoesNotExist:
+        return HttpResponse(json.dumps({
+            "details": "Can not find profile of the logger user, possibly not address"
+        }), status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == "POST":
+        print request.data ## <QueryDict
+        print request.FILES # <MultiValueDict: {}>
+
+        card_name = request.data["card_name"]
+        torecipient_id = request.data["torecipient_id"]
+
+        has_photo_int = request.data["has_photo_int"]
+
+        if has_photo_int == 1 or has_photo_int == "1":
+            print "sent a postcard has photo, SPP"
+            # create a card, action, card photo;
+            # sent postcard action with photo
+            # activity_type_id = 2, SPP
+
+            card_photo_file = request.FILES['card_photo']
+            card_photo_file.name = hash_file_name(card_photo_file.name)
+
+            # photo = CardPhoto(owner=profile_of_logged_user,
+            #                   card_host=card,
+            #                   card_photo=card_photo_file)
+            # photo.save()
+
+            card, sent_card_has_photo_action, card_photo = \
+                Card.objects.create_with_card_action_photo_objs_returned(
+                    card_name=card_name, torecipient_id=torecipient_id, fromsender_id=profile_of_logged_user.id,
+                    card_photo_file=card_photo_file
+                )
+
+            card_s = CardSerializer(card, context={'request': request})
+            action_s = SentCardActionSerializer(sent_card_has_photo_action)
+            card_photo_s = CardPhotoSerializer(card_photo)
+
+            return Response(
+                {
+                    "card": card_s.data,
+                    "sent_card_photo_action": action_s.data,
+                    "card_photo": card_photo_s.data
+                },
+                status=status.HTTP_201_CREATED
+            )
+
+        else:
+            print "sent a postcard with not photo"
+            # create a card, action;
+            # activity_type_id = 1, SP
+
+            card, sent_card_no_photo_action = Card.objects.create_with_card_action_objs_returned(
+                card_name=card_name,
+                torecipient_id=torecipient_id,
+                fromsender_id=profile_of_logged_user.id
+            )
+
+            card_s = CardSerializer(card, context={'request': request})
+            action_s = SentCardActionSerializer(sent_card_no_photo_action, context={'request': request})
+
+            return Response(
+                {"card": card_s.data,
+                 "sent_card_action": action_s.data},
+                status=status.HTTP_201_CREATED
+            )
+
+
+
+
+
 
 @api_view(["GET", "POST"])
 @permission_classes([permissions.IsAuthenticated, ])
-def add_new_card(request):
+def add_new_card_no_photo(request):
     """
-    Create a new card, initiated when user request a mailing address.
+    Create a new card, initiated when user request a mailing address. not card photo!!!
     :param request:
     :return:
     """
@@ -77,10 +309,11 @@ def add_new_card(request):
         try:
             profile_of_request_user = Profile.objects.get(profileuser = request.user)
 
-            randomProfile = Profile.objects.order_by("?").first()
+            # randomProfile = Profile.objects.order_by("?").first()
+            randomProfile = profile_of_request_user # FOR DEBUG
 
             data = {}
-            data["card_name"] = utils.generatePostCardName()
+            data["card_name"] = utils.generateUniquePostcardName()
             data["torecipient_id"] = randomProfile.id
             data["fromsender_id"] = profile_of_request_user.id
 
@@ -88,7 +321,7 @@ def add_new_card(request):
                                                         torecipient_id=data["torecipient_id"],
                                                         fromsender_id=data["fromsender_id"])
 
-            print data
+            # print data
 
             data['torecipient'] = {}
             data['torecipient']['name'] = randomProfile.profileaddress.name
@@ -104,8 +337,7 @@ def add_new_card(request):
             Response({"details": "Profile of the request.user does not exit!"},
                      status=status.HTTP_404_FORBIDDEN)
 
-
-        # serializer = CreateCardSerializer(data = data)
+        # serializer = CreateCardSerializer(data=request.data)
         # if serializer.is_valid():
         #     serializer.save() ## 创建了新明信片
         #
@@ -116,7 +348,7 @@ def add_new_card(request):
         #
         #     print "new card information is {0}".format(data)
         #
-        #     return Response(data, status=status.HTTP_201_CREATED)
+        #     return HttpResponse(json.dumps(data), content_type="application/json")
         #
         # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -124,7 +356,7 @@ def add_new_card(request):
 # @csrf_exempt
 @api_view(["POST", ])
 @permission_classes([permissions.IsAuthenticated, ])
-def receive_a_card(request):
+def receive_a_card_no_photo(request):
     """
     recevie a card from others
     :param request:
@@ -154,15 +386,23 @@ def receive_a_card(request):
 
         ## check wether the recipient id is the one of the request
         if profile_from_request_user.id == recipient_profile_id:
-            card.mark_arrived()
+            card.mark_arrived(has_photo=False)
 
-            data= {}
-            data['card_name'] = card.card_name
-            data['arrived_time']=card.arrived_time
-            data['has_arrived'] = card.has_arrived
+            response_data = {}
+            response_data['card_name'] = card.card_name
+            response_data['arrived_time'] = card.arrived_time
+            response_data['has_arrived'] = card.has_arrived
+            response_data["card_host_id"] = card.id
+            response_data["owner_id"] = profile_from_request_user.id
 
-            return Response(data,
-                        status=status.HTTP_200_OK)
+            action = ReceiveCardAction.objects.get(card_received=card)
+            action_s = ReceiveCardActionSerializer(action)
+            response_data["action"] = action_s.data
+
+            # print response_data
+
+            return Response(response_data, status=status.HTTP_201_CREATED)
+
 
         else:
             return Response({"details": "You are not the recipient of the card %s " % card_name},
@@ -173,7 +413,7 @@ def receive_a_card(request):
 @api_view(["POST", ])
 @permission_classes([permissions.IsAuthenticated, ])
 @parser_classes([MultiPartParser, FormParser])
-def receive_a_card_with_photo(request, format=None):
+def receive_a_card_with_photo(request):
     """
     recevie a card from others, register a card
     :param request:
@@ -195,11 +435,11 @@ def receive_a_card_with_photo(request, format=None):
         #### add photo
         card_name = request.data["card_name"]
         # f = request.data['card_photo']
-        f = request.FILES['card_photo']
-        f.name = hash_file_name(f.name)
+        card_photo_file = request.FILES['card_photo']
+        card_photo_file.name = hash_file_name(card_photo_file.name)
 
         try:
-            card = Card.objects.get(card_name=card_name)
+            card = Card.objects.filter(card_name=card_name).first()
         except Card.DoesNotExist:
             return Response({"details":"card with post id is invalid"},
                         status=status.HTTP_404_NOT_FOUND)
@@ -211,28 +451,26 @@ def receive_a_card_with_photo(request, format=None):
 
         ## check wether the recipient id is the one of the request
         if profile_from_request_user.id == card.torecipient.id:
-            card.mark_arrived()
+            card.mark_arrived(has_photo=True) # VERY IMPORTANT
 
             response_data= {}
             response_data['card_name'] = card.card_name
             response_data['arrived_time']=card.arrived_time
             response_data['has_arrived'] = card.has_arrived
-
-            photo = CardPhoto(owner=profile_from_request_user,
-                              card_host=card,
-                              card_photo=f)
-            photo.save()
-
-            name = photo.card_photo.name
-            url = photo.card_photo.url
-
-            ### related to the photo of card
-            response_data["name_on_server"] = name
-            response_data["url_on_server"] = url
             response_data["card_host_id"] = card.id
             response_data["owner_id"] = profile_from_request_user.id
 
-            print response_data
+            action = ReceiveCardAction.objects.get(card_received=card)
+            action_s = ReceiveCardActionSerializer(action)
+            response_data["action"] = action_s.data
+
+            photo = CardPhoto(owner=profile_from_request_user,
+                              card_host=card,
+                              card_photo=card_photo_file)
+            photo.save()
+
+            response_data["card_photo_name"] = photo.card_photo.name
+            response_data["card_photo_url"] = photo.card_photo.url
 
             return Response(response_data, status=status.HTTP_201_CREATED)
 
@@ -250,6 +488,13 @@ def upload_cardphoto(request):
     :param request:
     :return:
     """
+    try:
+        profile_from_request_user = Profile.objects.get(profileuser
+                                                        =request.user)
+    except Profile.DoesNotExist:
+        return Response({"details": "Can not find profile"},
+                        status=status.HTTP_404_NOT_FOUND)
+
     if request.method == "POST":
 
         card_name = request.data["card_name"]
@@ -258,12 +503,6 @@ def upload_cardphoto(request):
         f.name = hash_file_name(f.name)
 
         # print card_name
-        try:
-            profile_from_request_user = Profile.objects.get(profileuser
-                                                   =request.user)
-        except Profile.DoesNotExist:
-            return Response({"details": "Can not find profile"},
-                            status=status.HTTP_404_NOT_FOUND)
 
         try:
             card = Card.objects.get(card_name=card_name)
@@ -304,13 +543,21 @@ def upload_cardphoto(request):
 @api_view(["POST"])
 @permission_classes([permissions.IsAuthenticated, ])
 @parser_classes([MultiPartParser, FormParser])
-def upload_photo_for_card_cardname(request, card_name):
+def upload_cardphoto_afterwards_by_cardname(request, card_name):
     """
     Upload a photo for an card
     :param request:
     :param card_name:
     :return:
     """
+    try:
+        profile_from_request_user = Profile.objects.get(profileuser
+                                                        =request.user)
+    except Profile.DoesNotExist:
+        return Response({"details": "Can not find profile"},
+                            status=status.HTTP_404_NOT_FOUND)
+
+
     if card_name != request.data["card_name"]:
         return Response({"details": "card name in url %s != card name in request %s"
                                     % (card_name, request.data["card_name"])},
@@ -322,18 +569,10 @@ def upload_photo_for_card_cardname(request, card_name):
         f = request.FILES['card_photo']
         f.name = hash_file_name(f.name)
 
-        # print card_name
-        try:
-            profile_from_request_user = Profile.objects.get(profileuser
-                                                   =request.user)
-        except Profile.DoesNotExist:
-            return Response({"details": "Can not find profile"},
-                            status=status.HTTP_404_NOT_FOUND)
-
         try:
             card = Card.objects.get(card_name=card_name)
         except Card.DoesNotExist:
-            return Response({"details":"card with post id %s is invalid" % card_name},
+            return Response({"details":"card with card name %s is invalid" % card_name},
                         status=status.HTTP_404_NOT_FOUND)
 
 
@@ -347,23 +586,17 @@ def upload_photo_for_card_cardname(request, card_name):
 
             serializer = CardPhotoSerializer(photo)
 
-            # name = photo.card_photo.name
-            # url = photo.card_photo.url
-            #
-            # ##bucket = utils.get_bucket()
-            # ##bucket.put_object("%s-avatar.jpg"%pk, request.response_data['avatar'])
-            #
-            # response_data = {}
-            # response_data['card_name'] = card.card_name
-            # response_data["name_on_server"] = name
-            # response_data["url_on_server"] = url
-            # response_data["card_photo"] = photo.card_photo
-            # response_data["card_host_id"] = card.id
-            # response_data["owner_id"] = profile_from_request_user.id
-            #
-            # print response_data
+            action = UploadCardPhotoAction(subject=request.user, card_actioned=card)
+            action.save()
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            action_s = UploadCardPhotoActionSerializer(action)
+
+            return Response(
+                {
+                    "card_photo":serializer.data,
+                    "action": action_s.data
+                },
+                status=status.HTTP_201_CREATED)
 
         else:
             return Response({"details": "You are neither sender nor recipient of the card!"},
@@ -374,7 +607,7 @@ def upload_photo_for_card_cardname(request, card_name):
 @api_view(["POST"])
 @permission_classes([permissions.IsAuthenticated, ])
 @parser_classes([MultiPartParser, FormParser])
-def upload_photo_for_card_by_id(request, pk, format=None):
+def upload_cardphoto_afterwards_by_id(request, pk):
     if request.method == "POST":
         try:
             profile_from_request = Profile.objects.get(profileuser=request.user)
@@ -422,7 +655,7 @@ def upload_photo_for_card_by_id(request, pk, format=None):
 
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated, ])
-def card_check_isarrived(request, pk):
+def card_check_is_arrived(request, pk):
     """
     Check whether a card has registered or not
     :param request:
@@ -432,7 +665,8 @@ def card_check_isarrived(request, pk):
         card = Card.objects.get(pk=pk)
 
         return Response({
-            "hasArrived": card.has_arrived
+            "hasArrived": card.has_arrived,
+            "isArrived": card.has_arrived
         })
 
     except Card.DoesNotExist:

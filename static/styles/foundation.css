@@ -67,8 +67,8 @@ header div{
 
 /*篡改bootstrap的设计*/
 .row {
-  margin-right: 0px;
-  margin-left: 0px;
+  margin-right: 0;
+  margin-left: 0;
 }
 
 .spanner {
@@ -102,11 +102,18 @@ header div{
 }
 
 .spanner .profile-setting div#setting a:hover {
+   text-decoration: none;
+   color: white;
+
+ }
+
+.spanner .profile-setting div#setting a.active {
   text-decoration: none;
   color: white;
+
 }
 
-div.profile-setting.right{
+.profile-setting.right{
   border: 1px solid red;
 }
 
@@ -123,6 +130,10 @@ div.profile-setting.right{
   cursor: pointer;
 }
 
+.profile-setting div:hover a {
+  color: white;
+  text-decoration: none;
+}
 
 .nav {
   background-color:white;
@@ -215,7 +226,7 @@ div.profile-setting.right{
   top: calc(100% - 0px);
   padding-top: 0px;
   left: 0;
-  z-index: 30000;
+  z-index: 300;
 
 }
 
@@ -225,11 +236,12 @@ div.profile-setting.right{
 }
 
 .nav ul li.dropdown ul.collapsed li{
-  float:none;
+  float: none;
   width: calc(99% - 4px);
-  margin: 2px;
+  margin: 1px;
   height: 20px;
   line-height: 20px;
+  z-index: 300;
 }
 
 .nav ul li.dropdown ul.collapsed li a{
@@ -247,4 +259,9 @@ footer p {
 
 .copyright{
   margin: 0 auto;
+}
+
+
+.content-container {
+  border: solid 1px red;
 }

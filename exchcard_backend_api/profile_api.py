@@ -13,7 +13,9 @@ from exchcard_backend_api.serializers import GetProfileWithCardSerializer
 from exchcard_backend_api.serializers import GetUserAddressProfileSerializer
 from exchcard_backend_api.serializers import UserAddressProfileSerializer
 from exchcard_backend_api.serializers import UserSerializer, CardSerializer
+
 from multiple_model.views import MultipleModelAPIView
+
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
@@ -57,6 +59,7 @@ class RegisterProfileView(generics.CreateAPIView):
     permission_classes = [
         permissions.IsAuthenticated
     ]
+
 
 # ## multi model views with multi serializers
 # ## permission limit access to admin users
@@ -216,9 +219,10 @@ def get_random_profile(request, format=None):
     if request.method == "GET":
         try:
             profile = Profile.objects.order_by("?").first()
+            # profile = Profile.objects.get(profileuser=request.user) ## 自己给自己发送明信片，FOR DEBUG
 
         except Profile.DoesNotExist:
-            return Response({"detail": "404 NOT FOUND"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"details": "404 NOT FOUND"}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = GetUserAddressProfileSerializer(profile)
 
@@ -231,7 +235,7 @@ def get_random_profile(request, format=None):
 
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated, ])
-def get_avatar_url(request, format=None):
+def get_avatar_url(request):
     """
     得到avatar photo的url
     :param request:
@@ -243,17 +247,15 @@ def get_avatar_url(request, format=None):
         try:
             profile = Profile.objects.get(profileuser=request.user)
 
-            photos = AvatarPhoto.objects.filter(owner=profile).order_by('-created') ## 得到最新添加图片
+            avatars = AvatarPhoto.objects.filter(owner=profile).order_by('-created') ## 得到最新添加图片
 
             # count = AvatarPhoto.objects.filter(owner=profile).count()
             # print "头像图片总数为{0}".format(count)
             # print "头像图片总数为{0}".format(len(photos))
 
-            if len(photos)>1:
-                photo = photos[0]
-            elif len(photos)==1:
-                photo = photos.first()
-            elif len(photos) < 1:
+            if len(avatars) > 1:
+                photo = avatars.first()
+            elif len(avatars) < 1:
                 # print "no avatar photo, use default"
                 return Response({
                     "avatar_url": "/static/images/default-avatar.jpg",

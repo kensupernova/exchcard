@@ -87,11 +87,11 @@ urlpatterns = format_suffix_patterns([
         name="profile-update-with-ids"),
     url(r"^profiles/getrandom/$",
         "exchcard_backend_api.profile_api.get_random_profile",
-        name="profile-getrandom-for-card"),
+        name="profile-get-random-for-sent-card"),
 
     url(r'^profiles/avatar/url/$',
         "exchcard_backend_api.profile_api.get_avatar_url",
-        name="profile-get-avatar-photo-url"),
+        name="profile-get-avatar-url"),
 
     ## 头像图片上传
     url(r'^profiles/avatar/upload/$',
@@ -146,15 +146,23 @@ urlpatterns = format_suffix_patterns([
     url(r"^cards/(?P<pk>[0-9]+)/$", card_api.CardDetail.as_view(),
         name="card-detail"),
     ## 创建新的明信片，当用户申请邮寄地址时创建，并把明信片收信人地址返回
-    url(r"^cards/add/$",
-        "exchcard_backend_api.card_api.add_new_card",
-        name="card-add"),
+    url(r"^cards/add/no/photo/$",
+        "exchcard_backend_api.card_api.add_new_card_no_photo",
+        name="card-add-no-photo"),
+    url(r"^cards/get/address/$", "exchcard_backend_api.card_api.get_address_before_confirm_send_card",
+        name="get-address-only"),
+    url(r"^cards/confirm/send/card/$", "exchcard_backend_api.card_api.confirm_send_card",
+        name="confirm_send_card"),
+    url(r"^cards/confirm/send/card/no/photo/$", "exchcard_backend_api.card_api.confirm_send_card_no_photo",
+        name="confirm_send_card_no_photo"),
+    url(r"^cards/confirm/send/card/with/photo/$", "exchcard_backend_api.card_api.confirm_send_card_with_photo",
+        name="confirm_send_card_with_photo"),
 
-    ## 当明信片到达，接收方注册
+    ## 接收明信片，没有照片
     url(r"^cards/receive/$",
-        "exchcard_backend_api.card_api.receive_a_card",
-        name="card-receive"),
-    ## 注册明信片，带照片
+        "exchcard_backend_api.card_api.receive_a_card_no_photo",
+        name="card-receive-no-photo"),
+    ## 接收明信片，带照片
     url(r"^cards/receive/photo/$",
         "exchcard_backend_api.card_api.receive_a_card_with_photo",
         name="card-receive-with-photo"),
@@ -162,21 +170,22 @@ urlpatterns = format_suffix_patterns([
     ## 单独为某明信片上传图片
     url(r"^cards/upload/photo/$",
         "exchcard_backend_api.card_api.upload_cardphoto",
-        name="card-upload-photo"
+        name="card-upload-photo-after"
         ),
+    # 明信片创建，不管是否达到，为明信片上传图片
     url(r"^cards/(?P<card_name>.+)/upload/photo/$",
-        "exchcard_backend_api.card_api.upload_photo_for_card_cardname",
-        name="card-upload-photo-2"
+        "exchcard_backend_api.card_api.upload_cardphoto_afterwards_by_cardname",
+        name="card-upload-photo-afterwards"
         ),
     url(r"^cards/(?P<pk>[0-9]+)/upload/photo2/$",
-        'exchcard_backend_api.card_api.upload_photo_for_card_by_id',
-        name="card-photo-upload-by-id"),
+        'exchcard_backend_api.card_api.upload_cardphoto_afterwards_by_id',
+        name="card-photo-upload-afterwards2"),
 
     url(r"^cards/(?P<pk>[0-9]+)/update/$",
         "exchcard_backend_api.card_api.update_destrory_card",
         name="card-update"),
-    url(r"^cards/(?P<pk>[0-9]+)/hasarrived/$",
-        "exchcard_backend_api.card_api.card_check_isarrived",
+    url(r"^cards/(?P<pk>[0-9]+)/is-arrived/$",
+        "exchcard_backend_api.card_api.card_check_is_arrived",
         name="card-check-arrive"),
 
     # 某张明信片的某张照片得到的某个点赞
@@ -225,6 +234,7 @@ urlpatterns = format_suffix_patterns([
 ## ------------------------------------------------------------
     url(r"^moments/followings/activities/$", "exchcard_backend_api.moments_api.get_all_activities_of_my_followings",
         name="get-all-activities-of-my-followings"),
+
 ## ------------------------------------------------------------
     ## 其他
     url(r"^storage/sae/s3/$", "exchcard_backend_api.upload_api.sae_s3_storage"),

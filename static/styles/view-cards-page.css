@@ -1,6 +1,7 @@
 
 .cards-info-container{
   margin-top:.5em;
+  border: red 1px solid;
 }
 
 .cards-info-main-title{

@@ -2,6 +2,7 @@
 
 {% block headinfo %}
 <style>
+
   .receive-card-container {
     width: 60%;
     border: 1px solid red;
@@ -53,15 +54,20 @@
     text-align: left;
   }
 
-  .btn-submit{
+  .submit-action-container{
     margin-top:1.5em;
   }
 
-  .btn-submit button {
+  .submit-action-container button {
     min-width: 6em;
+    margin-bottom: 1em;
+  }
+  .submit-action-container button:hover {
+    background: red;
+    color: white;
   }
 
-  .btn-submit .receive-card-result{
+  .submit-action-container .receive-card-result{
     display: inline-block;
     /*border: 1px solid red;*/
     min-width: 6em;
@@ -73,8 +79,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="content-container">
-
+<div class="content-container receive-card-content-container">
   <div id="receive-card-container" class="receive-card-container">
     {% csrf_token %}
     <div>
@@ -92,16 +97,13 @@
       <label class="item-error-msg"></label>
       <div style="display: none; clear: both"></div>
     </div>
-    <div class="btn-submit">
-      <button id="submit">Submit</button>
-      <div class="receive-card-result" id="receive-card-result"></div>
+    <div class="submit-action-container">
+      <button id="btn-submit">Register</button>
+      <div class="receive-card-result" id="receive-card-result-msg"></div>
+      <div class="receive-card-result" id="receive-card-result-details"></div>
     </div>
 
-    {% if errors %}
-    <p style="color: red;">
-      Please correct the error {{ errors|pluralize }} below.
-    </p>
-    {% endif %}
+
   </div>
 
   <!--通过前端Form-->
@@ -116,6 +118,11 @@
     <!--</p>-->
     <!--{% endif %}-->
   <!--</form>-->
+  <!--{% if errors %}-->
+  <!--<p style="color: red;">-->
+    <!--Please correct the error {{ errors|pluralize }} below.-->
+  <!--</p>-->
+  <!--{% endif %}-->
 
 
 </div>

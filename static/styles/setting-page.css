@@ -134,7 +134,7 @@
 /*地址信息页面格式*/
 .address-info-container{
   border: 1px solid red;
-  width: 60%;
+  width: 80%;
 }
 
 .address-info-container .address-info-main-title h3{
@@ -215,7 +215,7 @@ button#save-address.active span{
 /*头像信息页面*/
 .avatar-info-container{
   border: 1px solid red;
-  width: 60%;
+  width: 80%;
 }
 
 .avatar-info-container .avatar-old-container{

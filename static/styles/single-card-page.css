@@ -1,3 +1,13 @@
+.single-card-main-title {
+  font-size: 16px;
+  font-weight: bolder;
+  margin-bottom: 1em;
+}
+
+.postal-info-container {
+
+}
+
 .postal-title-container {
   margin-bottom: 0.5em;
   font-weight:bold;
@@ -28,7 +38,7 @@
   margin-bottom:2px;
 }
 
-.postal-info-content .card-photos-container div {
+.postal-info-content .card-photos-container div.img-container {
   margin:2px;
   border: 1px gray solid;
   display: inline-block;
@@ -56,6 +66,11 @@
   margin-top:0.5em;
 }
 
-.postal-info-content .upload-photo-title {
+.postal-info-content .upload-card-photo-container .upload-photo-title {
   margin-top: 1em;
+}
+
+.upload-card-photo-container {
+  margin-top: 1em;
+  border: 1px solid red;
 }

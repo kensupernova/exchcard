@@ -10,10 +10,9 @@
     url: getActivitiesOfFollowingUrl,
     method: "GET",
     success: function (response) {
-      data = JSON.parse(response);
-      console.log(JSON.stringify(data));
+      /// console.log(JSON.stringify(response));
 
-      data.forEach(function (item, index) {
+      response.forEach(function (item, index) {
         $("#moments-container").append(createActItemContent(item));
       })
 
@@ -35,13 +34,14 @@
       act_short_name = "注册了一张明信片";
     }
 
-    var created = new Date(item['created']);
-    var created_str = created.getFullYear() +"." +
-      (created.getMonth() + 1) +"." +
-      created.getDate() +" " +
-      created.getHours() +":" +
-      created.getMinutes() +
-      " UTC";
+    // IN JSON
+    // "created":"2017-05-26T02:59:47.377354Z"
+    // var d = new Date('2017-05-26T02:59:47.377354Z')
+    // => Fri May 26 2017 10:59:47 GMT+0800 (CST)
+
+    var created = new Date(item['created']); // 已经转化成当地时间, UTC -> UTC+8:00
+    var offset = - created.getTimezoneOffset()/60;
+    var locale_timezone =  ' GMT+' + offset;
 
 
     var text =
@@ -54,7 +54,7 @@
       '    <div class="act-subject">' + item["subject_username"]+'</div>' +
       '    <div class="act-short-name">'+ act_short_name +'</div>' +
       '     </div>' +
-      '     <div class="act-time-container">' + created_str +'</div>' +
+      '     <div class="act-time-container">' + created.toLocaleString() + locale_timezone +'</div>' +
       '     <div class="act-photos-container">' +
       '       <img src="">' +
       '       <img src="">' +

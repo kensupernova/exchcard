@@ -1,5 +1,5 @@
 .section-register {
-  lear: both;
+  clear: both;
   overflow: hidden;
 }
 
@@ -10,23 +10,23 @@
 
 .threeColumn {
 
-
 }
 
-.threeColumn .item {
+.threeColumn.item {
   clear: both;
   overflow: hidden;
   margin-bottom: 2em;;
+
 }
 
-.threeColumn .item .inp-item{
+.threeColumn.item .inp-item{
   float:left;
   width:32%;
   height: 2em;
   margin-bottom: 0;
 }
 
-.threeColumn .item .inp-requirement{
+.threeColumn.item .inp-requirement{
   width:32%;
   float:left;
   height: 2em;
@@ -34,29 +34,37 @@
   margin-bottom: 0;
 }
 
-.threeColumn .item .inp-error{
+.threeColumn.item .inp-error{
   width:32%;
   height: 2em;
   float:left;
   margin-bottom: 0;
 }
 
+.item-submit {
+  height: 2em;
+}
 
-.threeColumn .item #btn-register-submit {
+#btn-register-submit {
   background: white;
   color: black;
-  border: black 1px solid;
+  border: red 1px solid;
   display: inline-flex;
   padding-left: 1em;
   padding-right: 1em;
   min-width: 5em;
   float:left;
+  height: 2em;
+  line-height: 2em;
 }
 
-#btn-register-submit:hover{
+#btn-register-submit:hover {
   background: red;
-  color:white;
+  color: white;
+  box-shadow: red 1px 1px 0px;
+  cursor: pointer;
 }
+
 
 #btn-register-submit:active{
   background: red;

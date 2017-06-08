@@ -1,4 +1,4 @@
-<div ng-controller="myCtrl" class="sent-warning-container">
+<div ng-controller="warningCtrl" class="sent-warning-container">
   <div>
     <div><label class="warning-main-title">注意事项</label></div>
     <div>
@@ -9,15 +9,14 @@
     </div>
   </div>
 
-  <div id="sendForm" class="sendForm">
-    <!--{% csrf_token %}-->
+  <div id="get-address-container" class="get-address-container">
     <div>
-      <input type="checkbox" name="send_postcard" value="" id="send-postcard">
-      <label for="send-postcard" class="send-postcard-wenzi">
+      <input type="checkbox" name="check-confirm-warning" value="" id="check-confirm-warning">
+      <label for="check-confirm-warning" class="confirm-warning-wenzi">
         我已经阅读了上面的文字, 我确定我会向地址发送一张明信片, 并且我确定我会把POST ID写到明信片上面。
       </label><br>
     </div>
-    <button id="sendButton" name="sendButton" class="button" ng-click="confirmGetPostal()">得到地址
+    <button id="btn-get-address" name="btn-get-address" class="button" ng-click="confirmGetAddress()">得到地址
     </button>
   </div>
 

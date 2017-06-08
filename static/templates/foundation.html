@@ -32,7 +32,13 @@
     <header class="header" id="header">
       <!--{% csrf_token %}-->
       <div class="row spanner">
-        <div class="logo-container"><a href="/profile">明信片交换网</a></div>
+        <div class="logo-container">
+          {% if isAuth %}
+            <a href="/profile">明信片交换网</a>
+          {% else %}
+            <a href="/">明信片交换网</a>
+          {% endif %}
+        </div>
         <div class="profile-setting right">
           {% if isAuth %}
             {% if profile %}
@@ -75,7 +81,7 @@
       <div class="nav" id="nav">
         <ul class="md-col-8">
           <li class="dropdown">
-            <a href="/profile/" id="cards">明信片 <span class="arr" >▼</span></a>
+            <a href="/profile/" id="cards">个人主页 <span class="arr" >▼</span></a>
             <ul class="collapsed">
               <li class="collapsed-item"><a href="/profile/cards/">明信片统计</a></li>
               <li class="collapsed-item"><a href="/card/send">寄送明信片</a></li>
@@ -91,7 +97,6 @@
 
 
     </header>
-
 
     {% block content %} {% endblock %}
 

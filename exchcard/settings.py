@@ -145,8 +145,6 @@ INSTALLED_APPS = (
     'rest_framework',
     'exchcard',
     'exchcard_backend_api',
-    'oneverse',
-    'oneverse_api',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -236,7 +234,7 @@ WSGI_APPLICATION = 'exchcard.wsgi.application'
 #     }
 # }
 
-
+APPEND_SLASH=True
 
 # 自定义的用户认证系统
 AUTH_USER_MODEL = 'exchcard.XUser'   # 扩展表的位置，appname.Model,   MyUser是manager app下models中的用户类

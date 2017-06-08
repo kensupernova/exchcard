@@ -1,6 +1,5 @@
-import random
+# coding: utf-8
 import datetime
-import time
 
 def mills2datetime(ms):
     """
@@ -8,12 +7,12 @@ def mills2datetime(ms):
     :param ms: mill seconds
     :return: datetime
     """
-    print ms
     if ms is None:
         return
     if ms == 0:
         return
     return datetime.datetime.fromtimestamp(int(ms/1000))
+
 
 def datetime2milss(dt):
     """

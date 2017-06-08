@@ -304,7 +304,7 @@ def make_a_follow_to_him(request):
         # VERY IMPORTANT !!!
         # CHECK WHETHER ALREADY FOLLOWING HIM!!!
         if Follow.objects.filter(subject_id=user.id).\
-                filter(object_being_followed_id=user_being_followed_id).\
+                filter(user_being_followed_id=user_being_followed_id).\
                 exists():
             return Response({"details":"You had already followed him",
                              "error_msg": "You had already followed him",
@@ -314,7 +314,7 @@ def make_a_follow_to_him(request):
                              "isAlreadyFollowingHimInt": 1,
                              })
 
-        follow = Follow(subject_id=user.id, object_being_followed_id=user_being_followed_id)
+        follow = Follow(subject_id=user.id, user_being_followed_id=user_being_followed_id)
         follow.save()
 
         serializer = FollowSerializer(follow)

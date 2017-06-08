@@ -1,7 +1,9 @@
 #coding: utf-8
+import json
 
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
@@ -95,16 +97,6 @@ def card_send_confirm(request):
 
     return render(request, 'exchcard/send-card-page.html', context)
 
-
-@login_required
-def card_receive(request):
-    profile = Profile.objects.get(profileuser=request.user)
-    context = {'profile': profile, 'user': request.user}
-    context['isAuth'] = True
-    if request.method == "GET":
-        return render(request, 'exchcard/receive-card-page.html', context)
-
-
 """
 查看某张在路途中的明信片
 """
@@ -116,7 +108,22 @@ def card_travelling(request, cardname):
     :param cardname:
     :return: view
     """
-    card = Card.objects.get(card_name=cardname)
+    try:
+        card = Card.objects.get(card_name=cardname)
+    except Card.DoesNotExist:
+        context = {
+            'card_name': cardname
+        }
+        return render(request, 'exchcard/error/card-does-not-exist-page.html', context)
+
+    if card.has_arrived:
+        context = {
+            'card_name': cardname,
+            'has_arrived': True,
+            'next':'/card/' + cardname
+        }
+        return render(request, 'exchcard/error/card-has-arrived-page.html', context)
+
     context = {'card_name':cardname,
                'recipient_user':card.torecipient.profileuser,
                'recipient_address': card.torecipient.profileaddress,
@@ -125,7 +132,23 @@ def card_travelling(request, cardname):
     context['profile'] = Profile.objects.get(profileuser=request.user)
     context['user'] = request.user
     context['isAuth'] = True
+
+    card_photos = CardPhoto.objects.filter(card_host=card)
+    if card_photos.count() > 0:
+        context['card_photos'] = card_photos
+    else:
+        print "not card photos of card %s" % cardname
+
     return render(request, 'exchcard/travelling-card-page.html', context)
+
+
+@login_required
+def card_receive(request):
+    profile = Profile.objects.get(profileuser=request.user)
+    context = {'profile': profile, 'user': request.user}
+    context['isAuth'] = True
+    if request.method == "GET":
+        return render(request, 'exchcard/receive-card-page.html', context)
 
 
 """
@@ -140,7 +163,12 @@ def view_single_card(request, cardname):
     :return: view
     """
 
-    card = Card.objects.get(card_name=cardname)
+    try:
+        card = Card.objects.filter(card_name=cardname).first()
+    except:
+        return HttpResponse(json.dumps({
+            "details": "server error!"
+        }))
 
     context = {'card_name':cardname,
                'recipient_user':card.torecipient.profileuser,
@@ -151,11 +179,10 @@ def view_single_card(request, cardname):
     context['user'] = request.user
     context['isAuth'] = True
 
-    try:
-        card_photos = CardPhoto.objects.filter(card_host=card)
-        if(card_photos.count()>0):
-            context['card_photos'] = card_photos
-    except:
+    card_photos = CardPhoto.objects.filter(card_host=card)
+    if card_photos.count()>0:
+        context['card_photos'] = card_photos
+    else:
         print "not card photos of card %s" % cardname
 
     return render(request, 'exchcard/single-card-page.html', context)

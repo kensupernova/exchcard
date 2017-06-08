@@ -11,15 +11,15 @@ from exchcard.models_profile import Card
 def generateToken(username):
     return "I am a token"
 
-def generatePostCardName():
+
+def generateUniquePostcardName():
     start = "POST"
     digit = int(random.random()*1000000)
     card_name = '{0}{1}'.format(start, digit)
     if Card.objects.filter(card_name=card_name).exists():
-        generatePostCardName()
+        generateUniquePostcardName()
     else:
         return card_name
-
 
 
 def count_arrive_travel(cards):
@@ -104,6 +104,44 @@ def hash_email_to_username(email):
     email = email.replace(".", "dot")
 
     return email
+
+
+def compare_created_early_to_late(a, b):
+    """
+    两个datetime比早晚， 从早到晚！！！
+    :param a: 包含created datetime string, like '2017-05-31T07:55:23.112844Z', UTC
+    :param b:
+    :return:
+    """
+    atime = datetime.datetime.strptime(a['created'], '%Y-%m-%dT%H:%M:%S.%fZ')
+    btime = datetime.datetime.strptime(b['created'], '%Y-%m-%dT%H:%M:%S.%fZ')
+
+    # 从大到小, 从早到晚
+    dtime = btime - atime # datetime.timedelta
+    return int(dtime.total_seconds())
+
+
+def mills2datetime(ms):
+    """
+    convert mill seconds to datetime
+    :param ms: mill seconds
+    :return: datetime
+    """
+    if ms is None:
+        return
+    if ms == 0:
+        return
+    return datetime.datetime.fromtimestamp(int(ms/1000))
+
+
+def datetime2milss(dt):
+    """
+    convert datetime to mill seconds
+    :param dt: datetime object
+    :return: mill seconds
+    """
+    return int(dt.strftime("%s") * 1000)
+
 # -------------------------------------------------
 # testing
 

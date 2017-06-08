@@ -21,12 +21,13 @@ $(document).ready(function(){
   var getHBasicInfo = "/exchcard/api/hobbyist/u/"+user_id + "/basic/info/";
   var getActivitiesAll = "/exchcard/api/hobbyist/u/"+user_id + "/activities/all/";
 
+  //--------------------------------------------
   // 下载头像图片, 文字信息, 与之关系等基本信息
   $.ajax({
     method:"GET",
     url: getHBasicInfo,
     success: function (response) {
-      console.log(JSON.stringify(response));
+      // console.log(JSON.stringify(response));
 
       var avatar_url= response['avatar_info']['avatar_url'];
       avatar_url = avatar_url.lastIndexOf("http", 0) === 0 ? avatar_url: response['avatar_info']['avatar'];
@@ -55,48 +56,51 @@ $(document).ready(function(){
 
   });
 
+  //--------------------------------------------
   $.ajax({
     method:"GET",
     url: getActivitiesAll,
     success: function (response) {
       // console.log(JSON.stringify(response));
 
-      if(response ==null ){
+      if(response == null || !response){
         alert("This user has no activities!");
       }
 
-      var receive_card_act = response["receive_card_actions"];
-      var sent_card_act = response["sent_card_actions"];
-
-      receive_card_act.forEach(function(item, index){
-        item["activity_id"] = 2;
-        item["activity_type"] = 2;
-        item["activity_short_name"] = "register postcard";
-
-      });
-
-      sent_card_act.forEach(function(item, index){
-        item["activity_id"] = 1;
-        item["activity_type"] = 1;
-        item["activity_short_name"] = "sent postcard";
-
-      });
-
-
-      var acts = receive_card_act.concat(sent_card_act);
-
-      acts = acts.sort(function (a, b) {
-        // 2017-05-28T02:24:27.353531Z
-        // new Date('2017-05-28T02:24:27.353531Z')
-        at = new Date(a["created"]);
-        bt = new Date(b["created"]);
-
-        return bt - at;
-      });
+      //---------------------------------
+      // 扁平化处理
+      // var receive_card_act = response["receive_card_actions"];
+      // var sent_card_act = response["sent_card_actions"];
+      //
+      // receive_card_act.forEach(function(item, index){
+      //   item["activity_id"] = 2;
+      //   item["activity_type_id"] = 2;
+      //   item["activity_short_name"] = "receive postcard";
+      //
+      // });
+      //
+      // sent_card_act.forEach(function(item, index){
+      //   item["activity_id"] = 1;
+      //   item["activity_type"] = 1;
+      //   item["activity_short_name"] = "sent postcard";
+      //
+      // });
+      //
+      //
+      // var acts = receive_card_act.concat(sent_card_act);
+      //
+      // acts = acts.sort(function (a, b) {
+      //   // 2017-05-28T02:24:27.353531Z
+      //   // new Date('2017-05-28T02:24:27.353531Z')
+      //   at = new Date(a["created"]);
+      //   bt = new Date(b["created"]);
+      //
+      //   return bt - at;
+      // });
 
       // console.log(JSON.stringify(acts));
 
-      acts.forEach(function(act){
+      response.forEach(function(act){
         $("#timeline-content-container").append(createActItem(act));
       });
 
@@ -115,23 +119,20 @@ $(document).ready(function(){
 
     var act_short_name = '';
 
-    if(act['activity_id'] == 1){
+    if(act['activity_type_id'] == 1){
       act_short_name = "发送了一张明信片";
-    } else if(act['activity_id'] == 2){
+    } else if(act['activity_type_id'] == 2){
       act_short_name = "注册了一张明信片";
     }
 
     var created = new Date(act['created']);
-    var created_str = created.getFullYear() +"." +
-      (created.getMonth() + 1) +"." +
-      created.getDate() +" " +
-      created.getHours() +":" +
-      created.getMinutes() +
-      " UTC";
+    var created_str = created.toLocaleString();
+    var offset = - created.getTimezoneOffset()/60;
+    var locale_timezone =  ' GMT+' + offset;
 
     var mainText =
       '<div class="act-item-container">' +
-      '  <div class="act-time-container left">'+ created_str  +'</div>' +
+      '  <div class="act-time-container left">'+ created_str + locale_timezone  +'</div>' +
       '  <div class="act-short-container right">' +
       '    <div class="act-subject">'+ act["subject_username"] +'</div>' +
       '    <div class="act-short-name">'+ act_short_name +'</div>' +

@@ -34,7 +34,11 @@ class RegisterUserSerializer1(serializers.ModelSerializer):
         model = get_user_model()
 
     def create(self, validated_data):
-
+        """
+        序列化的数据，转化成对象，并创建保存
+        :param validated_data:
+        :return:
+        """
         user = get_user_model().objects.create(
             username=validated_data['username'],
             email=validated_data['email'],
@@ -51,7 +55,6 @@ class RegisterUserSerializer2(serializers.ModelSerializer):
         fields = ('id', 'username', 'password', 'email')
         read_only_fields = ('id',)  ## read only, can not be written
         write_only_fields = ('password',) ## write only, can not be read
-
 
     def create(self, validated_data):
         user = User.objects.create(
@@ -109,7 +112,8 @@ class CardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Card
-        fields = ("url", "card_name",
+        fields = ("url", # HyperlinkedIdentityField
+                  "card_name",
                   "fromsender_id", "fromsender_email", "from_name","from_address", "from_postcode",
                   "torecipient_id", "torecipient_email", "to_name", "to_address", "to_postcode",
                   "sent_time", "arrived_time",
@@ -130,7 +134,6 @@ class CreateCardSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         ## print validated_data
         ## card name should be generated from sever to avoid duplicates?
-        ## print validated_data
         card = Card.objects.create_with_profile_ids(
             card_name=validated_data["card_name"],
             torecipient_id=validated_data["torecipient_id"],
@@ -390,7 +393,7 @@ class SentCardActionSerializer(serializers.ModelSerializer):
         )
 
 
-class ReceiveActionSerializer(serializers.ModelSerializer):
+class ReceiveCardActionSerializer(serializers.ModelSerializer):
 
     receive_card_action_id = serializers.CharField(source='id')
 
@@ -407,6 +410,25 @@ class ReceiveActionSerializer(serializers.ModelSerializer):
             "receive_card_action_id", "created", "has_photo",
             "subject_id", "subject_email", "subject_username",
             "card_receive_id","card_receive_cardname"
+        )
+
+class UploadCardPhotoActionSerializer(serializers.ModelSerializer):
+
+    upload_cardphoto_action_id = serializers.CharField(source='id')
+
+    subject_id = serializers.CharField(source='subject.id')
+    subject_email = serializers.CharField(source='subject.email')
+    subject_username = serializers.CharField(source='subject.username')
+
+    card_actioned_id = serializers.CharField(source='card_actioned.id')
+    card_actioned_cardname = serializers.CharField(source='card_actioned.card_name')
+
+    class Meta:
+        model = ReceiveCardAction
+        fields = (
+            "upload_cardphoto_action_id", "created",
+            "subject_id", "subject_email", "subject_username",
+            "card_actioned_id","card_actioned_cardname"
         )
 
 

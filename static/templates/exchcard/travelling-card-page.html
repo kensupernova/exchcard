@@ -2,7 +2,7 @@
 
 {% block headinfo %}
 <style>
-  .main-content-container {
+  .content-container {
     border: red 1px solid;
     margin-left: 5px;
     margin-right: 5px;
@@ -18,9 +18,10 @@
     font-weight:bold;
   }
 
+
   .postal-info-item {
     overflow: hidden;
-    clear:both;
+    clear :both;
     margin-bottom: 5px;
   }
 
@@ -35,24 +36,55 @@
     width: 65%;
     text-align: left;
     float: right;
-    margin-bottom:2px;
+    margin-bottom: 2px;
+  }
+
+
+  .upload-card-photo-container{
+    margin-top: 1em;
+  }
+
+  .upload-card-photo-container .explain {
+    font-size: 14px;
+    font-weight: bolder;
+    margin-bottom: 0.5em;
+  }
+
+  .upload-card-photo-container #btn-upload-card-photo{
+    margin-top: 1em;
+  }
+
+  .upload-card-photo-container #btn-upload-card-photo:hover{
+    background: red;
+    color: white;
+  }
+
+  .upload-card-photo-container .item-error-msg {
+    height: 2em;
+    margin-top: 1em;
+    /*border: red 1px solid;*/
+  }
+
+  .card-photos-container div img {
+    width: 300px;
+    overflow: hidden;
   }
 
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="content-container main-content-container">
+<div class="content-container travelling-card-content-container">
+  <div id="post-card-name-holder" style="display: none;">{{card.card_name}}</div>
+  <div id="post-id-holder" style="display: none;">{{card.id}}</div>
   <div class="postal-title-container">
-    <div class="main-title">新明信片寄送地址</div>
-    <div><label>请记住一定要把Postcard ID写在明信片上面</label>, 否则接收者无法登记收到, 你不会得到积分。</div>
+    <div class="main-title">飞行中的明信片</div>
   </div>
   <div class="postal-info-container" ng-show="postal_info != null">
     <div class="postal-info-item twoColumn">
       <div class="postal-info-title">明信片ID:</div>
-      <div class="postal-info-content">{{card.card_name}}</div>
+      <div class="postal-info-content" id="card-name-holder">{{card.card_name}}</div>
       <span style="display: none; clear:both"></span>
-
     </div>
     <div class="postal-info-item twoColumn">
       <div class="postal-info-title">接收者的地址:</div>
@@ -64,11 +96,40 @@
       <span style="display: none; clear:both"></span>
 
     </div>
+
+    {% if card_photos %}
+      <div class="postal-info-item twoColumn">
+        <div class="postal-info-title">明信片的图片:</div>
+        <div class="postal-info-content">
+          <div class="card-photos-container" id="card-photos-container">
+            {% for card_photo in card_photos %}
+            <div><img src="{{card_photo.card_photo.url}}"></div>
+            {% endfor %}
+          </div>
+        </div>
+        <span style="display: none; clear:both"></span>
+
+      </div>
+    {% endif %}
+
+    
+    <div class="postal-info-item twoColumn upload-card-photo-container">
+      <div class="postal-info-title">补交可选任务:</div>
+      <div class="postal-info-content">
+        <div class="explain">照片还未投递,我要上传一张明信片图片</div>
+        <div class="upload-action-container">
+          <input class="item-content" type="file" name="card_photo_file" id="card_photo_file"
+                 placeholder="postcard photo">
+          <input class="item-action" type="button" id="btn-upload-card-photo" value="上传明信片图片">
+          <label class="item-error-msg" id="upload-result-msg"></label>
+        </div>
+      </div>
+      <span style="display: none; clear:both"></span>
+    </div>
   </div>
 </div>
 {% endblock %}
 
 {% block jscontainer %}
-<script type="text/javascript" src="{{STATIC_URL}}lib/angular.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}javascripts/travelling-card-page.js"></script>
 {% endblock %}

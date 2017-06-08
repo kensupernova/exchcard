@@ -8,6 +8,7 @@
     min-height: 200px;
     border: red 1px solid;
     margin: 0 5px;
+    z-index: -100;
   }
 
   .hobbyist-main-content-container .hobbyist-main-title{
@@ -57,6 +58,10 @@
     overflow: hidden;
   }
 
+  .h-avatar-img:hover {
+    cursor: pointer;
+  }
+
   .h-item .h-text-info {
     vertical-align: top;
     width: 100px;
@@ -92,7 +97,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="hobbyist-main-content-container" ng-app="myApp">
+<div class="content-container hobbyist-main-content-container" ng-app="myApp">
   <div class="hobbyist-main-title">发烧友</div>
   <div class="h-container" ng-controller="myCtrl">
 
@@ -100,7 +105,8 @@
 
       <div class="h-avatar">
         <img class="h-avatar-img" src="{[{h.avatar_info.avatar_url}]}" ng-click="visitPublic($event.target)"/>
-        <p style="display: none;" class="user-id-placeholder">{[{h.user_id}]}</p>
+        <div style="display: none;" class="user-id-placeholder">{[{h.user_id}]}</div>
+        <input style="display: none;" type="hidden" class="user-id-inp" value="{[{h.user_id}]}" />
       </div>
       <div class="h-text-info">
         <div class="h-text-info-item">{[{h.text_info.name}]}</div>

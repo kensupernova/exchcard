@@ -2,101 +2,217 @@ $(document).ready(function(){
 
   $("#cards").addClass('active');
 
-});
-
-'use strict';
-
-var getAddress = "/exchcard/api/"+'cards/add/';
-
-var app = angular.module('myApp', ['ui.router']);
-
-//修改tag
-app.config(function($interpolateProvider) {
-  $interpolateProvider.startSymbol('{[{');
-  $interpolateProvider.endSymbol('}]}');
-});
+  // 预先新明信片的地址信息
+  // 预先新明信片的card_name
+  var pre_card_address = null;
+  var pre_card_name = null;
 
 
-app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $urlRouterProvider) {
+  $("#btn-get-address").click(function () {
+    // 确保 checkbox已经打钩
+    if(!$("#check-confirm-warning").prop("checked")){
+      alert("先确认阅读了警告文字!");
+      return;
+    }
 
-  // Setup router
-  $urlRouterProvider.when("", "/send").otherwise('/');
+    var getAddress = "/exchcard/api/"+'cards/get/address/';
 
-  var sendState = {
-    url: '/send',
-    name: 'send',
-    templateUrl: '/static/templates/exchcard/angular_templates/send-card-warning-page.html'
-  };
+    // var csrftoken = Cookies.get('csrftoken');
+    // headers: {
+    //   'X-CSRFToken': csrftoken
+    // },
 
-  var confirmState = {
-    url: '/confirm',
-    name: 'confirm',
-    templateUrl: '/static/templates/exchcard/angular_templates/send-card-address-success-page.html'
-  };
+    $.ajax({
+      method: "GET",
+      url: getAddress,
+      success: function mySucces(response) {
+        // console.log(JSON.stringify(response));
 
-  // 注册各个状态
-  $stateProvider
-    .state(sendState)
-    .state(confirmState);
+        // FILL IN DATA
+        if(response != null){
 
-}]);
+          // 成功得到地址后, 显现转, 隐藏注意事项
+          var block1 = $("#sent-warning-container");
+          block1.removeClass("shown-content");
+          block1.addClass("hidden-content");
+
+          var block2 = $("#create-card-container");
+          block2.addClass("shown-content");
+          block2.removeClass("hidden-content");
 
 
+          pre_card_address = response;
+          pre_card_name = response.card_name;
 
-app.controller('myCtrl', function($rootScope, $scope, $http) {
+          $("#torecipient-id-holder").text(pre_card_address.torecipient_id);
+          $("#card-name-holder").text(pre_card_address.card_name);
+          $("#postal-name-holder").text(pre_card_address.name);
+          $("#postal-address-holder").text(pre_card_address.address);
+          $("#postal-postcode-holder").text(pre_card_address.postcode);
+          $("#postal-country-holder").text(pre_card_address.country);
 
-  $scope.confirmGetPostal = function() {
+        }
 
-    // console.log("here .... ");
+      },
+      error: function myError(response) {
+        // console.log(JSON.stringify(response));
+
+      }
+    });
+  });
+
+  // 用户确定发送明信片
+  $("#btn-confirm-send-card").click(function () {
+    if(!$("#check-confirm-send").prop("checked")){
+      alert("至少要确认发送明信片!");
+      return;
+    }
+
+    if(pre_card_address == null || pre_card_name == null){
+      alert("还未得到明信片ID和地址!");
+      return;
+    }
+
+    var data = pre_card_address;
+
+    var has_photo = $("#check-has-photo").prop("checked"); // boolean
+    var has_photo_int = Number(has_photo);
+
+    if(has_photo || has_photo_int == 1){
+      alert("你将上传明信片图片");
+    }
+
+    var input_card_photo = $("#card_photo_file");
+
+    if(has_photo || has_photo_int == 1){
+      var card_photo = input_card_photo.val();
+
+      if(card_photo == null || !card_photo || card_photo == undefined) {
+        has_photo = false;
+        has_photo_int = 0;
+
+        alert("没有明信片图片");
+        return;
+      }
+    }
+
+    data["has_photo"] = has_photo;
+    data["has_photo_int"] = has_photo_int;
+
+    // console.log("data before ajax: " + JSON.stringify(data));
 
     var csrftoken = Cookies.get('csrftoken');
+    var path = "/exchcard/api/cards/confirm/send/card/";
+    var pathPhoto = "/exchcard/api/cards/confirm/send/card/";
 
-    $http({
-      method: "POST",
-      headers: {
-        'X-CSRFToken': csrftoken
-      },
-      url: getAddress
-    }).then(function mySucces(response) {
+    // 如果有图片
+    if(has_photo || has_photo_int == 1){
+      var formData = new FormData();
 
-      // response = JSON.parse(response);
-      // console.log("new card address: "+JSON.stringify(response.data));
-
-      var postcard_id = response.data.card_name;
-
-      if(postcard_id|| postcard_id==null|| postcard_id==undefined ||
-        address || address == null){
-        $scope.request_address_error = "fail to get an address";
+      for ( var key in data ) {
+        if(data.hasOwnProperty(key)){
+          formData.append(key, data[key]);
+        }
       }
 
-      $rootScope.postal_info = response.data;
+      // TESTING
+      // var data = {
+      //   a: "1",
+      //   b: "2",
+      //   c: "3"
+      // };
+      //
+      // for ( var key in data ) {
+      //   if(data.hasOwnProperty(key)){
+      //     console.log(data[key])
+      //   }
+      // }
 
-      window.location.href = "/card/travelling/"+postcard_id+"/";
+      var card_photo_file = input_card_photo[0].files[0];
+      formData.append('card_photo', card_photo_file);
 
-      // METHOD 2
-      // // 隐藏提示内容,呈现邮寄地址内容
-      // // $('#tab-confirm').click(); // 在angular中无效
-      // document.getElementById("tab-confirm").click();
+      $.ajax({
+        url: pathPhoto,
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        type: 'POST',
+        data: formData,
+        dataType: 'json',
+        async: false,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+          // console.log(JSON.stringify(response));
+
+          $("#send-card-result-msg").text("成功,有图片!");
+          // 3s后, 上传结果信息自动消失
+          setTimeout(function () {
+            $("#send-card-result-msg").hide();
+
+            window.location.href = "/card/travelling/" + pre_card_name;
+          }, 3000);
 
 
-    }, function myError(response) {
+        },
+        error: function (response) {
+          // console.log(JSON.stringify(response));
 
-    });
+          $("#send-card-result-msg").text("失败!");
+          // 3s后, 上传结果信息自动消失
+          setTimeout(function () {
+            $("#send-card-result-msg").hide();
+          }, 3000);
+        }
+      });
 
-  };
+    }
+    else {
+
+      $.ajax({
+        method: "POST",
+        url: path,
+        data: data,
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        success: function mySucces(response) {
+          // console.log(JSON.stringify(response));
+
+          $("#send-card-result-msg").text("成功,无图片!");
+          // 3s后, 上传结果信息自动消失
+
+
+          setTimeout(function () {
+            $("#send-card-result-msg").hide();
+
+            window.location.href = "/card/travelling/" + pre_card_name;
+          }, 3000);
+
+
+        },
+        error: function myError(response) {
+          // console.log(JSON.stringify(response));
+
+          $("#send-card-result-msg").text("失败!");
+          // 3s后, 上传结果信息自动消失
+          setTimeout(function () {
+            $("#send-card-result-msg").hide();
+          }, 3000);
+
+        }
+      });
+
+    }
+
+
+  });
+
+
 
 });
 
-app.controller('postalInfoControl', function($rootScope, $scope) {
-
-  // console.log("new card address: "+JSON.stringify($rootScope.postal_info));
-
-  if($rootScope.postal_info && $rootScope.postal_info != null ){
-    $scope.postal_info = $rootScope.postal_info;
-
-  } else{
-    $scope.postal_info = null;
-  }
 
 
-});
+
