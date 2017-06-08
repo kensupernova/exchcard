@@ -14,8 +14,10 @@ from django.db.models import Manager
 from exchcard import settings
 
 from django.contrib.auth import get_user_model # If used custom user mode
+
+
 User = get_user_model() #  自定义用户模型
-from utils.utils import mills2datetime
+
 
 class DetailedAddressManager(Manager):
     def create_detailed_address(self, first, second, third, city, stateorprovince, country):
@@ -634,3 +636,30 @@ class DianZan(models.Model):
             person_who_dianzan = self.person_who_dianzan.id,
             created = self.created
         )
+
+
+
+
+
+#-------------------------
+#  helpers
+def mills2datetime(ms):
+    """
+    convert mill seconds to datetime
+    :param ms: mill seconds
+    :return: datetime
+    """
+    if ms is None:
+        return
+    if ms == 0:
+        return
+    return datetime.datetime.fromtimestamp(int(ms/1000))
+
+
+def datetime2milss(dt):
+    """
+    convert datetime to mill seconds
+    :param dt: datetime object
+    :return: mill seconds
+    """
+    return int(dt.strftime("%s") * 1000)
