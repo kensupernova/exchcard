@@ -6,11 +6,14 @@
   var getActivitiesOfFollowingRange ="/exchcard/api/moments/followings/activities/?start=0&end=25";
 
   addCSRFTokenBeforeAjax();
+
   $.ajax({
     url: getActivitiesOfFollowingUrl,
     method: "GET",
     success: function (response) {
-      /// console.log(JSON.stringify(response));
+      // console.log(JSON.stringify(response));
+      // console.log(JSON.stringify(response[0]));
+      // console.log(JSON.stringify(response[1]));
 
       response.forEach(function (item, index) {
         $("#moments-container").append(createActItemContent(item));
@@ -29,9 +32,15 @@
     var act_short_name = '';
 
     if(item['activity_type_id'] == 1){
-      act_short_name = "发送了一张明信片";
-    } else if(item['activity_type_id'] == 2){
-      act_short_name = "注册了一张明信片";
+      act_short_name = "发送了一张明信片";// SP
+    } else if(item['actity_type_id'] == 2){
+      act_short_name = "发送了一张明信片";// SPP
+    } else if(item['activity_type_id'] == 3){
+      act_short_name = "注册了一张明信片"; // RP
+    }  else if(item['activity_type_id'] == 4){
+      act_short_name = "注册了一张明信片";// RPP
+    } else if(item['activity_type_id'] == 5){
+      act_short_name = "上传了一张图片";// UPP
     }
 
     // IN JSON
@@ -43,25 +52,43 @@
     var offset = - created.getTimezoneOffset()/60;
     var locale_timezone =  ' GMT+' + offset;
 
+    if (item['has_photo'] || item['has_photo'] == 'true'){
+      var text =
+        '<div class="act-item-container">' +
+        ' <div class="left act-subject-avatar-container">' +
+        '   <img src="'+ item["avatar_url"]+'">' +
+        ' </div>' +
+        '<div class="right act-content-container">' +
+        '  <div class="act-text-container">' +
+        '    <div class="act-subject">' + item["subject_username"]+'</div>' +
+        '    <div class="act-short-name">'+ act_short_name +'</div>' +
+        '  </div>' +
+        '  <div class="act-photos-container">' +
+        '     <img src="'+ item['card_photo_url'] +'">' +
+        '  </div>' +
+        '  <div class="act-time-container">' + created.toLocaleString() + locale_timezone +'</div>' +
+        '</div>' +
+        '<br style="display: none; clear: both"/>' +
+        '</div>';
 
-    var text =
-      '<div class="act-item-container">' +
-      ' <div class="left act-subject-avatar-container">' +
-      '   <img src="'+ item["avatar_url"]+'">' +
-      ' </div>' +
-      '<div class="right act-content-container">' +
-      '  <div class="act-short-container">' +
-      '    <div class="act-subject">' + item["subject_username"]+'</div>' +
-      '    <div class="act-short-name">'+ act_short_name +'</div>' +
-      '     </div>' +
-      '     <div class="act-time-container">' + created.toLocaleString() + locale_timezone +'</div>' +
-      '     <div class="act-photos-container">' +
-      '       <img src="">' +
-      '       <img src="">' +
-      '     </div>' +
-      '   </div>' +
-      '<br style="display: none; clear: both"/>' +
-      '</div>';
+    } else{
+      var text =
+        '<div class="act-item-container">' +
+        '  <div class="left act-subject-avatar-container">' +
+        '    <img src="'+ item["avatar_url"]+'">' +
+        '  </div>' +
+        '  <div class="right act-content-container">' +
+        '    <div class="act-text-container">' +
+        '      <div class="act-subject">' + item["subject_username"]+'</div>' +
+        '      <div class="act-short-name">'+ act_short_name +'</div>' +
+        '    </div>' +
+        '    <div class="act-photos-container">' +
+        '    </div>' +
+        '    <div class="act-time-container">' + created.toLocaleString() + locale_timezone +'</div>' +
+        '  </div>' +
+        '  <br style="display: none; clear: both"/>' +
+        '</div>';
+    }
 
     return text;
 

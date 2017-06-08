@@ -99,7 +99,8 @@ def hash_file_name(fname):
 
     return newName
 
-def hash_email_to_username(email):
+
+def hash_email_to_username_fool(email):
     email = email.replace("@", "at")
     email = email.replace(".", "dot")
 

@@ -50,14 +50,14 @@
         $("div#card-photos-container").append(ele);
 
         // 显示成功发送
-        $("#upload-result-msg").text("成功上传图片!");
+        $("#upload-result-msg").text("成功上传图片! redirect ...");
         input_card_photo.val('');
 
         // 3s后, 上传结果信息自动消失
         setTimeout(function () {
           // $("#upload-result-msg").hide();
-
-        }, 2000);
+          window.location.href=  "/card/" + card_name;
+        }, 1500);
 
       },
       error: function (response) {
@@ -68,8 +68,8 @@
         // 3s后, 上传结果信息自动消失
         setTimeout(function () {
           // $("#upload-result-msg").hide();
-
-        }, 2000);
+          window.location.href=  "/card/" + card_name;
+        }, 1500);
 
       }
     });

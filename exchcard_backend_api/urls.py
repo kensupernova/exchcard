@@ -210,7 +210,7 @@ urlpatterns = format_suffix_patterns([
     ## 发烧友
     url(r"^hobbyist/list/page/(?P<number>[0-9]+)/$",
         "exchcard_backend_api.hobbyist_api.get_basic_info_of_hobbyist_list",
-        name="hobbyist-list"),
+        name="hobbyist-list-by-page"),
 
     ## 某个用户的基本信息
     url(r"^hobbyist/u/(?P<user_id>[0-9]+)/basic/info/$",
@@ -232,6 +232,7 @@ urlpatterns = format_suffix_patterns([
     url(r"^hobbyist/sent-card/list/$", activity_api.SentCardActionListView.as_view(),
         name="sent-card-activity-list"),
 ## ------------------------------------------------------------
+    ## 朋友圈
     url(r"^moments/followings/activities/$", "exchcard_backend_api.moments_api.get_all_activities_of_my_followings",
         name="get-all-activities-of-my-followings"),
 

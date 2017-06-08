@@ -55,7 +55,7 @@ $(document).ready(function () {
           console.log("receive card success with no photo: " + JSON.stringify(data));
 
           // 显示成功发送
-          $("#receive-card-result").text("成功注册明信片!");
+          $("#receive-card-result").text("成功注册明信片! Redirect ...");
 
           // redirectToProfile();
           redirectToSingleCardPage(card_name);
@@ -109,8 +109,6 @@ $(document).ready(function () {
       });
 
     }
-
-
   }
 
   function redirectToProfile(){
@@ -118,7 +116,7 @@ $(document).ready(function () {
     setTimeout(function(){
       // redirect to profile page
       window.location.href=  "/profile/"
-    }, 2000);
+    }, 1500);
   }
 
   function redirectToSingleCardPage(card_name){
@@ -126,7 +124,7 @@ $(document).ready(function () {
     setTimeout(function(){
       // redirect to profile page
       window.location.href=  "/card/" + card_name;
-    }, 2000);
+    }, 1500);
   }
 
 

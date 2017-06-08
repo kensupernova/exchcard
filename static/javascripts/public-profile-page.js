@@ -62,43 +62,12 @@ $(document).ready(function(){
     url: getActivitiesAll,
     success: function (response) {
       // console.log(JSON.stringify(response));
+      // console.log(JSON.stringify(response[1]));
+      // console.log(JSON.stringify(response[2]));
 
       if(response == null || !response){
         alert("This user has no activities!");
       }
-
-      //---------------------------------
-      // 扁平化处理
-      // var receive_card_act = response["receive_card_actions"];
-      // var sent_card_act = response["sent_card_actions"];
-      //
-      // receive_card_act.forEach(function(item, index){
-      //   item["activity_id"] = 2;
-      //   item["activity_type_id"] = 2;
-      //   item["activity_short_name"] = "receive postcard";
-      //
-      // });
-      //
-      // sent_card_act.forEach(function(item, index){
-      //   item["activity_id"] = 1;
-      //   item["activity_type"] = 1;
-      //   item["activity_short_name"] = "sent postcard";
-      //
-      // });
-      //
-      //
-      // var acts = receive_card_act.concat(sent_card_act);
-      //
-      // acts = acts.sort(function (a, b) {
-      //   // 2017-05-28T02:24:27.353531Z
-      //   // new Date('2017-05-28T02:24:27.353531Z')
-      //   at = new Date(a["created"]);
-      //   bt = new Date(b["created"]);
-      //
-      //   return bt - at;
-      // });
-
-      // console.log(JSON.stringify(acts));
 
       response.forEach(function(act){
         $("#timeline-content-container").append(createActItem(act));
@@ -106,7 +75,7 @@ $(document).ready(function(){
 
     }
   }).fail(function (response) {
-    console.log(JSON.stringify(response));
+    // console.log(JSON.stringify(response));
 
   });
 
@@ -120,25 +89,48 @@ $(document).ready(function(){
     var act_short_name = '';
 
     if(act['activity_type_id'] == 1){
-      act_short_name = "发送了一张明信片";
-    } else if(act['activity_type_id'] == 2){
-      act_short_name = "注册了一张明信片";
+      act_short_name = "发送了一张明信片";// SP
+    } else if(act['actity_type_id'] == 2){
+      act_short_name = "发送了一张明信片";// SPP
+    } else if(act['activity_type_id'] == 3){
+      act_short_name = "注册了一张明信片"; // RP
+    }  else if(act['activity_type_id'] == 4){
+      act_short_name = "注册了一张明信片";// RPP
+    } else if(act['activity_type_id'] == 5){
+      act_short_name = "上传了一张图片";// UPP
     }
-
     var created = new Date(act['created']);
     var created_str = created.toLocaleString();
     var offset = - created.getTimezoneOffset()/60;
     var locale_timezone =  ' GMT+' + offset;
 
-    var mainText =
-      '<div class="act-item-container">' +
-      '  <div class="act-time-container left">'+ created_str + locale_timezone  +'</div>' +
-      '  <div class="act-short-container right">' +
-      '    <div class="act-subject">'+ act["subject_username"] +'</div>' +
-      '    <div class="act-short-name">'+ act_short_name +'</div>' +
-      '  </div>' +
-      '  <br style="clear: both; display: none;" />'+
-      '</div>';
+    if(act['has_photo']){
+      var mainText =
+        '<div class="act-item-container">' +
+        '  <div class="act-time-container left">'+ created_str + locale_timezone  +'</div>' +
+        '  <div class="act-text-container right">' +
+        '    <div class="act-short-name">'+ act_short_name +'</div>' +
+        '    <div class="act-photos-container">' +
+        '      <div>' +
+        '        <img src="'+ act['card_photo_url'] +'"/>' +
+        '      </div>' +
+        '    </div>' +
+        '  </div>' +
+        '  <br style="clear: both; display: none;" />'+
+        '</div>';
+    } else{
+      var mainText =
+        '<div class="act-item-container">' +
+        '  <div class="act-time-container left">'+ created_str + locale_timezone  +'</div>' +
+        '  <div class="act-text-container right">' +
+        '    <div class="act-short-name">'+ act_short_name +'</div>' +
+        '    <div class="act-photos-container">' +
+        '    </div>' +
+        '  </div>' +
+        '  <br style="clear: both; display: none;" />'+
+        '</div>';
+    }
+
 
     return mainText;
   }

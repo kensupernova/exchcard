@@ -7,7 +7,7 @@ from rest_framework import serializers
 
 from exchcard.models_profile import Card, Profile, Address, AvatarPhoto, CardPhoto,\
     SentCardAction, ReceiveCardAction, \
-    Follow
+    Follow, UploadCardPhotoAction
 from exchcard.models_profile import DianZan
 from exchcard.models import XUser
 
@@ -424,7 +424,7 @@ class UploadCardPhotoActionSerializer(serializers.ModelSerializer):
     card_actioned_cardname = serializers.CharField(source='card_actioned.card_name')
 
     class Meta:
-        model = ReceiveCardAction
+        model = UploadCardPhotoAction
         fields = (
             "upload_cardphoto_action_id", "created",
             "subject_id", "subject_email", "subject_username",

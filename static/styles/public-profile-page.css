@@ -1,14 +1,11 @@
-.public-main-content-container{
-  border: 1px solid red;
-}
 
-.h-image-container {
+.h-avatar-container {
   height: 120px;
   width: 120px;
   border: 1px solid red;
 }
 
-.h-image-container #h-img {
+.h-avatar-container #h-img {
   height: 100px;
   width: 100px;
   overflow: hidden;
@@ -76,14 +73,14 @@
 }
 
 .act-item-container .left {
-  width: 40%;
+  width: 20%;
   float: left;
   text-align: right;
   padding-right: 1em;
 }
 
 .act-item-container .right {
-  width: 58%;
+  width: 78%;
   float: left;
   text-align: left;
   min-height: 5em;
@@ -104,4 +101,10 @@
 
 .act-item-container .act-time-container{
   color: gray;
+  font-size: 12px;
+}
+
+.act-photos-container div img{
+  width: 300px;
+  overflow: hidden;
 }

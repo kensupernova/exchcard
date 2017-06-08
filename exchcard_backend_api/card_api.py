@@ -80,8 +80,9 @@ def get_address_before_confirm_send_card(request):
             profile_of_request_user = Profile.objects.get(profileuser=request.user)
 
             # TODO: COMMENT OUT FOR DEBUG FINISHED
-            # randomProfile = Profile.objects.order_by("?").first()
-            randomProfile = profile_of_request_user # FOR DEBUG
+            # TODO: smartly get recipient!!!
+            randomProfile = Profile.objects.order_by("?").first()
+            # randomProfile = profile_of_request_user # FOR DEBUG
 
             response_data= {}
             response_data["card_name"] = utils.generateUniquePostcardName()
@@ -309,6 +310,7 @@ def add_new_card_no_photo(request):
         try:
             profile_of_request_user = Profile.objects.get(profileuser = request.user)
 
+            # TODO: UNCOMMENT OUT!!
             # randomProfile = Profile.objects.order_by("?").first()
             randomProfile = profile_of_request_user # FOR DEBUG
 
@@ -386,7 +388,7 @@ def receive_a_card_no_photo(request):
 
         ## check wether the recipient id is the one of the request
         if profile_from_request_user.id == recipient_profile_id:
-            card.mark_arrived(has_photo=False)
+            receive_card_action, card_photo = card.mark_arrived(has_photo=False, card_photo_file=None)
 
             response_data = {}
             response_data['card_name'] = card.card_name
@@ -395,8 +397,7 @@ def receive_a_card_no_photo(request):
             response_data["card_host_id"] = card.id
             response_data["owner_id"] = profile_from_request_user.id
 
-            action = ReceiveCardAction.objects.get(card_received=card)
-            action_s = ReceiveCardActionSerializer(action)
+            action_s = ReceiveCardActionSerializer(receive_card_action)
             response_data["action"] = action_s.data
 
             # print response_data
@@ -440,6 +441,9 @@ def receive_a_card_with_photo(request):
 
         try:
             card = Card.objects.filter(card_name=card_name).first()
+            if not card:
+                return Response({"details": "card with post id is invalid"},
+                                status=status.HTTP_404_NOT_FOUND)
         except Card.DoesNotExist:
             return Response({"details":"card with post id is invalid"},
                         status=status.HTTP_404_NOT_FOUND)
@@ -451,7 +455,7 @@ def receive_a_card_with_photo(request):
 
         ## check wether the recipient id is the one of the request
         if profile_from_request_user.id == card.torecipient.id:
-            card.mark_arrived(has_photo=True) # VERY IMPORTANT
+            receive_card_action, card_photo = card.mark_arrived(has_photo=True, card_photo_file=card_photo_file) # VERY IMPORTANT
 
             response_data= {}
             response_data['card_name'] = card.card_name
@@ -460,17 +464,16 @@ def receive_a_card_with_photo(request):
             response_data["card_host_id"] = card.id
             response_data["owner_id"] = profile_from_request_user.id
 
-            action = ReceiveCardAction.objects.get(card_received=card)
-            action_s = ReceiveCardActionSerializer(action)
+            action_s = ReceiveCardActionSerializer(receive_card_action)
             response_data["action"] = action_s.data
 
-            photo = CardPhoto(owner=profile_from_request_user,
-                              card_host=card,
-                              card_photo=card_photo_file)
-            photo.save()
+            # photo = CardPhoto(owner=profile_from_request_user,
+            #                   card_host=card,
+            #                   card_photo=card_photo_file)
+            # photo.save()
 
-            response_data["card_photo_name"] = photo.card_photo.name
-            response_data["card_photo_url"] = photo.card_photo.url
+            response_data["card_photo_name"] = card_photo.card_photo.name
+            response_data["card_photo_url"] = card_photo.card_photo.url
 
             return Response(response_data, status=status.HTTP_201_CREATED)
 
@@ -499,8 +502,8 @@ def upload_cardphoto(request):
 
         card_name = request.data["card_name"]
         # f = request.data['card_photo']
-        f = request.FILES['card_photo']
-        f.name = hash_file_name(f.name)
+        card_photo_file = request.FILES['card_photo']
+        card_photo_file.name = hash_file_name(card_photo_file.name)
 
         # print card_name
 
@@ -516,7 +519,7 @@ def upload_cardphoto(request):
 
             photo = CardPhoto(owner=profile_from_request_user,
                               card_host=card,
-                              card_photo=f)
+                              card_photo=card_photo_file)
             photo.save()
 
             name = photo.card_photo.name
@@ -566,8 +569,8 @@ def upload_cardphoto_afterwards_by_cardname(request, card_name):
     if request.method == "POST":
         card_name = request.data["card_name"]
         # f = request.data['card_photo']
-        f = request.FILES['card_photo']
-        f.name = hash_file_name(f.name)
+        card_photo_file = request.FILES['card_photo']
+        card_photo_file.name = hash_file_name(card_photo_file.name)
 
         try:
             card = Card.objects.get(card_name=card_name)
@@ -575,25 +578,25 @@ def upload_cardphoto_afterwards_by_cardname(request, card_name):
             return Response({"details":"card with card name %s is invalid" % card_name},
                         status=status.HTTP_404_NOT_FOUND)
 
-
         if profile_from_request_user.id == card.torecipient.id or \
             profile_from_request_user.id == card.fromsender.id:
 
             photo = CardPhoto(owner=profile_from_request_user,
                               card_host=card,
-                              card_photo=f)
+                              card_photo=card_photo_file)
             photo.save()
 
-            serializer = CardPhotoSerializer(photo)
+            card_photo_serializer = CardPhotoSerializer(photo, context={'request': request})
 
-            action = UploadCardPhotoAction(subject=request.user, card_actioned=card)
+            action = UploadCardPhotoAction(subject=request.user, card_actioned=card,
+                                           card_photo_uploaded=photo)
             action.save()
 
             action_s = UploadCardPhotoActionSerializer(action)
 
             return Response(
                 {
-                    "card_photo":serializer.data,
+                    "card_photo":card_photo_serializer.data,
                     "action": action_s.data
                 },
                 status=status.HTTP_201_CREATED)

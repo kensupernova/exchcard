@@ -16,7 +16,7 @@ class XUserManager(BaseUserManager):
             email=XUserManager.normalize_email(email),
             username=username,
             type=type if type else 0
-        ) ## 不用obj.save()
+        )
 
         user.set_password(password)
 

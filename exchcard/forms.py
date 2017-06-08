@@ -153,7 +153,7 @@ class RegisterForm(forms.Form):
         if len(username) !=2 :
             raise forms.ValidationError(u'邮箱格式不对')
         else:
-            username = utils.hash_email_to_username(email)
+            username = utils.hash_email_to_username_fool(email)
             self.user = XUser.objects.create_user(email=email, username=username, password=pwd, type=-1, avatar=avatar).id
         return data
 

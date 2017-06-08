@@ -62,30 +62,27 @@ class ProfileManager(Manager):
 
 
 class CardManager(Manager):
+    def create(self, *args, **kwargs):
+        # 重新定义create
+        # kwargs['order_no'] = datetime.datetime.now.strftime('%Y%m%d' + seq)
+        return super(CardManager, self).create(*args, **kwargs)
+
     def create_with_profile_ids(self, card_name, torecipient_id, fromsender_id):
         if Profile.objects.filter(id=torecipient_id).exists() and \
                 Profile.objects.filter(id=fromsender_id).exists():
 
-            card = self.create(card_name=card_name,
+            # method 1:
+            # card = self.create(card_name=card_name,
+            #                    torecipient_id=torecipient_id,
+            #                    fromsender_id=fromsender_id,
+            #                    has_arrived=False)
+
+            # method 2:
+            card = self.model(card_name=card_name,
                                torecipient_id=torecipient_id,
                                fromsender_id=fromsender_id,
                                has_arrived=False)
-
-            # card = Card.objects.create(card_name=card_name,
-            #                    torecipient_id=torecipient_id,
-            #                    fromsender_id=fromsender_id,
-            #                    has_arrived=False)
-            # card = Card(card_name=card_name,
-            #                    torecipient_id=torecipient_id,
-            #                    fromsender_id=fromsender_id,
-            #                    has_arrived=False)
-            # card.save()
-
-            ## very important
-            ## create sent card action or activity
-
-            action = SentCardAction(subject=card.fromsender.profileuser, card_sent=card)
-            action.save()
+            card.save(using=self._db)  ## 必须save()
 
             return card
 
@@ -98,6 +95,10 @@ class CardManager(Manager):
         objects card, sent card action, shall be created automatically and sync
         :return: card, sentcardaction,
         """
+        if (not Profile.objects.filter(id=torecipient_id).exists()) or \
+                (not Profile.objects.filter(id=fromsender_id).exists()):
+            return None
+
         card = self.create(card_name=card_name,
                                torecipient_id=torecipient_id,
                                fromsender_id=fromsender_id,
@@ -117,29 +118,29 @@ class CardManager(Manager):
         objects card, sent card action, card photo;shall be created automatically and sync
         :return: card, sentcardaction,
         """
+        if (not Profile.objects.filter(id=torecipient_id).exists()) or \
+                (not Profile.objects.filter(id=fromsender_id).exists()):
+            return None
+
         card = self.create(card_name=card_name,
                            torecipient_id=torecipient_id,
                            fromsender_id=fromsender_id,
                            has_arrived=False, *args, **kwargs)
-
-        action = SentCardAction(subject=card.fromsender.profileuser,
-                                card_sent=card,
-                                has_photo=True)
-        action.save()
 
         photo = CardPhoto(owner=card.fromsender,
                           card_host=card,
                           card_photo=card_photo_file)
         photo.save()
 
+        action = SentCardAction(subject=card.fromsender.profileuser,
+                                card_sent=card,
+                                has_photo=True,
+                                card_sent_photo=photo)
+        action.save()
+
         return card, action, photo
 
 
-    def create(self, *args, **kwargs):
-        # type: (object, object) -> object
-        # 重新定义create
-        # kwargs['order_no'] = datetime.datetime.now.strftime('%Y%m%d' + seq)
-        return super(CardManager, self).create(*args, **kwargs)
 
 
 class DianZanManager(Manager):
@@ -161,7 +162,7 @@ class FollowManager(Manager):
     def create_with_ids(self, subject_id, object_being_followed_id):
         if not Follow.objects.filter(object_being_followed_id=object_being_followed_id).exists():
             obj = self.create(subject_id=subject_id,
-                                        object_being_followed_id=object_being_followed_id)
+                            object_being_followed_id=object_being_followed_id)
             return obj
         return None
 
@@ -174,10 +175,12 @@ class ReceiveCardActionManager(Manager):
 
 class UploadCardPhotoActionManager(Manager):
     """
-    Upload postcard photo action manage
+    Upload postcard photo action manager
     """
-    def create_with_ids(self, subject_id, card_host_id):
-        obj = self.create(subject_id=subject_id, card_host_id=card_host_id)
+    def create_with_ids(self, subject_id, card_host_id, card_photo_uploaded_id):
+        obj = self.create(subject_id=subject_id,
+                          card_host_id=card_host_id,
+                          card_photo_uploaded_id=card_photo_uploaded_id)
         return obj
 
 
@@ -377,7 +380,7 @@ class Card(models.Model):
         self.sent_time  =sent_time
         super(Card, self).save(*args, **kwargs)
 
-    def mark_arrived(self, has_photo, *args, **kwargs):
+    def mark_arrived(self, has_photo=False, card_photo_file=None, *args, **kwargs):
         self.has_arrived = True
         # save arrived time as current time in mill seconds
         self.arrived_time = int(round(time.time()*1000))
@@ -388,18 +391,31 @@ class Card(models.Model):
 
         self.arrived_date = timezone.now()
 
-        # objects.create() Receive action automatically card.save()
-        ReceiveCardAction.objects.create(subject=self.torecipient.profileuser,
-                                         card_received=self,
-                                         has_photo =has_photo)
         # 接收明信片有图片
-        if has_photo:
+        if has_photo and card_photo_file:
             print "Receive postcard with photo , SPP, activity_type_id = 4"
+            photo = CardPhoto(owner=self.torecipient,
+                              card_host=self,
+                              card_photo=card_photo_file)
+            photo.save()
+
         else:
-            print "Receive postcard, SP, SPP, activity_type_id = 3"
+            print "Receive postcard, SP, SP, activity_type_id = 3"
+            photo = None
+
+
+        # objects.create() Receive action automatically card.save()
+        receive_card_action = ReceiveCardAction.objects.create(
+            subject=self.torecipient.profileuser,
+            card_received=self,
+            has_photo=has_photo,
+            card_received_photo= photo)
+        receive_card_action.save()
 
         # 保存明信片到达等信息
         super(Card, self).save(*args, **kwargs)
+
+        return receive_card_action, photo
 
     def update_date_with_timestamp(self, *args, **kwargs):
         if (not self.arrived_time) and (self.arrived_time != 0) and (self.arrived_time is not None):
@@ -517,6 +533,7 @@ class SentCardAction(models.Model):
 
     ## 新加的！
     has_photo = models.BooleanField(default=False) # 默认没有photo
+    card_sent_photo = models.OneToOneField('CardPhoto', null=True)
 
     objects = SentCardActionManager
 
@@ -547,6 +564,7 @@ class ReceiveCardAction(models.Model):
 
     ## 新加的！
     has_photo = models.BooleanField(default=False)  # 默认没有photo
+    card_received_photo = models.OneToOneField('CardPhoto', null=True)
 
     objects = ReceiveCardActionManager
 
@@ -573,6 +591,8 @@ class UploadCardPhotoAction(models.Model):
     subject = models.ForeignKey('XUser', related_name='upload_actions_by_subject', null=False)
     # 这种图片所属的明信片
     card_actioned = models.ForeignKey('Card', related_name='upload_actions_to_card', null=False)
+
+    card_photo_uploaded = models.OneToOneField('CardPhoto', null=False)
 
     objects = UploadCardPhotoActionManager
 

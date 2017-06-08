@@ -18,9 +18,8 @@ from rest_framework.response import Response
 
 from exchcard.models_profile import Address, Profile, AvatarPhoto, SentCardAction, ReceiveCardAction, Follow
 from exchcard.models import XUser
-from exchcard_backend_api.serializers import SentCardActionSerializer, ReceiveCardActionSerializer
 
-from utils.utils import compare_created_early_to_late
+from exchcard_backend_api.helpers import get_all_activities_of_user
 
 def getAvatarInfoByProfile(profile):
     """
@@ -162,46 +161,50 @@ def get_all_basic_info_of_other_user(request, user_id):
 @api_view(["GET", ])
 @permission_classes([permissions.IsAuthenticated, ])
 def get_all_activities_of_other_user(request, user_id):
-    """"""
+    """
+    访问其他用户个人主页时，得到该用户所有活动
+    :param request:
+    :param user_id:
+    :return:
+    """
     if request.user.id == user_id:
         print "你在访问自己的页面"
 
     try:
         user = XUser.objects.get(id=user_id)
 
-        sent_actions = SentCardAction.objects.filter(subject=user)
-        receive_actions = ReceiveCardAction.objects.filter(subject=user)
+        # sent_actions = SentCardAction.objects.filter(subject=user)
+        # receive_actions = ReceiveCardAction.objects.filter(subject=user)
+        #
+        # s_serializer = SentCardActionSerializer(sent_actions, many=True)
+        # r_serializer = ReceiveCardActionSerializer(receive_actions, many=True)
+        #
+        # # print "activities 1 %s" % s_serializer.data
+        # # print "activities 2 %s" % r_serializer.data
+        #
+        # s_data = s_serializer.data
+        # r_data = r_serializer.data
+        #
+        # response_data = []
+        # for item in s_data:
+        #     item["activity_id"] = 1
+        #     item["activity_type_id"] = 1
+        #     item["activity_type"] = "SP"
+        #     item["activity_short_name"] = "Sent a postcard"
+        #
+        #     response_data.append(item)
+        #
+        # for item in r_data:
+        #     item["activity_id"] = 3
+        #     item["activity_type_id"] = 3
+        #     item["activity_type"] = "RP"
+        #     item["activity_short_name"] = "Receive a postcard"
+        #
+        #     response_data.append(item)
+        #
+        # sorted_response = sorted(response_data, cmp=compare_created_early_to_late)
 
-        s_serializer = SentCardActionSerializer(sent_actions, many=True)
-        r_serializer = ReceiveCardActionSerializer(receive_actions, many=True)
-
-        # print "activities 1 %s" % s_serializer.data
-        # print "activities 2 %s" % r_serializer.data
-
-        s_data = s_serializer.data
-        r_data = r_serializer.data
-
-        # TODO: 扁平化
-        # TODO: sort by created
-
-        response_data = []
-        for item in s_data:
-            item["activity_id"] = 1
-            item["activity_type_id"] = 1
-            item["activity_type"] = "SP"
-            item["activity_short_name"] = "Sent a postcard"
-
-            response_data.append(item)
-
-        for item in r_data:
-            item["activity_id"] = 2
-            item["activity_type_id"] = 2
-            item["activity_type"] = "RP"
-            item["activity_short_name"] = "Receive a postcard"
-
-            response_data.append(item)
-
-        sorted_response = sorted(response_data, cmp=compare_created_early_to_late)
+        sorted_response = get_all_activities_of_user(user)
 
         return HttpResponse(json.dumps(sorted_response), content_type="application/json")
         # return JsonResponse(sorted_response)
