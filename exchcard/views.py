@@ -15,7 +15,20 @@ def index(request):
 
 
 def about(request):
-    return render(request, 'exchcard/about-page.html')
+    if request.user.is_authenticated():
+        context = {
+            "user": request.user,
+            "isAuth": True
+        }
+        try:
+            profile = Profile.objects.get(profileuser=request.user)
+            context['profile'] = profile
+        except Profile.DoesNotExist:
+            context['profile'] = None
+
+        return render(request, 'exchcard/about-page.html', context)
+    else:
+        return render(request, 'exchcard/about-page.html')
 
 
 def user_login(request):
@@ -28,6 +41,15 @@ def user_register(request):
 
 @login_required
 def address_create(request):
+    try:
+        p = Profile.objects.get(profileuser=request.user)
+        """
+        如果用户的profile已经建立，address已经填写，直接进入个人页面
+        """
+        return HttpResponseRedirect(redirect_to="/profile/")
+    except Profile.DoseNotExist:
+        ''
+
     if request.user.is_authenticated():
         context = {
             "user": request.user,
@@ -35,6 +57,7 @@ def address_create(request):
         }
 
         return render(request, 'exchcard/address-create-page.html', context)
+
     else:
         return Http404
 
@@ -57,10 +80,13 @@ def setting(request):
     :param request:
     :return:
     """
-    profile = Profile.objects.get(profileuser=request.user)
-    context = {"profile": profile, "user": request.user}
-    context['isAuth'] = True
-    return render(request, 'exchcard/setting-page.html', context)
+    try:
+        profile = Profile.objects.get(profileuser=request.user)
+        context = {"profile": profile, "user": request.user}
+        context['isAuth'] = True
+        return render(request, 'exchcard/setting-page.html', context)
+    except Profile.DoesNotExist:
+        return HttpResponseRedirect(redirect_to="/account/address/create/")
 
 
 @login_required

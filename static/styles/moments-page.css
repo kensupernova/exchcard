@@ -1,7 +1,7 @@
 .moments-main-content-container {
   min-height: 200px;
   border: red 1px solid;
-  margin: 0 5px;
+  /*margin: 0 5px;*/
 }
 
 .moments-main-content-container .moments-main-title{

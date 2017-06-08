@@ -71,30 +71,39 @@ header div{
   margin-left: 0;
 }
 
-.spanner {
+.row.spanner {
   min-height: 5em;
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
-.spanner .logo-container {
-  width:60%;
+
+.row.spanner .logo-container {
+  width:100%;
   display: inline-block;
 }
 
-.spanner .logo-container a {
+.row.spanner .logo-container a {
   width: 100%;
   display: inline-block;
   font-size: 4em;
   color: black;
 }
 
+.row.spanner {
+  position: relative;
+}
 
-.spanner .profile-setting {
+.row.spanner .profile-setting {
   display: inline-block;
-  float:right;
-  margin-right: 3em;
+  /*float:right;*/
+  margin-right: 0px;
   line-height: 3em;
   min-height: 3em;
   margin-top: 1em;
+  position: absolute;
+  right: 0;
+  top:0;
 }
 
 .spanner .profile-setting div#setting a{
@@ -139,18 +148,18 @@ header div{
   background-color:white;
   position: relative;
   z-index: 0;
+  border:red 1px solid;
 
 }
 .nav ul {
-  padding: 0px;
-  position: relative;
+  padding: 0;
   margin: 0;
 }
 
 .nav ul li{
   display: inline-block;
-  width:calc(98%/4 - 2px);
-  /*border:red 1px solid;*/
+  width:calc(99%/4 - 1px);
+
 }
 
 .nav ul li a {
@@ -158,7 +167,7 @@ header div{
   text-decoration: none;
   color: #323232;
   font-size: 20px;
-  padding: 8px;
+  padding: 8px 2px;
   outline: none;
   display: inline-block;
   width:100%;
@@ -168,9 +177,9 @@ header div{
 .nav ul li a:hover {
   background-color: red;
   color: white;
-  box-shadow: #888888 5px 5px 5px;
-  -moz-box-shadow: #888888 5px 5px 5px;
-  -webkit-box-shadow: #888888 5px 5px 5px;
+  box-shadow: #888888 5px 5px 2px;
+  -moz-box-shadow: #888888 5px 5px 2px;
+  -webkit-box-shadow: #888888 5px 5px 2px;
 }
 
 .nav ul li a:active, .nav ul li a.active {
@@ -249,19 +258,20 @@ header div{
   display: inline-block;
 }
 
-
-
-footer p {
-  margin: 0 auto;
-  width: 60%;
-  padding: 10px;
-}
-
-.copyright{
-  margin: 0 auto;
-}
-
-
 .content-container {
   border: solid 1px red;
 }
+
+.smaller-container {
+}
+
+.footer {
+  border: solid 1px red;
+  margin: 10px 0px;
+}
+
+.footer div.copyright{
+  margin: 0 auto;
+}
+
+

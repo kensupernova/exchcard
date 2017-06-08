@@ -171,8 +171,7 @@ def get_all_activities_of_my_followings(request):
 
                 item["avatar_url"] = avatar_url
 
-                print obj
-                # TODO: CHECK THE BUGS
+                # print obj
                 card_photo = obj.card_photo_uploaded
                 if card_photo:
                     item['has_photo'] = True
@@ -181,25 +180,11 @@ def get_all_activities_of_my_followings(request):
 
                 response_data.append(item)
 
-        # datetime.datetime.strptime('2017-05-29T12:50:33.495153Z', '%Y-%m-%dT%H:%M:%S.%fZ')
-        # print item['created']
-        # 2017-05-29T12:50:33.495153Z
-        # 2017-05-31T07:55:23.112844Z
-        # time in local timezone
-        # >> > datetime.datetime.now()
-        # datetime.datetime(2017, 6, 5, 13, 13, 23, 103926)
-        # time in UTC
-        # >> > datetime.datetime.utcnow()
-        # datetime.datetime(2017, 6, 5, 5, 13, 30, 287766)
-        # timestamp in micro seconds
-        # >> > time.time()
-        # 1496639972.792231
-
         start = time.time()
         sorted_response = sorted(response_data, cmp=compare_created_early_to_late)
         # print sorted_response
         end = time.time()
-        print "time taken to sort: {0} micro seconds".format(int(end - start))
+        print "time taken to sort: {0} micro seconds".format(int((end - start)*1000))
 
         # TODO: PAGINATION
         # TODO: GET THE MOST CURRENT

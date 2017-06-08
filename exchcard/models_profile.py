@@ -15,8 +15,7 @@ from exchcard import settings
 
 from django.contrib.auth import get_user_model # If used custom user mode
 User = get_user_model() #  自定义用户模型
-
-from utils import datetime_helper
+from utils.utils import mills2datetime
 
 class DetailedAddressManager(Manager):
     def create_detailed_address(self, first, second, third, city, stateorprovince, country):
@@ -420,11 +419,11 @@ class Card(models.Model):
     def update_date_with_timestamp(self, *args, **kwargs):
         if (not self.arrived_time) and (self.arrived_time != 0) and (self.arrived_time is not None):
             ## print self.arrived_time
-            self.arrived_date = datetime_helper.mills2datetime(self.arrived_time)
+            self.arrived_date = mills2datetime(self.arrived_time)
 
         if (not self.sent_time) and (self.sent_time != 0) and (self.sent_time is not None):
             ## print self.sent_time
-            self.sent_date = datetime_helper.mills2datetime(self.sent_time)
+            self.sent_date = mills2datetime(self.sent_time)
 
         super(Card, self).save(*args, **kwargs)
 
@@ -623,17 +622,15 @@ class DianZan(models.Model):
     ## the user who dianzan, not profile
     person_who_dianzan = models.ForeignKey('XUser', related_name='dianzans_by_person', default=1)
 
-
     objects = DianZanManager()
 
     class Meta:
         ordering = ['-created']
 
     def as_json(self):
-        created_in_ms = self.created
         return dict(
             dianzan_id = self.id,
             card_by_dianzan = self.card_by_dianzan.id,
             person_who_dianzan = self.person_who_dianzan.id,
-            created = created_in_ms
+            created = self.created
         )

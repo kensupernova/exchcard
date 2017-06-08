@@ -412,6 +412,7 @@ class ReceiveCardActionSerializer(serializers.ModelSerializer):
             "card_receive_id","card_receive_cardname"
         )
 
+
 class UploadCardPhotoActionSerializer(serializers.ModelSerializer):
 
     upload_cardphoto_action_id = serializers.CharField(source='id')

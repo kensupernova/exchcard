@@ -7,8 +7,10 @@
   .hobbyist-main-content-container {
     min-height: 200px;
     border: red 1px solid;
-    margin: 0 5px;
+    /*margin: 0 5px;*/
     z-index: -100;
+    clear: both;
+    overflow: hidden;
   }
 
   .hobbyist-main-content-container .hobbyist-main-title{
@@ -19,19 +21,18 @@
 
   .h-container {
     border: red 1px solid;
-    margin: 1px;
+    margin: 5px;
     min-height: 104px;
-  }
-
-  .clear {
     clear: both;
+    overflow: hidden;
   }
-
 
   .h-item {
     border: red 1px solid;
     height: 100px;
     float: left;
+    margin-left: 5px;
+    margin-top: 5px;
     margin-right: 10px;
     margin-bottom: 10px;
     position: relative;
@@ -46,7 +47,7 @@
   .h-item .h-avatar{
     width: 96px;
     height: 96px;
-    border: red 1px solid;
+    /*border: red 1px solid;*/
     background: transparent;
     display: inline-block;
     margin: 0 2px;
@@ -67,7 +68,7 @@
     width: 100px;
     height: 96px;
     display: inline-block;
-    border: red 1px solid;
+    /*border: red 1px solid;*/
   }
 
   .h-item .h-text-info div{
@@ -97,8 +98,8 @@
 {% endblock %}
 
 {% block content %}
-<div class="content-container hobbyist-main-content-container" ng-app="myApp">
-  <div class="hobbyist-main-title">发烧友</div>
+<div class="content-container hobbyist-main-content-container hobbyist-content-container" ng-app="myApp">
+  <div class="hobbyist-main-title">明信片发烧友</div>
   <div class="h-container" ng-controller="myCtrl">
 
     <div class="h-item" ng-repeat="h in hobbyists"  >
@@ -117,14 +118,8 @@
     </div>
 
     <br style="clear: both; display: none;"/>
-    <div class="clear"></div>
 
   </div>
-
-
-
-  </div>
-
 </div>
 
 

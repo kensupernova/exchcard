@@ -77,12 +77,10 @@ def get_address_before_confirm_send_card(request):
     if request.method == "GET":
         # the sender_id must be the current log in user exchcard_backend_api
         try:
-            profile_of_request_user = Profile.objects.get(profileuser=request.user)
-
-            # TODO: COMMENT OUT FOR DEBUG FINISHED
             # TODO: smartly get recipient!!!
             randomProfile = Profile.objects.order_by("?").first()
-            # randomProfile = profile_of_request_user # FOR DEBUG
+            # profile_of_request_user = Profile.objects.get(profileuser=request.user)
+            # randomProfile = profile_of_request_user
 
             response_data= {}
             response_data["card_name"] = utils.generateUniquePostcardName()
