@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.http import Http404
 
-from exchcard.models_profile import Address, Profile
+from exchcard.models_main import Address, Profile
 from exchcard_backend_api.serializers import AddressSerializer, GetProfileSerializer
 
 from rest_framework import generics

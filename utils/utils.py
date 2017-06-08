@@ -5,7 +5,7 @@ import datetime
 import time
 
 from exchcard import settings
-from exchcard.models_profile import Card
+from exchcard.models_main import Card
 
 def generateToken(username):
     return "I am a token"

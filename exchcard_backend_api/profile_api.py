@@ -5,7 +5,7 @@ User = get_user_model()
 
 from django.db.models import Q
 
-from exchcard.models_profile import Address, Card, Profile, AvatarPhoto
+from exchcard.models_main import Address, Card, Profile, AvatarPhoto
 from exchcard_backend_api.permissions import IsProfileUserOrStaffUser
 from exchcard_backend_api.serializers import AddressSerializer, AvatarPhotoSerializer
 from exchcard_backend_api.serializers import CreateProfileSerializer

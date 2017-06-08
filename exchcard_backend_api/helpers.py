@@ -10,7 +10,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.http import JsonResponse
 
-from exchcard.models_profile import Profile, Follow, SentCardAction, ReceiveCardAction, AvatarPhoto, UploadCardPhotoAction
+from exchcard.models_main import Profile, Follow, SentCardAction, ReceiveCardAction, AvatarPhoto, UploadCardPhotoAction
 from exchcard_backend_api.serializers import SentCardActionSerializer, ReceiveCardActionSerializer, \
     UploadCardPhotoActionSerializer
 from utils.utils import compare_created_early_to_late

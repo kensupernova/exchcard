@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
-from exchcard.models_profile import Card, CardPhoto, Profile
+from exchcard.models_main import Card, CardPhoto, Profile
 
 
 def index(request):

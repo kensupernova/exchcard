@@ -5,10 +5,10 @@ User = get_user_model()
 
 from rest_framework import serializers
 
-from exchcard.models_profile import Card, Profile, Address, AvatarPhoto, CardPhoto,\
+from exchcard.models_main import Card, Profile, Address, AvatarPhoto, CardPhoto,\
     SentCardAction, ReceiveCardAction, \
     Follow, UploadCardPhotoAction
-from exchcard.models_profile import DianZan
+from exchcard.models_main import DianZan
 from exchcard.models import XUser
 
 

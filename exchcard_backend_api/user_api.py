@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model # If used custom user mode
 from rest_framework.serializers import Serializer
 
-from exchcard.models_profile import Follow
+from exchcard.models_main import Follow
 
 User = get_user_model()
 

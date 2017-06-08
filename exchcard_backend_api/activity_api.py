@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from exchcard.models_profile import Card,CardPhoto, Profile, SentCardAction
-from exchcard.models_profile import DianZan
+from exchcard.models_main import Card,CardPhoto, Profile, SentCardAction
+from exchcard.models_main import DianZan
 from exchcard_backend_api.serializers import DianZanSerializer, SentCardActionSerializer
 from rest_framework import generics
 from rest_framework import permissions

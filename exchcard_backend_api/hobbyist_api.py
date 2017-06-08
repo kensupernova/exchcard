@@ -16,7 +16,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
-from exchcard.models_profile import Address, Profile, AvatarPhoto, SentCardAction, ReceiveCardAction, Follow
+from exchcard.models_main import Address, Profile, AvatarPhoto, SentCardAction, ReceiveCardAction, Follow
 from exchcard.models import XUser
 
 from exchcard_backend_api.helpers import get_all_activities_of_user
