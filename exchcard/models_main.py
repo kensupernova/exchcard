@@ -60,8 +60,6 @@ class ProfileManager(Manager):
         return profile
 
 
-
-
 class CardManager(Manager):
     def create(self, *args, **kwargs):
         # 重新定义create
@@ -142,23 +140,6 @@ class CardManager(Manager):
         return card, action, photo
 
 
-
-
-class DianZanManager(Manager):
-    def create_with_ids(self, card_by_dianzan_id,
-                        card_photo_by_dianzan_id, person_who_dianzan_id):
-        if Card.objects.filter(id=card_by_dianzan_id).exists():
-            dianzan = self.create(card_by_dianzan=Card.objects.get(id=card_by_dianzan_id),
-                                  card_photo_by_dianzan=CardPhoto.objects.get(id=card_photo_by_dianzan_id),
-                                  person_who_dianzan=Profile.objects.get(id=person_who_dianzan_id))
-
-            dianzan.save()
-
-            return dianzan
-
-        return None
-
-
 class FollowManager(Manager):
     def create_with_ids(self, subject_id, object_being_followed_id):
         if not Follow.objects.filter(object_being_followed_id=object_being_followed_id).exists():
@@ -183,6 +164,8 @@ class UploadCardPhotoActionManager(Manager):
                           card_host_id=card_host_id,
                           card_photo_uploaded_id=card_photo_uploaded_id)
         return obj
+
+
 
 
 """
@@ -501,6 +484,7 @@ class Follow(models.Model):
     user_being_followed = models.ForeignKey('XUser', related_name='followers_of_user', default=1, null=False)
 
     is_active = models.BooleanField(default=True)
+
     class Meta:
         ordering = ['-created']
 
@@ -608,36 +592,6 @@ class UploadCardPhotoAction(models.Model):
 
     def save(self, *args, **kwargs):
         super(UploadCardPhotoAction, self).save(*args, **kwargs)
-
-
-#--------------------------------------------
-# Feedback on Actions: ReceiveCardAction, SentCardAction,
-class DianZan(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-
-    # the card who is dianzaned
-    card_by_dianzan = models.ForeignKey('Card', related_name='dianzans_of_card', default=1)
-
-    # Photo which is dianzaned
-    card_photo_by_dianzan = models.ForeignKey('CardPhoto', related_name='dianzans_of_card_photo', default=1)
-
-    ## the user who dianzan, not profile
-    person_who_dianzan = models.ForeignKey('XUser', related_name='dianzans_by_person', default=1)
-
-    objects = DianZanManager()
-
-    class Meta:
-        ordering = ['-created']
-
-    def as_json(self):
-        return dict(
-            dianzan_id = self.id,
-            card_by_dianzan = self.card_by_dianzan.id,
-            person_who_dianzan = self.person_who_dianzan.id,
-            created = self.created
-        )
-
-
 
 
 

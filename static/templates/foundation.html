@@ -26,11 +26,11 @@
 </head>
 <body>
 <div id="profile-id-holder" style="display: none">{{profile.id}}</div>
+<div id="user-id-holder" style="display: none">{{profile.profileuser.id}}</div>
 {% csrf_token %}
 <div class="container">
   <div class="smaller-container col-md-10">
     <header class="header" id="header">
-      <!--{% csrf_token %}-->
       <div class="row spanner">
         <div class="logo-container">
           {% if isAuth %}

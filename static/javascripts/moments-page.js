@@ -33,7 +33,7 @@
 
     if(item['activity_type_id'] == 1){
       act_short_name = "发送了一张明信片";// SP
-    } else if(item['actity_type_id'] == 2){
+    } else if(item['activity_type_id'] == 2){
       act_short_name = "发送了一张明信片";// SPP
     } else if(item['activity_type_id'] == 3){
       act_short_name = "注册了一张明信片"; // RP

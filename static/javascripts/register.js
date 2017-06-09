@@ -6,13 +6,13 @@ $(document).ready(function() {
 
   $("#btn-register-submit").click(function () {
     // get the input values for email and password
-    var email = $("#form-email").val() || "zgh10@126.com";
-    var password = $("#form-password").val() || "z111111";
-    var password2 = $("#form-password-2").val() ||  "z111111";
+    // var email = $("#form-email").val() || "zgh10@126.com";
+    // var password = $("#form-password").val() || "z111111";
+    // var password2 = $("#form-password-2").val() ||  "z111111";
 
-    // var email = $("#form-email").val() ;
-    // var password = $("#form-password").val() ;
-    // var password2 = $("#form-password-2").val() ;
+    var email = $("#form-email").val() ;
+    var password = $("#form-password").val() ;
+    var password2 = $("#form-password-2").val() ;
 
     if(password2!=password){
       $("password-error-2").text("第二次输入秘密与第一次不一致。")

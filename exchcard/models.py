@@ -37,16 +37,16 @@ class XUserManager(BaseUserManager):
         if not email:
             raise ValueError(u'用户必须要有邮箱')
 
-        ## 瞒天过海，把邮箱地址转化为用户名
+        # 瞒天过海，把邮箱地址转化为用户名
         username = email.replace("@", "at")
         username = username.replace(".", "dot")
 
-        user = self.self.model(
+        user = self.model(
             email=XUserManager.normalize_email(email),
             username=username,
             type=type if type else 0,
             **kwargs
-        ) ## 不用obj.save()
+        ) ## 必须用obj.save()
 
         user.set_password(password)
         user.save(using=self._db)
