@@ -350,10 +350,22 @@ class CardPhotoSerializer(serializers.ModelSerializer):
 
 #----------------------------------------------------------------------
 class DianZanSerializer(serializers.ModelSerializer):
-    person_who_dianzan_id = serializers.IntegerField(source='person_who_dianzan.id')
+    user_who_zan_id = serializers.IntegerField(source='user_who_zan.id')
+    user_who_zan_username = serializers.CharField(source='user_who_zan.username')
+    user_who_zan_email= serializers.CharField(source='user_who_zan.email')
+
+    sent_card_action_zaned_id = serializers.IntegerField(source='sent_card_action_zaned.id')
+    receive_card_action_zaned_id = serializers.IntegerField(source='receive_card_action_zaned.id')
+    upload_cardphoto_action_zaned_id = serializers.IntegerField(source='upload_cardphoto_action_zaned.id')
+
     class Meta:
         model = DianZan
-        fields = ('id', 'card_by_dianzan', 'person_who_dianzan_id', 'created')
+        fields = ('id', 'created','is_active',
+                  'user_who_zan', 'user_who_zan_id', 'user_who_zan_username', 'user_who_zan_email',
+                  'sent_card_action_zaned_id',
+                  'receive_card_action_zaned_id',
+                  'upload_cardphoto_action_zaned_id'
+                  )
 
 
 class GetUserSendCardActionSerializer(serializers.HyperlinkedModelSerializer):
@@ -374,60 +386,69 @@ class GetUserSendCardActionSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class SentCardActionSerializer(serializers.ModelSerializer):
-    sent_card_action_id = serializers.CharField(source='id')
+    action_id = serializers.IntegerField(source='id')
+    sent_card_action_id = serializers.IntegerField(source='id')
 
     subject_email = serializers.CharField(source='subject.email')
-    subject_id = serializers.CharField(source='subject.id')
+    subject_id = serializers.IntegerField(source='subject.id')
     subject_username = serializers.CharField(source='subject.username')
 
-    card_sent_id = serializers.CharField(source='card_sent.id')
+    card_sent_id = serializers.IntegerField(source='card_sent.id')
     card_sent_cardname = serializers.CharField(source='card_sent.card_name')
 
 
     class Meta:
         model = SentCardAction
         fields = (
-            "sent_card_action_id", "created", "has_photo",
+            "action_id",
+            "sent_card_action_id",
+            "created",
+            "has_photo",
             "subject_id", "subject_email", "subject_username",
             "card_sent_id","card_sent_cardname"
         )
 
 
 class ReceiveCardActionSerializer(serializers.ModelSerializer):
+    action_id = serializers.IntegerField(source='id')
+    receive_card_action_id = serializers.IntegerField(source='id')
 
-    receive_card_action_id = serializers.CharField(source='id')
-
-    subject_id = serializers.CharField(source='subject.id')
+    subject_id = serializers.IntegerField(source='subject.id')
     subject_email = serializers.CharField(source='subject.email')
     subject_username = serializers.CharField(source='subject.username')
 
-    card_receive_id = serializers.CharField(source='card_received.id')
+    card_receive_id = serializers.IntegerField(source='card_received.id')
     card_receive_cardname = serializers.CharField(source='card_received.card_name')
 
     class Meta:
         model = ReceiveCardAction
         fields = (
-            "receive_card_action_id", "created", "has_photo",
+            "action_id",
+            "receive_card_action_id",
+            "created",
+            "has_photo",
             "subject_id", "subject_email", "subject_username",
             "card_receive_id","card_receive_cardname"
         )
 
 
 class UploadCardPhotoActionSerializer(serializers.ModelSerializer):
+    action_id = serializers.IntegerField(source='id')
+    upload_cardphoto_action_id = serializers.IntegerField(source='id')
 
-    upload_cardphoto_action_id = serializers.CharField(source='id')
-
-    subject_id = serializers.CharField(source='subject.id')
+    subject_id = serializers.IntegerField(source='subject.id')
     subject_email = serializers.CharField(source='subject.email')
     subject_username = serializers.CharField(source='subject.username')
 
-    card_actioned_id = serializers.CharField(source='card_actioned.id')
+    card_actioned_id = serializers.IntegerField(source='card_actioned.id')
     card_actioned_cardname = serializers.CharField(source='card_actioned.card_name')
 
     class Meta:
         model = UploadCardPhotoAction
         fields = (
-            "upload_cardphoto_action_id", "created",
+            "action_id",
+            "upload_cardphoto_action_id",
+            "created",
             "subject_id", "subject_email", "subject_username",
             "card_actioned_id","card_actioned_cardname"
         )
@@ -437,11 +458,11 @@ class FollowSerializer(serializers.ModelSerializer):
     """
     serialize follow object
     """
-    subject_id = serializers.CharField(source='subject.id')
+    subject_id = serializers.IntegerField(source='subject.id')
     subject_username = serializers.CharField(source='subject.username')
     subject_email = serializers.CharField(source='subject.email')
 
-    user_being_followed_id = serializers.CharField(source='user_being_followed.id')
+    user_being_followed_id = serializers.IntegerField(source='user_being_followed.id')
     user_being_followed_username = serializers.CharField(source='user_being_followed.username')
     user_being_followed_email = serializers.CharField(source='user_being_followed.email')
 

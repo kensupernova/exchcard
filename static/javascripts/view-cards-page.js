@@ -82,11 +82,8 @@ app.run(function($rootScope, $http) {
     // console.log(JSON.stringify(response.data['sent_travelling'].length));
     // console.log(JSON.stringify(response.data['receive_travelling'].length));
 
-    // 点击第一个tab, 相当于点击shref
-    // 相当于 Refresh the ui-view
-    document.getElementById('#tab-sent-arrived').click();
-
-
+    // 点击第 二个tab, 相当于点击shref, refresh ui-view
+    document.getElementById("tab-receive-arrived").click();
 
   }, function myError(response) {
     // console.log("fail to get cards data!");

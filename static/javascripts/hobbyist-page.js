@@ -30,7 +30,7 @@ app.controller('myCtrl', function($rootScope, $scope, $http) {
     method: "GET",
     url: getHListUrl
   }).then(function mySucces(response) {
-    var data = JSON.parse(response.data)
+    var data = JSON.parse(response.data);
     // console.log(data[0]);
     $scope.hobbyists = data;
 

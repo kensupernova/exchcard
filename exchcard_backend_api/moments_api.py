@@ -10,9 +10,10 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.http import JsonResponse
 
-from exchcard.models_main import Profile, Follow, SentCardAction, ReceiveCardAction, AvatarPhoto, UploadCardPhotoAction
+from exchcard.models_main import Profile, Follow, SentCardAction, ReceiveCardAction, AvatarPhoto, UploadCardPhotoAction, \
+    DianZan
 from exchcard_backend_api.serializers import SentCardActionSerializer, ReceiveCardActionSerializer, \
-    UploadCardPhotoActionSerializer
+    UploadCardPhotoActionSerializer, DianZanSerializer
 from utils.utils import compare_created_early_to_late
 
 
@@ -44,7 +45,7 @@ def get_all_activities_of_my_followings(request):
     #     print "start=%s" % request.GET['start']
 
     user = request.user
-    # 用户所有的关注
+    # 用户所有的关注用户
     followings = Follow.objects.filter(subject=user)
 
     if not followings.exists():
@@ -125,6 +126,14 @@ def get_all_activities_of_my_followings(request):
 
                 item["avatar_url"] = avatar_url
 
+                # 活动得到的feedback, dianzan
+                dianzans = DianZan.objects.filter_by_action_id(sent_card_action_zaned_id=obj.id)
+
+                if dianzans:
+                    dianzans_serializer = DianZanSerializer(dianzans, many=True)
+                    item["feedback"]={}
+                    item["feedback"]["dianzans"] = dianzans_serializer.data
+
                 response_data.append(item)
 
             for obj in receive_actions:
@@ -154,6 +163,12 @@ def get_all_activities_of_my_followings(request):
 
                 item["avatar_url"] = avatar_url
 
+                dianzans = DianZan.objects.filter_by_action_id(receive_card_action_zaned_id=obj.id)
+
+                if dianzans:
+                    dianzans_serializer = DianZanSerializer(dianzans, many=True)
+                    item["feedback"] = {}
+                    item["feedback"]["dianzans"] = dianzans_serializer.data
                 response_data.append(item)
 
             for obj in upload_cardphoto_actions:
@@ -178,13 +193,24 @@ def get_all_activities_of_my_followings(request):
                     item['card_photo_url'] = card_photo.card_photo.url
                     item['card_photo_name'] = card_photo.card_photo.name
 
+                #---------------
+                dianzans = DianZan.objects.filter_by_action_id(upload_cardphoto_action_zaned_id=obj.id)
+
+                if dianzans:
+                    dianzans_serializer = DianZanSerializer(dianzans, many=True)
+                    # 点赞总数
+                    count = len(dianzans)
+                    # 点赞用户字符串
+
+                    item["feedback"] = {}
+                    item["feedback"]["dianzans"] = dianzans_serializer.data
+
                 response_data.append(item)
 
-        start = time.time()
+        # start = time.time()
         sorted_response = sorted(response_data, cmp=compare_created_early_to_late)
-        # print sorted_response
-        end = time.time()
-        print "time taken to sort: {0} micro seconds".format(int((end - start)*1000))
+        # end = time.time()
+        # print "time taken to sort: {0} micro seconds".format(int((end - start)*1000))
 
         # TODO: PAGINATION
         # TODO: GET THE MOST CURRENT

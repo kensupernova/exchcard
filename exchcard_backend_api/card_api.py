@@ -5,12 +5,10 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
-from exchcard.models_main import Card,CardPhoto, Profile, ReceiveCardAction, UploadCardPhotoAction
-from exchcard.models_main import DianZan
+from exchcard.models_main import Card,CardPhoto, Profile, UploadCardPhotoAction
 from exchcard_backend_api.permissions import IsSenderStaffOrReadOnly
 from exchcard_backend_api.serializers import CreateCardSerializer, CardSerializer, CardPhotoSerializer, \
     SentCardActionSerializer, ReceiveCardActionSerializer, UploadCardPhotoActionSerializer
-from exchcard_backend_api.serializers import DianZanSerializer
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status

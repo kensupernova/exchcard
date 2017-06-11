@@ -25,8 +25,8 @@
 
 </head>
 <body>
-<div id="profile-id-holder" style="display: none">{{profile.id}}</div>
-<div id="user-id-holder" style="display: none">{{profile.profileuser.id}}</div>
+<div id="logged-profile-id-holder" style="display: none">{{profile.id}}</div>
+<div id="logged-user-id-holder" style="display: none">{{profile.profileuser.id}}</div>
 {% csrf_token %}
 <div class="container">
   <div class="smaller-container col-md-10">
@@ -42,7 +42,7 @@
         <div class="profile-setting right">
           {% if isAuth %}
             {% if profile %}
-              <div >{{profile.profileuser.email}}</div>
+              <div ><a href="/profile/">{{profile.profileuser.email}}</a></div>
               <div id="setting"><a href="/setting">设置</a></div>
             {% else %}
               <div>

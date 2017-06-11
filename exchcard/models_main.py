@@ -166,6 +166,65 @@ class UploadCardPhotoActionManager(Manager):
         return obj
 
 
+class DianZanManager(Manager):
+    def create_with_ids(self, user_who_zan_id, sent_card_action_zaned_id=None,
+                        receive_card_action_zaned_id=None, upload_cardphoto_action_zaned_id=None,
+                        *args, **kwargs):
+        obj = self.model(user_who_zan_id=user_who_zan_id,
+                         sent_card_action_zaned_id=sent_card_action_zaned_id,
+                         receive_card_action_zaned_id=receive_card_action_zaned_id,
+                         upload_cardphoto_action_zaned_id=upload_cardphoto_action_zaned_id)
+        # if kwargs:
+        #     if kwargs.get('sent_card_action_zaned_id', None):
+        #         obj.sent_card_action_zaned_id = kwargs['sent_card_action_zaned_id']
+        #     if kwargs.get('receive_card_action_zaned_id', None):
+        #         obj.receive_card_action_zaned_id = kwargs['receive_card_action_zaned_id']
+        #     if kwargs.get('upload_cardphoto_action_zaned_id', None):
+        #         obj.upload_cardphoto_action_zaned_id = kwargs['upload_cardphoto_action_zaned_id']
+
+        # save !!! important
+        obj.save(using=self._db)
+        return obj
+
+    @staticmethod
+    def filter_by_action_id(sent_card_action_zaned_id=None,
+                            receive_card_action_zaned_id=None, upload_cardphoto_action_zaned_id=None):
+        """
+        通过活动action_id过滤得到DianZan
+        :param args:
+        :param kwargs:
+        :return: list of objects
+        """
+        dianzans = None
+        if not sent_card_action_zaned_id:
+            dianzans = DianZan.objects.filter(sent_card_action_zaned_id=sent_card_action_zaned_id).\
+                filter(is_active=True)
+
+        if not receive_card_action_zaned_id:
+            dianzans = DianZan.objects.filter(receive_card_action_zaned_id=receive_card_action_zaned_id).\
+                filter(is_active=True)
+
+        if not upload_cardphoto_action_zaned_id:
+            dianzans = DianZan.objects.filter(upload_cardphoto_action_zaned_id=upload_cardphoto_action_zaned_id).\
+                filter(is_active=True)
+
+        return dianzans
+
+
+class CommentManager(Manager):
+    def create_with_ids(self, comment, user_who_comment_id, *args, **kwargs):
+        obj = self.model(comment=comment, user_who_comment_id=user_who_comment_id)
+        if kwargs:
+            if kwargs.get('sent_card_action_commented_id', None):
+                obj.sent_card_action_commented_id = kwargs['sent_card_action_commented_id']
+            if kwargs.get('receive_card_action_commented_id', None):
+                obj.sent_card_action_commented_id = kwargs['receive_card_action_commented_id']
+            if kwargs.get('upload_cardphoto_action_commented_id', None):
+                obj.sent_card_action_commented_id = kwargs['upload_cardphoto_action_commented_id']
+
+        # save !!! important
+        obj.save(using=self._db)
+        return obj
 
 
 """
@@ -592,6 +651,79 @@ class UploadCardPhotoAction(models.Model):
 
     def save(self, *args, **kwargs):
         super(UploadCardPhotoAction, self).save(*args, **kwargs)
+
+
+class DianZan(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    user_who_zan = models.ForeignKey('XUser',
+                                    related_name='dianzans_by_user',
+                                    null=False)
+    is_active = models.BooleanField(null=False, default=True)
+    # 用户活动点赞的对象, 三种情况
+    sent_card_action_zaned = models.ForeignKey('SentCardAction',
+                                            related_name='dianzans_of_send_card_action',
+                                            null=True)
+    receive_card_action_zaned = models.ForeignKey('ReceiveCardAction',
+                                                related_name='dianzans_of_receive_card_action',
+                                                null=True)
+    upload_cardphoto_action_zaned = models.ForeignKey('UploadCardPhotoAction',
+                                                    related_name='dianzans_of_receive_card_action',
+                                                    null=True)
+    objects = DianZanManager()
+
+    class Meta:
+        ordering = ['-created']
+
+    def save(self, *args, **kwargs):
+        super(DianZan, self).save(*args, **kwargs)
+
+    def toggle_active(self, *args, **kwargs):
+        self.is_active = not self.is_active
+        super(DianZan, self).save(*args, **kwargs)
+
+
+class Comment(models.Model):
+    """
+    用户USER给其他用户或者自己活动Action, ReceiveCardAction, SentCardAction, UploadCardPhotoAction,
+    （SP, SPP, RP, RPP, UPP）的评论， 或者对评论的评论
+    # Feedback on Actions: ReceiveCardAction, SentCardAction, UploadCardPhotoAction
+    """
+    created = models.DateTimeField(auto_now_add=True)
+    comment = models.CharField(max_length=500, null=False)
+    user_who_comment = models.ForeignKey('XUser',
+                                         related_name='comments_by_user',
+                                         null=False)
+
+
+    # 用户评论的对象, 三种情况
+    sent_card_action_commented = models.ForeignKey('SentCardAction',
+                                                   related_name='comments_of_send_card_action',
+                                                   null=True)
+
+    receive_card_action_commented = models.ForeignKey('ReceiveCardAction',
+                                                      related_name='comments_of_receive_card_action',
+                                                      null=True)
+
+    upload_cardphoto_action_commented = models.ForeignKey('UploadCardPhotoAction',
+                                                          related_name='comments_of_receive_card_action',
+                                                          null=True)
+
+    # reply_to =
+
+    objects = CommentManager()
+
+    class Meta:
+        ordering = ['-created']
+
+    def as_json(self):
+        return dict(
+            created=self.created,
+            comment_id=self.id,
+            comment=self.comment,
+            user_who_comment_id=self.user_who_comment.id
+        )
+
+
 
 
 

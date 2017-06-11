@@ -1,19 +1,3 @@
-$(document).ready(function(){
-	// console.log("profile page ...");
-
-  $(".btn-send-card").click(function () {
-    window.location.href="/card/send/";
-  });
-
-  $(".btn-receive-card").click(function () {
-    window.location.href="/card/receive/";
-  });
-
-  $("#cards").addClass('active');
-
-});
-
-
 'use strict';
 var profile_id =$('#profile-id-holder').text().trim();
 var stateCountUrl = "/exchcard/api/"+"profiles/"+profile_id+"/cards/eachstate/count/";
@@ -28,53 +12,6 @@ app.config(function($interpolateProvider) {
   $interpolateProvider.endSymbol('}]}');
 });
 
-
-app.controller("myCtrl", function($scope, $http) {
-
-  $http({
-  method: "get",
-  url: stateCountUrl
-  }).then(function mySucces(response) {
-    // console.log(JSON.stringify(response.data));
-
-    $scope.sent_cards_arrived_count = response.data["sent_cards_count"]["arrived"];
-    $scope.sent_cards_travelling_count = response.data["sent_cards_count"]["travelling"];
-
-    $scope.receive_cards_arrived_count = response.data["receive_cards_count"]["arrived"];
-    $scope.receive_cards_travelling_count = response.data["receive_cards_count"]["travelling"];
-
-  }, function myError(response) {
-
-  });
-
-  var baseUrl = window.location.protocol +"//"+window.location.host;
-  var defaultAvatarUrl = "/static/images/default-avatar.jpg";
-
-  // 有关头像图片的URL
-  var getAvatarUrl = "/exchcard/api/profiles/avatar/url/";
-  // js.cookie可以产生csrftoken
-  var csrftoken = Cookies.get('csrftoken');
-
-
-  // 下载头像图片
-  $http({
-    method:"GET",
-    headers:{
-      'X-CSRFToken': csrftoken
-    },
-    url: getAvatarUrl
-  }).then(function mySucces(response) {
-    // console.log(JSON.stringify(response));
-
-      $scope.avatar_url = response.data['avatar'];
-
-  }, function myError(response) {
-    // console.log(JSON.stringify(response));
-
-  });
-
-});
-
 // --------------------------------------------------
 //// angular ui router configuration
 
@@ -86,25 +23,33 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
   var sentArrivedState = {
     url:'/sentArrived',
     name:'sentArrived',
-    templateUrl: '/static/templates/exchcard/angular_templates/cards/sent-arrived.html'
+    templateUrl: '/static/templates/exchcard/angular_templates/cards/sent-arrived.html',
+    // 每次单击调用控制器,不缓存
+    cache: false
   };
 
   var receiveArrivedState= {
     url: '/receiveArrived',
     name: 'receiveArrived',
-    templateUrl: '/static/templates/exchcard/angular_templates/cards/receive-arrived.html'
+    templateUrl: '/static/templates/exchcard/angular_templates/cards/receive-arrived.html',
+    // 每次单击调用控制器,不缓存
+    cache: false
   };
 
   var sentTravellingState= {
     url: '/sentTravelling',
     name: 'sentTravelling',
-    templateUrl: '/static/templates/exchcard/angular_templates/cards/sent-travelling.html'
+    templateUrl: '/static/templates/exchcard/angular_templates/cards/sent-travelling.html',
+    // 每次单击调用控制器,不缓存
+    cache: false
   };
 
   var receiveTravellingState= {
     url: '/receiveTravelling',
     name: 'receiveTravelling',
-    templateUrl: '/static/templates/exchcard/angular_templates/cards/receive-travelling.html'
+    templateUrl: '/static/templates/exchcard/angular_templates/cards/receive-travelling.html',
+    // 每次单击调用控制器,不缓存
+    cache: false
   };
 
   // var sentArrivedState = {
@@ -233,10 +178,13 @@ app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $u
 
 }]);
 
-///// 运行app
-app.run(function($rootScope, $http) {
-  var csrftoken = Cookies.get('csrftoken');
 
+app.run(function($rootScope){
+  console.log("angular app is running");
+});
+
+app.controller('cardsCtrl', function($rootScope, $http, $state) {
+  var csrftoken = Cookies.get('csrftoken');
   $http({
     method: "GET",
     headers: {
@@ -257,28 +205,29 @@ app.run(function($rootScope, $http) {
     // console.log(JSON.stringify(response.data['sent_travelling'].length));
     // console.log(JSON.stringify(response.data['receive_travelling'].length));
 
-    // Refresh the ui-view
-    // 点击第一个tab, 相当于点击shref
+    // 下载数据后, Refresh the ui-view
+
+    // METHOD 1:
+    // 点击第一个tab, 相当于点击shref, 相当于refresh ui-view
     document.getElementById("tab-receive-arrived").click();
 
-
-    document.getElementById("tab-sent-arrived").click();
-    // // angular里面无效
-    // $('#tab-receive-arrived').click();
-    // $('#tab-sent-arrived').click();
-
-
+    // METHOD 2:
+    // 一种可以通过$state.go的方式跳转路由，同样可以使用这个参数来处理；
+    // 另外一种可以直接使用$state.reload，直接调用$state.reload()是加载整个页面，
+    // $state.reload('currentState')则是加载当前路由，这些在源码的注释中都有清晰的说明
+    // $state.go('sentArrived');
 
   }, function myError(response) {
     // console.log("fail to get cards data!");
   });
+
 });
 
 
-app.controller('sentArrivedCtrl',  function($scope, $rootScope) {
+app.controller('sentArrivedCtrl',  function($scope, $rootScope, $state) {
   $scope.sent_arrived = $rootScope.sent_arrived;
+  // $state.reload();
 
-  // console.log("rendering sent arrived");
 });
 
 app.controller('receiveArrivedCtrl', function($scope, $rootScope) {
@@ -297,4 +246,51 @@ app.controller('receiveTravellingCtrl', function($scope, $rootScope) {
   $scope.receive_travelling = $rootScope.receive_travelling;
 
   // console.log("rendering receive travelling");
+});
+
+
+app.controller("infoCtrl", function($scope, $http) {
+
+  $http({
+    method: "get",
+    url: stateCountUrl
+  }).then(function mySucces(response) {
+    // console.log(JSON.stringify(response.data));
+
+    $scope.sent_cards_arrived_count = response.data["sent_cards_count"]["arrived"];
+    $scope.sent_cards_travelling_count = response.data["sent_cards_count"]["travelling"];
+
+    $scope.receive_cards_arrived_count = response.data["receive_cards_count"]["arrived"];
+    $scope.receive_cards_travelling_count = response.data["receive_cards_count"]["travelling"];
+
+  }, function myError(response) {
+
+  });
+
+  var baseUrl = window.location.protocol +"//"+window.location.host;
+  var defaultAvatarUrl = "/static/images/default-avatar.jpg";
+
+  // 有关头像图片的URL
+  var getAvatarUrl = "/exchcard/api/profiles/avatar/url/";
+  // js.cookie可以产生csrftoken
+  var csrftoken = Cookies.get('csrftoken');
+
+
+  // 下载头像图片
+  $http({
+    method:"GET",
+    headers:{
+      'X-CSRFToken': csrftoken
+    },
+    url: getAvatarUrl
+  }).then(function mySucces(response) {
+    // console.log(JSON.stringify(response));
+
+    $scope.avatar_url = response.data['avatar'];
+
+  }, function myError(response) {
+    // console.log(JSON.stringify(response));
+
+  });
+
 });

@@ -5,25 +5,24 @@
 {% endblock %}
 
 {% block content %}
-<div class="profile-main-content-container content-container" ng-app="myApp" >
-  <div class="info-box" ng-controller="myCtrl">
+<div class="profile-main-content-container profile-content-container content-container" ng-app="myApp" >
+  <div class="info-box" ng-controller="infoCtrl">
   <div class="upper">
-   <div class="left">
-    <div class="profile-image">
-     <div>
-      <img src="{[{avatar_url}]}">
-     </div>
+    <div class="left">
+      <div class="profile-image">
+        <div>
+          <img src="{[{avatar_url}]}">
+        </div>
+      </div>
+      <div class="info-summary">
+      <div>成功发送了{[{sent_cards_arrived_count}]}张</div>
+      <div>成功接收了{[{receive_cards_arrived_count}]}张</div>
+      <div>有{[{sent_cards_travelling_count}]}张明信片在飞向别人</div>
+      <div>有{[{receive_cards_travelling_count}]}张明信片正在飞向我</div>
     </div>
-    <div class="info-summary">
-
-     <div>成功发送了{[{sent_cards_arrived_count}]}张</div>
-     <div>成功接收了{[{receive_cards_arrived_count}]}张</div>
-     <div>有{[{sent_cards_travelling_count}]}张明信片在飞向别人</div>
-     <div>有{[{receive_cards_travelling_count}]}张明信片正在飞向我</div>
-    </div>
-
    </div>
-   <div class="right">
+
+    <div class="right">
 
     <div class="btns">
      <div class="btn-send-card">
@@ -34,27 +33,25 @@
      </div>
     </div>
    </div>
-
   </div>
 
 
  </div>
-  <div class="profile-cards-info-container">
-   <div>
-    <label class="profile-cards-info-main-title">明信片统计</label>
+   <div class="profile-cards-info-container" ng-controller="cardsCtrl">
+     <div>
+     <label class="profile-cards-info-main-title">明信片统计</label>
    </div>
    <div class="tab-btn-container ">
 
-    <a ui-sref="sentArrived" ui-sref-active="active" id="tab-sent-arrived" class="tab-btn">成功寄送</a>
-    <a ui-sref="receiveArrived" ui-sref-active="active" id="tab-receive-arrived" class="tab-btn">成功接收</a>
-    <a ui-sref="sentTravelling" ui-sref-active="active" id="tab-sent-travelling" class="tab-btn">未寄送到</a>
-    <a ui-sref="receiveTravelling" ui-sref-active="active" id="tab-receive-travelling" class="tab-btn">未接收到</a>
+     <a ui-sref="sentArrived" ui-sref-opts="{reload:true}" ui-sref-active="active" id="tab-sent-arrived" class="tab-btn">成功寄送</a>
+     <a ui-sref="receiveArrived" ui-sref-opts="{reload:true}" ui-sref-active="active" id="tab-receive-arrived" class="tab-btn">成功接收</a>
+     <a ui-sref="sentTravelling" ui-sref-opts="{reload:true}" ui-sref-active="active" id="tab-sent-travelling" class="tab-btn">未寄送到</a>
+     <a ui-sref="receiveTravelling" ui-sref-opts="{reload:true}" ui-sref-active="active" id="tab-receive-travelling" class="tab-btn">未接收到</a>
 
    </div>
    <div>
-    <ui-view></ui-view>
+     <ui-view></ui-view>
    </div>
-
   </div>
 
   <!--<div class="feeds-box">-->
@@ -78,6 +75,23 @@
 {% endblock %}
 
 {% block jscontainer %}
+<script>
+  $(document).ready(function(){
+    // console.log("profile page ...");
+
+    $(".btn-send-card").click(function () {
+      window.location.href="/card/send/";
+    });
+
+    $(".btn-receive-card").click(function () {
+      window.location.href="/card/receive/";
+    });
+
+    $("#cards").addClass('active');
+
+  });
+</script>
+
 <script type="text/javascript" src="{{STATIC_URL}}lib/angular.js"></script>
 <script src="{{STATIC_URL}}lib/angular-ui-router.min.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}javascripts/profile-page.js"></script>

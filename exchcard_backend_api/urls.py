@@ -188,19 +188,6 @@ urlpatterns = format_suffix_patterns([
         "exchcard_backend_api.card_api.card_check_is_arrived",
         name="card-check-arrive"),
 
-    # 某张明信片的某张照片得到的某个点赞
-    url(r"^cards/(?P<cardid>[0-9]+)/cardphotos/(?P<photoid>[0-9]+)/dianzan/$",
-        "exchcard_backend_api.activity_api.card_dianzan",
-        name="card-photo-dianzan-crud"),
-    # 某张明信片的某张照片得到的所有的点赞
-    url(r"^cards/(?P<cardid>[0-9]+)/cardphotos/(?P<photoid>[0-9]+)/dianzans/$",
-        "exchcard_backend_api.activity_api.card_dianzans",
-        name="card-photo-dianzans-all"),
-    # 某张明信片的所有照片得到的所有的点赞
-    url(r"^cards/(?P<cardid>[0-9]+)/dianzans/$", activity_api.DianzanListView.as_view(),
-        name="card-dianzans-all"),
-
-
 
     ## 明信片实时信息
     url(r"^cards/feeds/$", "exchcard_backend_api.card_api.cards_feeds",
@@ -231,10 +218,19 @@ urlpatterns = format_suffix_patterns([
     # 所有发送明信片的活动
     url(r"^hobbyist/sent-card/list/$", activity_api.SentCardActionListView.as_view(),
         name="sent-card-activity-list"),
-## ------------------------------------------------------------
+#------------------------------------------------------------
     ## 朋友圈
     url(r"^moments/followings/activities/$", "exchcard_backend_api.moments_api.get_all_activities_of_my_followings",
         name="get-all-activities-of-my-followings"),
+# ---------------------------------------------------------------
+#   某个动态得到点赞
+    url(r"^moments/activity/dianzan/create/$",
+        "exchcard_backend_api.activity_api.make_dianzan",
+        name="make_dianzan"),
+
+    url(r"^moments/activity/dianzan/toggle/$",
+            "exchcard_backend_api.activity_api.toggle_dianzan",
+            name="toggle_dianzan"),
 
 ## ------------------------------------------------------------
     ## 其他

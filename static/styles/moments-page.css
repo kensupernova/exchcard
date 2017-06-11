@@ -23,21 +23,33 @@
 }
 
 .moments-container .act-item-container .left{
-  width: 30%;
+  width: 20%;
   float: left;
+  margin-top: 0.5em;
 }
 
 .moments-container .act-item-container .right{
-  width: 68%;
+  width: 78%;
   float: left;
   min-height: 5em;
   text-align: left;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  border: 1px solid red;
+}
+.moments-container .act-item-container .act-subject-avatar-container{
+  clear: both;
+  overflow: hidden;
 }
 
 .moments-container .act-item-container .act-subject-avatar-container img{
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   overflow: hidden;
+  float:right;
+  margin-right: 2em;
+  padding: 5px;
+  border: 1px solid red;
 }
 
 .moments-container .act-item-container .act-photos-container img {
@@ -47,4 +59,80 @@
 
 .moments-container .act-item-container .act-time-container {
   color: darkgray;
+}
+
+.act-item-container .btn-feedback-container {
+
+}
+
+.act-item-container .btn-feedback-container  .btn-feedback {
+  display: inline-block;
+  font-size: 8px;
+  text-align: center;
+  width: 5em;
+  height: 2em;
+  line-height: 2em;
+  border: 1px solid red;
+}
+
+
+.btn-feedback-container {
+
+}
+
+
+
+.btn-feedback-container{
+
+}
+
+.btn-feedback-container .btn-feedback{
+  color: black;
+  background: white;
+}
+.btn-feedback-container .btn-feedback:hover,
+.btn-feedback-container .btn-feedback:active{
+  background: red;
+  color: white;
+  box-shadow: red 2px 2px 0px;
+  cursor: pointer;
+}
+
+.btn-feedback-container .btn-feedback:hover img,
+.btn-feedback-container .btn-feedback:active img,
+.btn-feedback-container .btn-feedback:hover span,
+.btn-feedback-container .btn-feedback:active span{
+  background: red;
+}
+
+.btn-feedback-container .btn-feedback-pressed {
+  background: transparent;
+  color: gray;
+
+}
+
+
+.btn-feedback-container .img-icon{
+  width: 1.5em;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  margin: 0 5px;
+}
+
+
+.dianzans-container {
+  border: solid red 1px;
+  margin-top: 5px;
+  padding-left: 10px;;
+}
+
+.dianzans-container .dianzan-img.img-icon{
+  width: 1.5em;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  display: inline-block;
+}
+
+.dianzans-container .dianzan-username-str{
+  display: inline-block;
 }

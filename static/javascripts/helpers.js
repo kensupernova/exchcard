@@ -16,3 +16,10 @@ function compare_two_date(a, b) {
 function hash_file_name(fname){
 
 }
+
+
+// TODO: 把html文件变成String, 用于创建新元素
+function html_to_string(fname){
+
+
+}

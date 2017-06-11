@@ -3,17 +3,14 @@ $(document).ready(function(){
   // local login
 	$(".btn-login-submit").click(function(){
     // get the input values for email and password
-    // var email = $("#form_email").val()|| "zgh1@126.com";
-    // var password = $("#form_password").val()||"zz1111";
+    var email = $("#form_email").val()|| "zgh1@126.com";
+    var password = $("#form_password").val()||"zz1111";
 
-    var email = $("#form_email").val();
-    var password = $("#form_password").val();
+    // var email = $("#form_email").val();
+    // var password = $("#form_password").val();
 
-    var username = convert_email_to_username_sha1(email);
-
-    // console.log("username: " + username);
-    // console.log("password: " + password);
-    // console.log("email: " + email);
+    console.log("password: " + password);
+    console.log("email: " + email);
 
     if(!validate_email(email)){
       console.log("email is wrong")

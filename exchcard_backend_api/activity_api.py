@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+"""
+Activity就是就是各种Action
+"""
+from django.http import JsonResponse
 
 from exchcard.models_main import Card,CardPhoto, Profile, SentCardAction
 from exchcard.models_main import DianZan
@@ -8,27 +12,6 @@ from rest_framework import permissions
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-
-
-# All the dianzan of a postcard
-class DianzanListView(generics.ListAPIView):
-    serializer_class = DianZanSerializer
-    permission_classes = [permissions.IsAuthenticated, ]
-
-    def get_queryset(self):
-        """
-        This view should return a list of all the purchases
-        for the currently authenticated user.
-        """
-        cardid = self.kwargs['cardid']
-        card = Card.objects.filter(id=int(cardid))
-        return DianZan.objects.filter(card_by_dianzan=card)
-
-
-class DianzanRUDView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = DianZan.objects.all()
-    serializer_class =  DianZanSerializer
-    permission_classes = [permissions.IsAuthenticated, ]
 
 
 class SentCardActionListView(generics.ListAPIView):
@@ -47,79 +30,203 @@ class SentCardActionDetailView(generics.RetrieveAPIView):
         permissions.IsAuthenticated
     ]
 
-##################################################
-### add dianzan to a card
-@api_view(["GET", "POST", "PUT", "DELETE",  ])
+
+#-----------------------------------------------------------
+
+
+@api_view(["POST"])
 @permission_classes([permissions.IsAuthenticated,])
-def card_dianzan(request, cardid, photoid):
-    profile_from_user = Profile.objects.get(profileuser=request.user)
+def toggle_dianzan(request):
+    """
+    make dianzan
+    :param request:
+    :return:
+    """
+    user = request.user
 
-    try:
-        card = Card.objects.get(id=int(cardid))
-    except Card.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == "POST":
+        request_data = request.data
+        """
+        得到数据格式
+        {
+            user_who_action_id: '',
+            activity_type_id: '',
+            activity_short_name: '',
+            action_id:""
+        }
+        activity_type_id 可以确定是那种活动，SentCardAction, ReceiveCardAction, UploadCardPhotoAction,
+        action_id + activity_type_id, 可以查询到被点赞的对象
+        """
+        user_who_zan_id = user.id
+        if request_data.get('user_who_action_id', None) == user.id:
+           print "You are dianzan your own action!"
 
-    try:
-        cardphoto = CardPhoto.objects.get(id=int(photoid))
-    except CardPhoto.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        activity_type_id = request_data.get('activity_type_id', None)
+        action_id = request_data.get('action_id', None)
+        # activity_sort_name= request_data.get('activity_short_name', None)
 
-    data = request.data
+        # print 'action id: %s ' % action_id
+        # print 'activity_type_id: %s ' % activity_type_id
+        # print 'user_who_zan_id: %s ' % user_who_zan_id
 
-    if request.method == 'POST':
-        card_by_dianzan_id = card.id,
-        person_who_dianzan_id = profile_from_user.id
+        #---------------------------
+        # check whether the dianzan is already exist,
+        # the same user make dianzan to the same action.
+        # if exist, toggle is_active
+        # otherwise, create new dianzan
 
-        ## check whether had been dianzan already
-        if DianZan.objects.filter(person_who_dianzan = profile_from_user,
-                                  card_by_dianzan = card,
-                                  card_photo_by_dianzan = cardphoto).exists():
-            # DianZan.objects.filter(person_who_dianzan = profile_from_user, card_by_dianzan = card).delete()
-            return Response({"detail": "already dianzan"})
+        if activity_type_id == 1 or activity_type_id == '1'\
+                or activity_type_id == 2 or activity_type_id == "2":
+            # SentCardAction, No photo
+            # action = SentCardAction.objects.get(id=action_id)
+
+            existing_dianzan = DianZan.objects.filter_by_action_id \
+                (sent_card_action_zaned_id=action_id).filter(user_who_zan_id=user.id)
+            if existing_dianzan.exists():
+                dianzan = existing_dianzan.first()
+                # dianzan.is_active = False
+                # dianzan.save();
+                dianzan.toggle_active()
+
+            else:
+                dianzan = DianZan.objects.create_with_ids(
+                    user_who_zan_id=user_who_zan_id,
+                    sent_card_action_zaned_id=action_id
+                 )
+
+        elif activity_type_id == 3 or activity_type_id == '3'\
+                or activity_type_id == 4 or activity_type_id == "4":
+            # ReceiveCardAction, No photo
+            # action = ReceiveCardAction.objects.get(id=action_id)
+
+            existing_dianzan = DianZan.objects.filter_by_action_id \
+                (receive_card_action_zaned_id=action_id).filter(user_who_zan_id=user.id)
+            if existing_dianzan.exists():
+                dianzan = existing_dianzan.first()
+                # dianzan.is_active = False
+                # dianzan.save();
+                dianzan.toggle_active()
+
+            else:
+                dianzan = DianZan.objects.create_with_ids(
+                user_who_zan_id=user_who_zan_id,
+                receive_card_action_zaned_id=action_id
+            )
+
+        elif activity_type_id == 5 or activity_type_id == '5'\
+                or activity_type_id == 5 or activity_type_id == "5":
+            # UploadCardPhotoAction, photo
+            # action = UploadCardPhotoAction.objects.get(id=action_id)
+            existing_dianzan = DianZan.objects.filter_by_action_id \
+                (upload_cardphoto_action_zaned_id=action_id).filter(user_who_zan_id=user.id)
+            if existing_dianzan.exists():
+                dianzan = existing_dianzan.first()
+                # dianzan.is_active = False
+                # dianzan.save();
+                dianzan.toggle_active()
+
+            else:
+                dianzan = DianZan.objects.create_with_ids(
+                    user_who_zan_id=user_who_zan_id,
+                    upload_cardphoto_action_zaned_id=action_id
+                )
 
         else:
-            zan = DianZan.objects.create_with_ids(card_by_dianzan_id=card.id,
-                                                  card_photo_by_dianzan_id=cardphoto.id,
-                                                person_who_dianzan_id=profile_from_user.id)
-            serializer = DianZanSerializer(zan)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            dianzan = None
 
-    if request.method == "PUT":
-        ## check whether had been dianzan already
-        if DianZan.objects.filter(person_who_dianzan=profile_from_user, card_by_dianzan=card).exists():
-            # DianZan.objects.filter(person_who_dianzan=profile_from_user, card_by_dianzan=card).delete()
-            return Response({"detail": "Already dianzan"})
+        if dianzan:
+            serializer = DianZanSerializer(dianzan)
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return JsonResponse({
+                "details": "Fail to dianzan"
+            }, safe=True)
+
+
+@api_view(["POST"])
+@permission_classes([permissions.IsAuthenticated,])
+def make_dianzan(request):
+    """
+    :param request:
+    :return:
+    """
+    user = request.user
+    profile = Profile.objects.get(profileuser=request.user)
+    if request.method == "POST":
+        request_data = request.data
+        """
+        得到数据格式
+        {
+            user_who_action_id: '',
+            activity_type_id: '',
+            activity_short_name: '',
+            action_id:""
+        }
+        activity_type_id 可以确定是那种活动，SentCardAction, ReceiveCardAction, UploadCardPhotoAction,
+        action_id + activity_type_id, 可以查询到被点赞的对象
+        """
+        user_who_zan_id = user.id
+        if request_data.get('user_who_action_id', None) == user.id:
+           print "You are dianzan your own action!"
+
+        activity_type_id = request_data.get('activity_type_id', None)
+        action_id = request_data.get('action_id', None)
+        # activity_sort_name= request_data.get('activity_short_name', None)
+
+        print 'action id: %s ' % action_id
+        print 'activity_type_id: %s ' % activity_type_id
+        print 'user_who_zan_id: %s ' % user_who_zan_id
+
+
+        if activity_type_id == 1 or activity_type_id == '1'\
+                or activity_type_id == 2 or activity_type_id == "2":
+            # SentCardAction, No photo
+            # action = SentCardAction.objects.get(id=action_id)
+
+            dianzan = DianZan.objects.create_with_ids(
+                user_who_zan_id=user_who_zan_id,
+                sent_card_action_zaned_id=action_id
+            )
+
+        elif activity_type_id == 3 or activity_type_id == '3'\
+                or activity_type_id == 4 or activity_type_id == "4":
+            # ReceiveCardAction, No photo
+            # action = ReceiveCardAction.objects.get(id=action_id)
+
+            dianzan = DianZan.objects.create_with_ids(
+                user_who_zan_id=user_who_zan_id,
+                receive_card_action_zaned_id=action_id
+            )
+
+        elif activity_type_id == 5 or activity_type_id == '5'\
+                or activity_type_id == 5 or activity_type_id == "5":
+            # UploadCardPhotoAction, photo
+            # action = UploadCardPhotoAction.objects.get(id=action_id)
+
+            dianzan = DianZan.objects.create_with_ids(
+                user_who_zan_id=user_who_zan_id,
+                upload_cardphoto_action_zaned_id=action_id
+            )
 
         else:
-            zan = DianZan.objects.create_with_ids(card_by_dianzan_id=card.id,
-                                                  person_who_dianzan_id=profile_from_user.id)
+            dianzan = None
 
-            serializer = DianZanSerializer(zan)
+        if dianzan:
+            serializer = DianZanSerializer(dianzan)
+
+
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return JsonResponse({
+                "details": "Fail to dianzan"
+            }, safe=True)
 
 
-    if request.method == "DELETE":
-        zan = DianZan.objects.filter(card_by_dianzan_id = data['card_by_dianzan_id'])
-        zan.delete()
-
-    if request.method == 'GET':
-        zan = DianZan.objects.filter(card_by_dianzan_id=data['card_by_dianzan_id'])
-        serializer = DianZanSerializer(zan)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view(["GET", ])
-@permission_classes([permissions.IsAuthenticated,])
-def card_dianzans(request, cardid):
-    cardid = int(cardid)
-    try:
-        card = Card.objects.get(id=cardid)
-    except Card.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'GET':
-        zans = DianZan.objects.filter(card_by_dianzan_id =cardid)
-        results = [obj.as_json() for obj in zans]
-        return Response(results, status= status.HTTP_200_OK)
 
-#
+
+
