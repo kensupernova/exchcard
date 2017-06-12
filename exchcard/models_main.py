@@ -197,16 +197,13 @@ class DianZanManager(Manager):
         """
         dianzans = None
         if not sent_card_action_zaned_id:
-            dianzans = DianZan.objects.filter(sent_card_action_zaned_id=sent_card_action_zaned_id).\
-                filter(is_active=True)
+            dianzans = DianZan.objects.filter(sent_card_action_zaned_id=sent_card_action_zaned_id)
 
         if not receive_card_action_zaned_id:
-            dianzans = DianZan.objects.filter(receive_card_action_zaned_id=receive_card_action_zaned_id).\
-                filter(is_active=True)
+            dianzans = DianZan.objects.filter(receive_card_action_zaned_id=receive_card_action_zaned_id)
 
         if not upload_cardphoto_action_zaned_id:
-            dianzans = DianZan.objects.filter(upload_cardphoto_action_zaned_id=upload_cardphoto_action_zaned_id).\
-                filter(is_active=True)
+            dianzans = DianZan.objects.filter(upload_cardphoto_action_zaned_id=upload_cardphoto_action_zaned_id)
 
         return dianzans
 

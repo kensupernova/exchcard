@@ -39,8 +39,8 @@ $(document).ready(function(){
       $("#text-info-user-id-inp").val(response['user_id']);
       $("#text-info-user-id-holder").text(response['user_id']);
 
-      var isFollowingHimBool = response['isFollowingHimBool'];
-      if(isFollowingHimBool){
+      var isFollowingHimInt = response['isFollowingHimInt'];
+      if(isFollowingHimInt == 1 || isFollowingHimInt == '1'){
         // var ele = $("#btn-follow-him");
         // ele.addClass("btn-inactive");
         // ele.addClass("following");
@@ -52,11 +52,12 @@ $(document).ready(function(){
 
     }
   }).fail(function (response) {
-    // console.log(JSON.stringify(response));
+    console.log(JSON.stringify(response));
 
   });
 
   //--------------------------------------------
+  // 下载用户所有的活动
   $.ajax({
     method:"GET",
     url: getActivitiesAll,
@@ -151,6 +152,16 @@ $(document).ready(function(){
     // var id2 = $("#text-info-user-id-holder").text();
 
     var user_id_of_the_hobbyist = $("#text-info-user-id-inp").val();
+
+    if(!user_id_of_the_hobbyist || user_id_of_the_hobbyist == ''){
+      return;
+    }
+
+    var logged_user_id = $("#logged-user-id-holder").text();
+    if(Number(logged_user_id) == Number(user_id_of_the_hobbyist)){
+      alert("You can not follow yourself!");
+      return;
+    }
 
     // VERY IMPORTANT IN AJAX REQUEST, GET OR POST
     addCSRFTokenBeforeAjax();

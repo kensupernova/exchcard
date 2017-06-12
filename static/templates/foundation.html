@@ -25,7 +25,9 @@
 
 </head>
 <body>
+<div id="profile-id-holder" style="display: none">{{profile.id}}</div>
 <div id="logged-profile-id-holder" style="display: none">{{profile.id}}</div>
+<div id="user-id-holder" style="display: none">{{profile.profileuser.id}}</div>
 <div id="logged-user-id-holder" style="display: none">{{profile.profileuser.id}}</div>
 {% csrf_token %}
 <div class="container">

@@ -58,7 +58,7 @@
         //------------------------------------------
         // 发送ajax post 请求
 
-        var makeDianzanUrl = "/exchcard/api/moments/activity/dianzan/toggle/";
+        var toggleDianzanUrl = "/exchcard/api/moments/activity/dianzan/toggle/";
         addCSRFTokenBeforeAjax();
 
         var request_data = {
@@ -71,7 +71,7 @@
 
         $.ajax({
           method: "POST",
-          url: makeDianzanUrl,
+          url: toggleDianzanUrl,
           data: request_data,
           success: function (response) {
             console.log(JSON.stringify(response));

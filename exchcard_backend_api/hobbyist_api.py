@@ -19,7 +19,7 @@ from rest_framework.response import Response
 from exchcard.models_main import Address, Profile, AvatarPhoto, SentCardAction, ReceiveCardAction, Follow
 from exchcard.models import XUser
 
-from exchcard_backend_api.helpers import get_all_activities_of_user
+from exchcard_backend_api.helpers import get_all_activities_of_a_user
 
 def getAvatarInfoByProfile(profile):
     """
@@ -204,7 +204,7 @@ def get_all_activities_of_other_user(request, user_id):
         #
         # sorted_response = sorted(response_data, cmp=compare_created_early_to_late)
 
-        sorted_response = get_all_activities_of_user(user)
+        sorted_response = get_all_activities_of_a_user(user)
 
         return HttpResponse(json.dumps(sorted_response), content_type="application/json")
         # return JsonResponse(sorted_response)

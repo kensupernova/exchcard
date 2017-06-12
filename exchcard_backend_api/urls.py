@@ -224,10 +224,6 @@ urlpatterns = format_suffix_patterns([
         name="get-all-activities-of-my-followings"),
 # ---------------------------------------------------------------
 #   某个动态得到点赞
-    url(r"^moments/activity/dianzan/create/$",
-        "exchcard_backend_api.activity_api.make_dianzan",
-        name="make_dianzan"),
-
     url(r"^moments/activity/dianzan/toggle/$",
             "exchcard_backend_api.activity_api.toggle_dianzan",
             name="toggle_dianzan"),

@@ -300,6 +300,17 @@ def make_a_follow_to_him(request):
     if request.method == "POST":
         user = request.user
         user_being_followed_id = request.data["user_being_followed_id"]
+        print user.id
+        print user_being_followed_id
+
+        if int(user.id) == int(user_being_followed_id):
+            print "User is trying to follow himself!"
+            return Response({
+                "details": "You are him, not allowed to follow oneself",
+                "error_msg": "You are him, not allowed to follow oneself",
+                "isFollowSuccessBool": False,
+                "isFollowSuccessInt": 0
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         # VERY IMPORTANT !!!
         # CHECK WHETHER ALREADY FOLLOWING HIM!!!
@@ -312,7 +323,7 @@ def make_a_follow_to_him(request):
                              "isFollowSuccessInt": 0,
                              "isAlreadyFollowingHimBool": True,
                              "isAlreadyFollowingHimInt": 1,
-                             })
+                             }, status=status.HTTP_400_BAD_REQUEST)
 
         follow = Follow(subject_id=user.id, user_being_followed_id=user_being_followed_id)
         follow.save()

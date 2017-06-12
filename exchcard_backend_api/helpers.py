@@ -16,7 +16,7 @@ from exchcard_backend_api.serializers import SentCardActionSerializer, ReceiveCa
 from utils.utils import compare_created_early_to_late
 
 
-def get_all_activities_of_user(user):
+def get_all_activities_of_a_user(user):
     """
     取得用户的所有活动，扁平化处理，
     :param user: 活动的subject
@@ -135,8 +135,6 @@ def get_all_activities_of_user(user):
 
         item["avatar_url"] = avatar_url
 
-        print obj
-        # TODO: CHECK THE BUGS
         card_photo = obj.card_photo_uploaded
         if card_photo:
             item['has_photo'] = True

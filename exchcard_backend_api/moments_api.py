@@ -58,7 +58,7 @@ def get_all_activities_of_my_followings(request):
         response_data = []
 
         for follow in followings:
-            # print "{0} following {1}".format(follow.subject.email, follow.user_being_followed.email)
+            print "{0} following {1}".format(follow.subject.email, follow.user_being_followed.email)
 
             user_being_followed = follow.user_being_followed
 
@@ -84,19 +84,6 @@ def get_all_activities_of_my_followings(request):
                 (subject=user_being_followed)
             upload_cardphoto_actions = UploadCardPhotoAction.objects.filter\
                 (subject=user_being_followed)
-
-            # s_serializer = SentCardActionSerializer(sent_actions, many=True)
-            # r_serializer = ReceiveCardActionSerializer(receive_actions, many=True)
-            # u_serializer = UploadCardPhotoActionSerializer(upload_cardphoto_actions, many=True)
-            #
-            # # print "activities 1 %s" % s_serializer.data
-            # # print "activities 2 %s" % r_serializer.data
-            # # print "activities 3 %s" % u_serializer.data
-            #
-            #
-            # s_data = s_serializer.data
-            # r_data = r_serializer.data
-            # u_data = u_serializer.data
 
             # 所有数据，扁平化处理
             for obj in sent_actions:
@@ -127,10 +114,11 @@ def get_all_activities_of_my_followings(request):
                 item["avatar_url"] = avatar_url
 
                 # 活动得到的feedback, dianzan
-                dianzans = DianZan.objects.filter_by_action_id(sent_card_action_zaned_id=obj.id)
+                active_dianzans = DianZan.objects.filter_by_action_id(sent_card_action_zaned_id=obj.id)\
+                    .filter(is_active=True)
 
-                if dianzans:
-                    dianzans_serializer = DianZanSerializer(dianzans, many=True)
+                if active_dianzans:
+                    dianzans_serializer = DianZanSerializer(active_dianzans, many=True)
                     item["feedback"]={}
                     item["feedback"]["dianzans"] = dianzans_serializer.data
 
@@ -163,10 +151,11 @@ def get_all_activities_of_my_followings(request):
 
                 item["avatar_url"] = avatar_url
 
-                dianzans = DianZan.objects.filter_by_action_id(receive_card_action_zaned_id=obj.id)
+                active_dianzans = DianZan.objects.filter_by_action_id(receive_card_action_zaned_id=obj.id)\
+                    .filter(is_active=True)
 
-                if dianzans:
-                    dianzans_serializer = DianZanSerializer(dianzans, many=True)
+                if active_dianzans:
+                    dianzans_serializer = DianZanSerializer(active_dianzans, many=True)
                     item["feedback"] = {}
                     item["feedback"]["dianzans"] = dianzans_serializer.data
                 response_data.append(item)
@@ -194,12 +183,13 @@ def get_all_activities_of_my_followings(request):
                     item['card_photo_name'] = card_photo.card_photo.name
 
                 #---------------
-                dianzans = DianZan.objects.filter_by_action_id(upload_cardphoto_action_zaned_id=obj.id)
+                active_dianzans = DianZan.objects.filter_by_action_id(upload_cardphoto_action_zaned_id=obj.id)\
+                    .filter(is_active=True)
 
-                if dianzans:
-                    dianzans_serializer = DianZanSerializer(dianzans, many=True)
+                if active_dianzans:
+                    dianzans_serializer = DianZanSerializer(active_dianzans, many=True)
                     # 点赞总数
-                    count = len(dianzans)
+                    # count = len(dianzans)
                     # 点赞用户字符串
 
                     item["feedback"] = {}
