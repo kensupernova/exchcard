@@ -6,13 +6,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link href="{{STATIC_URL}}/images/favicon.ico" mce_href="favicon.ico" rel="bookmark" type="image/x-icon" />
 
+  <link rel="stylesheet" href="{{STATIC_URL}}lib/bootstrap/bootstrap.min.css">
+
   <!-- Libraries From CDN -->
   <!--
-  <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
   <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" rel="stylesheet">
   <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://cdn.bootcss.com/angular.js/1.6.0/angular.min.js"></script>
 
    -->
 
@@ -30,10 +29,10 @@
 <div id="user-id-holder" style="display: none">{{profile.profileuser.id}}</div>
 <div id="logged-user-id-holder" style="display: none">{{profile.profileuser.id}}</div>
 {% csrf_token %}
-<div class="container">
-  <div class="smaller-container col-md-10">
+<div class="container" id="container">
+  <div class="smaller-container col-md-10" id="smaller-container">
     <header class="header" id="header">
-      <div class="row spanner">
+      <div class="row topper">
         <div class="logo-container">
           {% if isAuth %}
             <a href="/profile">明信片交换网</a>
@@ -102,7 +101,7 @@
 
     {% block content %} {% endblock %}
 
-    <footer class="footer">
+    <footer class="footer" id="footer">
       <div class ="copyright">&copy GUANGHUI ZHANG</div>
     </footer>
   </div>
@@ -113,7 +112,7 @@
 <!-- jquery is before any other libraries since many are dependent on it. -->
 <script type="text/javascript" src="{{STATIC_URL}}lib/jquery-2.1.0.min.js"></script>
 
-<link rel="stylesheet" href="{{STATIC_URL}}lib/bootstrap/bootstrap.min.css">
+
 <script type="text/javascript" src="{{STATIC_URL}}lib/bootstrap/bootstrap.min.js"></script>
 
 <!--manage cookie, set, get, remove-->
@@ -126,6 +125,12 @@
         type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript" src="{{STATIC_URL}}javascripts/foundation.js"></script>
+
+<!--CDN -->
+<!--<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>-->
+<!--<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+<!--<script src="https://cdn.bootcss.com/angular.js/1.6.0/angular.min.js"></script>-->
+
 {% block jscontainer %} {% endblock %}
 </body>
 

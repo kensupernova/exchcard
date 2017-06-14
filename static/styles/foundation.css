@@ -1,45 +1,36 @@
-body {
-  font-size: 16px;
-  text-align: center;
-  font-family: '微软雅黑', 'Microsoft Tai Le', 'Helvetica', 'Tahoma', 'Helvetica', 'Arial', sans-serif;
-  background-color: #eeeeee;
-}
-
 * {
   padding: 2px;
   margin: 0 auto;
+  font-size: 16px;
+  text-align: center;
+  font-family: '微软雅黑', 'Microsoft Tai Le', 'Helvetica', 'Tahoma', 'Helvetica', 'Arial', sans-serif;
 }
 
+body {
+
+}
 
 div {
   font: inherit;
   font-size: 100%;
   padding: 0;
-  margin: 0 auto;
   background-color:#ffffff;
 }
 
-.container {
-  background: #eeeeee;
-  padding: 0;
+#container {
   margin: 0;
+  padding: 0;
+  width: 100%;
+  background: #eeeeee;
 }
 
-.smaller-container.col-md-10{
+#smaller-container {
   margin-left: calc(16.7%/2);
   padding: 0;
   background: #eeeeee;
 }
 
-.spanner {
-  margin-left: 0;
-  margin-right: 0;
-}
 
-
-.main {
-  margin-top: 1px;
-}
 
 .clear {
   clear: both;
@@ -59,7 +50,7 @@ header{
   position: relative;
   z-index: 0;
   padding: 0;
-  background: #ffffff;
+  background: #eeeeee;
 
 }
 
@@ -73,32 +64,35 @@ header div{
   margin-left: 0;
 }
 
-.row.spanner {
+.row.topper {
   min-height: 5em;
   margin-left: 0;
   margin-right: 0;
-  position: relative;
-  box-shadow: gray 6px 6px 3px;
   margin-bottom: 1em;
+  position: relative;
+  z-index: 301;
+  box-shadow: 1px 1px 3px gray;
+  border-bottom: 1px solid #ebebeb;
+
 }
 
-.row.spanner .logo-container {
+.row.topper .logo-container {
   width:100%;
   display: inline-block;
-  border: 1px red solid;
+
 }
 
-.row.spanner .logo-container a {
+.row.topper .logo-container a {
   width: 100%;
   display: inline-block;
   font-size: 4em;
   color: black;
 }
 
-.row.spanner .profile-setting {
+.row.topper .profile-setting {
   display: inline-block;
   /*float:right;*/
-  margin-right: 0px;
+  margin-right: 0;
   line-height: 3em;
   min-height: 3em;
   margin-top: 1em;
@@ -107,18 +101,18 @@ header div{
   top:0;
 }
 
-.spanner .profile-setting div a{
+.row.topper .profile-setting div a{
   color: black;
   text-decoration: none;
 }
 
-.spanner .profile-setting div a:hover {
+.row.topper .profile-setting div a:hover {
    text-decoration: none;
    color: white;
 
  }
 
-.spanner .profile-setting div a.active {
+.row.topper .profile-setting div a.active {
   text-decoration: none;
   color: white;
 }
@@ -150,8 +144,11 @@ header div{
 .nav {
   background-color:white;
   position: relative;
-  z-index: 0;
-  border:red 1px solid;
+  /*z-index: 0;*/
+  /*border:red 1px solid;*/
+  z-index: 302;
+  box-shadow: 1px 1px 3px gray;
+  border-bottom: 1px solid #ebebeb;
 
 }
 .nav ul {
@@ -176,16 +173,9 @@ header div{
   width:100%;
 }
 
-
-.nav ul li a:hover {
-  background-color: red;
-  color: white;
-  box-shadow: #888888 5px 5px 2px;
-  -moz-box-shadow: #888888 5px 5px 2px;
-  -webkit-box-shadow: #888888 5px 5px 2px;
-}
-
-.nav ul li a:active, .nav ul li a.active {
+.nav ul li a:hover,
+.nav ul li a:active,
+.nav ul li a.active {
   background-color: red;
   color: white;
   box-shadow: #888888 5px 5px 5px;
@@ -207,7 +197,9 @@ header div{
 }
 
 /*下拉菜单符号*/
-.nav ul li.dropdown a.active .arr, .nav ul li.dropdown a:active .arr, .nav ul li.dropdown a:hover .arr {
+.nav ul li.dropdown a.active .arr,
+.nav ul li.dropdown a:active .arr,
+.nav ul li.dropdown a:hover .arr {
   background: red;
 }
 
@@ -222,7 +214,7 @@ header div{
 }
 .nav ul li.dropdown {
   position: relative;
-  z-index: 0;
+  z-index: 1;
 }
 
 .nav ul li.dropdown a:hover{
@@ -236,9 +228,9 @@ header div{
   width: 90%;
   position: absolute;
   top: calc(100% - 0px);
-  padding-top: 0px;
+  padding-top: 0;
   left: 0;
-  z-index: 300;
+  z-index: 200;
 
 }
 
@@ -253,7 +245,7 @@ header div{
   margin: 1px;
   height: 20px;
   line-height: 20px;
-  z-index: 300;
+  z-index: 201;
 }
 
 .nav ul li.dropdown ul.collapsed li a{
@@ -262,14 +254,20 @@ header div{
 }
 
 .content-container {
-  border: solid 1px red;
+  /*border: solid 1px red;*/
+  z-index: 302;
+  box-shadow: 1px 1px 3px gray;
+  border-bottom: 1px solid #ebebeb;
 }
 
 .smaller-container {
 }
 
 .footer {
-  border: solid 1px red;
+  /*border: solid 1px red;*/
+  z-index: 302;
+  box-shadow: 0px 0px 2px gray;
+  border-bottom: 1px solid #ebebeb;
   margin: 10px 0px;
 }
 

@@ -87,6 +87,10 @@
   border: red 1px solid ;
 }
 
+.act-item-container .right div {
+  text-align: left;
+}
+
 .act-item-container .act-short-container {
 
 }

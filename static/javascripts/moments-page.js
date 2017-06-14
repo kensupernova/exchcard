@@ -230,7 +230,7 @@
       '   <img src="'+ item["avatar_url"]+'">' +
       ' </div>' +
       '<div class="right act-content-container">' +
-      '  <div class="act-text-container">' +
+      '  <div class="act-text-container row">' +
       '    <div class="act-subject">' + item["subject_username"]+'</div>' +
       '    <div class="act-short-name">'+ act_describe_zh +'</div>' +
       '  </div>' +
