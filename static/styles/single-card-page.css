@@ -38,6 +38,10 @@
   margin-bottom:2px;
 }
 
+.postal-info-content div {
+  text-align: left;
+}
+
 .postal-info-content .card-photos-container div.img-container {
   margin:2px;
   border: 1px gray solid;
