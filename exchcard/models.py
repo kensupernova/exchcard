@@ -10,7 +10,7 @@ class XUserManager(BaseUserManager):
     通过邮箱，密码创建用户
     """
 
-    def create_user(self, email, username, password=None, type=0, **kwargs):
+    def create_user(self, email, username, password=None, type=None, **kwargs):
         if not email:
             raise ValueError(u'用户必须要有邮箱')
 
@@ -80,7 +80,8 @@ class XUserManager(BaseUserManager):
             if kwargs.get('avatar', None):
                 user.avatar = kwargs['avatar']
 
-        user.save(using=self._db)  # 必须save()
+        user.save(using=self._db)  #
+        #  必须save()
 
         return user
 
@@ -147,6 +148,7 @@ class XUser(AbstractBaseUser):
 
     email = models.EmailField(verbose_name='Email', max_length=255, unique=True, db_index=True)
     username = models.CharField(max_length=50, unique=True, db_index=True)
+
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
@@ -156,6 +158,7 @@ class XUser(AbstractBaseUser):
 
     weibo_uid = models.CharField(max_length=50, null=True)  # weibo uid
     weibo_access_token = models.CharField(max_length=100, null=True)  # weibo access_token
+
     desc = models.CharField(max_length=2000, null=True)  # 个人信息简介
     url = models.URLField(null=True)  # 个人站点
     avatar = models.CharField(max_length=500, null=True)  # 头像
