@@ -32,7 +32,7 @@ user_agent = 'Mozilla/5.0 (Windows NT 6.1; rv:28.0) Gecko/20100101 Firefox/28.0'
 headers = {'User-Agent': user_agent}
 
 
-class SuperWeibo(object):
+class WeiboSuper(object):
     def __init__(self, weibo_access_token, weibo_uid, request=None, **kwargs):
         self.weibo_access_token = weibo_access_token
         self.weibo_uid = weibo_uid
@@ -40,11 +40,10 @@ class SuperWeibo(object):
         self.user_cache = None
         self.kwargs = kwargs
 
-
-    def createUser(self):
-        """创建用户"""
-        userInfo = self.getUserInfo()
-        username=userInfo.get('screen_name')
+    def create_new_user(self):
+        """创建新用户"""
+        userInfo = self.get_user_info()
+        username = userInfo.get('screen_name', None)
         if XUser.objects.filter(username=username).exists():
             username = username+'[weibo]'
 
@@ -56,29 +55,29 @@ class SuperWeibo(object):
                     email=str(self.weibo_uid) + '@weibo.com',
                     username=username,
                     password=self.weibo_uid,
-                    type=1,
-                    sex=int(userInfo.get('sex', 1)),
 
+                    type=1, # weibo user
                     weibo_uid=self.weibo_uid,
                     weibo_access_token=self.weibo_access_token,
 
+                    sex=int(userInfo.get('sex', 1)),
                     url=userInfo.get('url', ''),
                     desc=userInfo.get('description', ''),
-                    avatar=userInfo.get('avatar_large')
+                    avatar=userInfo.get('avatar_large', '')
             )
 
             newuser_id = new_user.id
-            print "success create new user from new weibo login"
+            print(u"success create new user from new weibo auth with user id {0}".format(newuser_id))
 
-            self.Login()  # 新用户登陆
+            self.login()  # 新用户登陆
 
         except:
-            print "fail to create new user from new weibo login"
+            print(u"fail to create new user from new weibo auth")
             pass
 
         return newuser_id
 
-    def getUserInfo(self):
+    def get_user_info(self):
         """获取微博用户信息"""
         data = {'access_token': self.weibo_access_token, 'uid': self.weibo_uid}
 
@@ -90,11 +89,11 @@ class SuperWeibo(object):
 
         if result.get('error_code', None):
             # 写入日志
-            print '获取用户信息失败'
+            print(u'获取用户信息失败')
             return False
         return result
 
-    def SendWeibo(self):
+    def send_weibo(self):
         """用户发送微博"""
         status = self.kwargs.get('status', None)	   # 微博内容
         visible = self.kwargs.get('visible', 0)	 # 微博的可见性，0：所有人能看，1：仅自己可见，2：密友可见，3：指定分组可见，默认为0。
@@ -109,18 +108,18 @@ class SuperWeibo(object):
             result = json.loads(response.read())
             if result.get('error_code', None):
                 # 写入日志
-                print '发送微博失败'
+                print(u'发送微博失败')
                 return False
             return True
         return result
 
-    def Login(self):
+    def login(self):
         """登陆"""
         # user_ = XUser.objects.filter(weibo_uid=self.weibo_uid).first()
         user = authenticate(email=str(self.weibo_uid) + '@weibo.com', password=self.weibo_uid)
         login(self.request, user)
 
-    def Logout(self):
+    def logout(self):
         """
         注销
         :return:

@@ -29,18 +29,6 @@ def url_name():
 # >> > time.time()
 # 1496639972.792231
 
-# coding: utf-8
-def foo(x, *args, **kwargs):
-    print "------------------"
-    print "x=", x
-    print "args=", args
-    print "kwargs=", kwargs
-
-    for arg in args:
-        print arg
-
-    for k, v in kwargs.items():
-        print k, v
 
 
 types = {
@@ -61,7 +49,7 @@ for key, val in types.items():
     types2[key]['short_name'] = val[2]
     types2[key]['description'] = val[3]
 
-print types2
+print(types2)
 
 if __name__ == "__main__":
-    ""
+    pass

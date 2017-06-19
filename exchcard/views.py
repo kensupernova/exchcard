@@ -21,8 +21,8 @@ def about(request):
             "isAuth": True
         }
         try:
-            profile = Profile.objects.get(profileuser=request.user)
-            context['profile'] = profile
+            p = Profile.objects.get(profileuser=request.user)
+            context['profile'] = p
         except Profile.DoesNotExist:
             context['profile'] = None
 
@@ -41,37 +41,34 @@ def user_register(request):
 
 @login_required
 def address_create(request):
-    try:
-        p = Profile.objects.get(profileuser=request.user)
+    if Profile.objects.filter(profileuser=request.user).exists():
         """
         如果用户的profile已经建立，address已经填写，直接进入个人页面
         """
+        print(u"profile exists!")
         return HttpResponseRedirect(redirect_to="/profile/")
-    except Profile.DoseNotExist:
-        ''
 
-    if request.user.is_authenticated():
-        context = {
-            "user": request.user,
-            "isAuth": True
-        }
+    context = {
+        "user": request.user,
+        "isAuth": True
+    }
 
-        return render(request, 'exchcard/address-create-page.html', context)
+    print(u"no address, no profile, render address create page!")
 
-    else:
-        return Http404
+    return render(request, 'exchcard/address-create-page.html', context)
 
 
-## 注入登录验证
+# 注入登录验证
 @login_required
-def profile(request):
+def profile_view(request):
     try:
-        profile = Profile.objects.get(profileuser=request.user)
-        context = {'profile': profile, 'user': request.user}
-        context['isAuth'] = True
+        p = Profile.objects.get(profileuser=request.user)
+        context = {'profile': p, 'user': request.user, 'isAuth': True}
         return render(request, 'exchcard/profile-page.html', context)
+
     except Profile.DoesNotExist:
         return HttpResponseRedirect(redirect_to="/account/address/create/")
+
 
 @login_required
 def setting(request):
@@ -81,8 +78,8 @@ def setting(request):
     :return:
     """
     try:
-        profile = Profile.objects.get(profileuser=request.user)
-        context = {"profile": profile, "user": request.user}
+        p = Profile.objects.get(profileuser=request.user)
+        context = {"profile": p, "user": request.user}
         context['isAuth'] = True
         return render(request, 'exchcard/setting-page.html', context)
     except Profile.DoesNotExist:
@@ -163,7 +160,7 @@ def card_travelling(request, cardname):
     if card_photos.count() > 0:
         context['card_photos'] = card_photos
     else:
-        print "not card photos of card %s" % cardname
+        print u"not card photos of card %s" % cardname
 
     return render(request, 'exchcard/travelling-card-page.html', context)
 

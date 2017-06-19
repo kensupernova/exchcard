@@ -227,8 +227,8 @@ def confirm_send_card(request):
         }), status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == "POST":
-        print request.data ## <QueryDict
-        print request.FILES # <MultiValueDict: {}>
+        # print request.data ## <QueryDict
+        # print request.FILES # <MultiValueDict: {}>
 
         card_name = request.data["card_name"]
         torecipient_id = request.data["torecipient_id"]
@@ -236,7 +236,7 @@ def confirm_send_card(request):
         has_photo_int = request.data["has_photo_int"]
 
         if has_photo_int == 1 or has_photo_int == "1":
-            print "sent a postcard has photo, SPP"
+            # print "sent a postcard has photo, SPP"
             # create a card, action, card photo;
             # sent postcard action with photo
             # activity_type_id = 2, SPP
@@ -307,8 +307,8 @@ def add_new_card_no_photo(request):
             profile_of_request_user = Profile.objects.get(profileuser = request.user)
 
             # TODO: UNCOMMENT OUT!!
-            # randomProfile = Profile.objects.order_by("?").first()
-            randomProfile = profile_of_request_user # FOR DEBUG
+            randomProfile = Profile.objects.order_by("?").first()
+            # randomProfile = profile_of_request_user # FOR DEBUG
 
             data = {}
             data["card_name"] = utils.generateUniquePostcardName()
@@ -333,7 +333,7 @@ def add_new_card_no_photo(request):
 
         except Profile.DoesNotExist:
             Response({"details": "Profile of the request.user does not exit!"},
-                     status=status.HTTP_404_FORBIDDEN)
+                     status=status.HTTP_400_BAD_REQUEST)
 
         # serializer = CreateCardSerializer(data=request.data)
         # if serializer.is_valid():

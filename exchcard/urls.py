@@ -14,11 +14,11 @@ urlpatterns = [
     url(r'^account/register/$', 'exchcard.views.user_register'),
     url(r'^account/login/$', 'exchcard.views.user_login'),
 
-    url(r'^account/resetpassword/$', 'exchcard.views.profile'),
-    url(r'^account/findpassword/$', 'exchcard.views.profile'),
+    url(r'^account/resetpassword/$', 'exchcard.views.profile_view'),
+    url(r'^account/findpassword/$', 'exchcard.views.profile_view'),
 
-    url(r'^weibo/auth/$', 'exchcard.weibo_auth_views.weibo_login'),
-    url(r'^weibo/auth/callback/$', 'exchcard.weibo_auth_views.weibo_check'),
+    url(r'^weibo/auth/$', 'exchcard.weibo_auth_views.weibo_auth'),
+    url(r'^weibo/auth/callback/$', 'exchcard.weibo_auth_views.weibo_auth_callback'),
     url(r'^weibo/auth/cancel/$', 'exchcard.weibo_auth_views.weibo_auth_cancel'),
 
     url(r'^account/address/create/$', 'exchcard.views.address_create'),
@@ -26,7 +26,7 @@ urlpatterns = [
     url(r'^setting/$', 'exchcard.views.setting'),
 
     # view the current logged user's profile
-    url(r'^profile/$', 'exchcard.views.profile'),
+    url(r'^profile/$', 'exchcard.views.profile_view'),
 
     # view current logged user's cards list
     # url(r'^profile/(?P<id>.+)/cards/$', 'exchcard.views.view_cards_list'),

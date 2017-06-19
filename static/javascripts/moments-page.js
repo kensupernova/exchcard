@@ -14,8 +14,8 @@
     method: "GET",
     success: function (response) {
       // console.log(JSON.stringify(response));
-      console.log(JSON.stringify(response[0]));
-      console.log(JSON.stringify(response[1]));
+      // console.log(JSON.stringify(response[0]));
+      // console.log(JSON.stringify(response[1]));
       console.log(JSON.stringify("Total actions of my followings " +response.length));
 
 

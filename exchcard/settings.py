@@ -241,10 +241,11 @@ AUTH_USER_MODEL = 'exchcard.XUser'   # 扩展表的位置，appname.Model,   MyU
 AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', 'exchcard.models.XAuth')   # 后端认证
 
 # 微博登陆, 在微博开放平台上应用的key和secret
-URL = 'http://exchcard.applinzi.com'
+URL = 'http://127.0.0.1:8000'
 APP_KEY = '2764709156'
 APP_SERCET = '172a5be795a5ccdb70d205cda876e636'
 CALLBACK_URL = URL+'/weibo/auth/callback/'  # 回调地址
+CANCEL_URL = URL+'/weibo/auth/cancel/'  # 取消授权回调页
 
 # ------------------------------------------------
 ## 配置SAE新浪云, 存储上传的media文件

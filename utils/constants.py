@@ -26,4 +26,4 @@ USER_ACTIVITY_TYPES = {
             'short_name': 'Upload postcard photo', 'activity_type': 'UPP'}
 }
 
-print USER_ACTIVITY_TYPES['UPP']['activity_type_id']
+print(USER_ACTIVITY_TYPES['UPP']['activity_type_id'])

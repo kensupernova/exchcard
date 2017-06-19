@@ -49,9 +49,9 @@ def get_all_activities_of_my_followings(request):
     followings = Follow.objects.filter(subject=user)
 
     if not followings.exists():
-        return Response(json.dumps({
+        return HttpResponse(json.dumps({
             "details": "You have no followings"
-        }))
+        }), content_type="application/json", status=status.HTTP_204_NO_CONTENT)
 
     if request.method == "GET":
 

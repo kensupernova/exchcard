@@ -121,10 +121,18 @@ class CardManager(Manager):
                 (not Profile.objects.filter(id=fromsender_id).exists()):
             return None
 
+        # method 1
         card = self.create(card_name=card_name,
                            torecipient_id=torecipient_id,
                            fromsender_id=fromsender_id,
                            has_arrived=False, *args, **kwargs)
+
+        # method 2
+        # card = self.model(card_name=card_name,
+        #                    torecipient_id=torecipient_id,
+        #                    fromsender_id=fromsender_id,
+        #                    has_arrived=False, *args, **kwargs)
+        # card.save(using=self._db)
 
         photo = CardPhoto(owner=card.fromsender,
                           card_host=card,
