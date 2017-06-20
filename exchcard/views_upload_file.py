@@ -7,7 +7,7 @@ from exchcard.models_main import Profile, AvatarPhoto
 from utils import utils
 
 
-def uploadFile(request):
+def upload_file_view(request):
     if request.method == "POST":
         # print "deal with post request"
         # print request.POST
@@ -32,7 +32,7 @@ def uploadFile(request):
             # return HttpResponseRedirect("/main/upload/success")
 
         else:
-            print "form is invalid"
+            print (u"form is invalid")
 
     elif request.method == "GET":
         form = UploadFileForm()

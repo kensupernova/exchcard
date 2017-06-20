@@ -48,7 +48,7 @@ class WeiboSuper(object):
             username = username+'[weibo]'
 
         ## 用户的Id
-        newuser_id = 0
+        newuser_id = None
 
         try:
             new_user = XUser.objects.create_user(

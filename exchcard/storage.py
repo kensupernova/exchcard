@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-__author__ = 'lenovo'
-
 
 from django.core.files.storage import Storage
 from django.core.files.base import ContentFile

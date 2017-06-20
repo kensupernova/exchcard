@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 from django.conf.urls import include, url
 # from django.views.generic.simple import direct_to_template
 from django.views.generic.base import TemplateView
@@ -23,14 +23,13 @@ urlpatterns = [
 
     url(r'^account/address/create/$', 'exchcard.views.address_create'),
     #设置
-    url(r'^setting/$', 'exchcard.views.setting'),
+    url(r'^setting/$', 'exchcard.views.setting_view'),
 
     # view the current logged user's profile
     url(r'^profile/$', 'exchcard.views.profile_view'),
 
     # view current logged user's cards list
-    # url(r'^profile/(?P<id>.+)/cards/$', 'exchcard.views.view_cards_list'),
-    url(r'^profile/cards/$', 'exchcard.views.view_cards_list'),
+    url(r'^profile/cards/$', 'exchcard.views.card_list_view'),
 
     # send a card
     url(r'^card/send/$', 'exchcard.views.card_send'),
@@ -40,9 +39,7 @@ urlpatterns = [
     # 查看还在路途中的某张明信片
     url(r'^card/travelling/(?P<cardname>.+)/$', 'exchcard.views.card_travelling'),
     # view a card with cardname
-    url(r'^card/(?P<cardname>.+)/$', 'exchcard.views.view_single_card'),
-
-
+    url(r'^card/(?P<cardname>.+)/$', 'exchcard.views.single_card_view'),
 
     # 发烧友圈子
     url(r'^moments/$', 'exchcard.views.view_shao_you_quan'),
@@ -70,9 +67,6 @@ urlpatterns = [
 
     # 其他
     url(r'^search/$', 'exchcard.views_search.search'),
-    url(r'^upload/file/$', 'exchcard.views_upload_file.uploadFile'),
-
-    # url(r'^oneverse/api/', include('oneverse_api.urls')),
-    # url(r'^oneverse/', include('oneverse.urls')),
+    url(r'^upload/file/$', 'exchcard.views_upload_file.upload_file_view'),
 
 ]

@@ -1,5 +1,6 @@
+# coding:utf-8
 # Django settings
-#coding:utf-8
+
 import os
 
 
@@ -216,7 +217,7 @@ FILE_UPLOAD_HANDLERS=[
     "django.core.files.uploadhandler.TemporaryFileUploadHandler"
 ]
 
-## login_required, 默认login地址
+## @login_required装饰器, 默认login地址
 LOGIN_URL = "/account/login/"
 
 # 修改上传时文件在内存中可以存放的最大size为10m
@@ -237,7 +238,7 @@ WSGI_APPLICATION = 'exchcard.wsgi.application'
 APPEND_SLASH=True
 
 # 自定义的用户认证系统
-AUTH_USER_MODEL = 'exchcard.XUser'   # 扩展表的位置，appname.Model,   MyUser是manager app下models中的用户类
+AUTH_USER_MODEL = 'exchcard.XUser'   # 扩展表的位置，appname.Model, XUser是exchcard app下models中的用户类
 AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', 'exchcard.models.XAuth')   # 后端认证
 
 # 微博登陆, 在微博开放平台上应用的key和secret
@@ -279,12 +280,6 @@ CANCEL_URL = URL+'/weibo/auth/cancel/'  # 取消授权回调页
 #     }
 # }
 
-# -------------------------------------------------------------
-
-# # 在本地开发环境中，如下配置数据库，即可执行 python manage.py syncdb 直接 syncdb 到线上数据库。
-# from sae._restful_mysql import monkey
-# monkey.patch()
-#
 # -------------------------------------------------------------
 # Local Database Connection
 DATABASES = {

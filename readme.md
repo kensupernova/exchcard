@@ -12,11 +12,13 @@ index.wsgi ： 给新浪云指定WSGI application
 config.yaml ： 配置部署在新浪云上面   
 
 ### 本地运营
-运营环境python2.7 
-后端依赖包: 
- - Django v1.8.3 
- - Django-Rest-Framework v3.3.2 
- - MySQL-python v1.2.5    
+运营环境python2.7
+后端框架：
+ - Django v1.8.3
+ - Django-Rest-Framework v3.3.2
+其他依赖包:
+ - MySQL-python v1.2.5
+ - requests v2.10.0
 
 ### 前端框架
  - jquery  v2.1.0   
