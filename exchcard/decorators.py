@@ -3,7 +3,7 @@
 """
 decorators 装饰器
 """
-from django.core.serializers import json
+import json
 from django.http import HttpResponse
 
 

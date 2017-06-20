@@ -36,6 +36,6 @@ def upload_file_view(request):
 
     elif request.method == "GET":
         form = UploadFileForm()
-        return render(request, 'upload_file.html', {'form':form})
+        return render(request, 'upload_file_page.html', {'form':form})
 
 

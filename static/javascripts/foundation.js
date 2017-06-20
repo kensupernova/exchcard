@@ -82,9 +82,9 @@ $(document).ready(function(){
         window.location.href= "/";
       }
     }).done(function(){
-      console.log("log out success!");
+      // console.log("log out success!");
     }).fail(function(){
-      console.log("log out failed!");
+      // console.log("log out failed!");
     });
 
 	});
@@ -116,7 +116,7 @@ $(document).ready(function(){
   //   alert('logout');
   // }
 
-  // 3rd method
+  // 3rd method login
   $("#wb_connect_btn").click(function () {
     window.location.href="/weibo/auth/";
   });

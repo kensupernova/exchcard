@@ -40,7 +40,7 @@ def count_arrive_travel(cards):
                 travel = travel + 1
 
         except Card.DoesNotExit:
-            print "%s does not exit" % card_id
+            print ("%s does not exit" % card_id)
 
     total = arrive + travel
     return (total, arrive, travel)
@@ -50,11 +50,11 @@ def get_sae_bucket():
     # from sae.storage import Bucket
     from sae.storage import Connection
     from exchcard import settings
-    connection = Connection(accesskey=settings.MYSQL_USER,
-                                    secretkey=settings.MYSQL_PASS,
+    connection = Connection(accesskey=settings.DATABASES.MYSQL_USER,
+                                    secretkey=settings.DATABASES.MYSQL_PASS,
                                     account="exchcard2", retries=3)
 
-    bucket = connection.get_bucket("exchcard_backend_api-bucket")
+    bucket = connection.get_bucket(settings.STORAGE_BUCKET_NAME)
     bucket.post(acl=".r:*", metadata={"expires":"1d"})
 
     return bucket

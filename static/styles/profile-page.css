@@ -59,7 +59,7 @@
   vertical-align: middle;
   overflow: hidden;
   height: 150px;
-  border:red 0.5px solid;
+  /*border:red 0.5px solid;*/
 }
 
 
@@ -114,7 +114,7 @@
 /*主页明信片详细情况*/
 .profile-cards-info-container{
   min-height: 200px;
-  border: 1px solid red;
+  /*border: 1px solid red;*/
   margin: 0 5px;
 }
 
@@ -219,12 +219,12 @@ table tr th:nth-child(8){
 }
 
 .feeds-box div h3{
-  border:red 0.5px solid;
+  border:red 1px solid;
   text-align: center;
 }
 
 .feeds-box div p{
-  border:red 0.5px solid;
+  border:red 1px solid;
 }
 
 .feeds-box #liveEvents ul li{
