@@ -6,6 +6,8 @@ import time
 
 from exchcard import settings
 from exchcard.models_main import Card
+import string
+
 
 def generateToken(username):
     return "I am a token"
@@ -15,6 +17,7 @@ def generateUniquePostcardName():
     start = "POST"
     digit = int(random.random()*1000000)
     card_name = '{0}{1}'.format(start, digit)
+
     if Card.objects.filter(card_name=card_name).exists():
         generateUniquePostcardName()
     else:
@@ -62,8 +65,9 @@ def get_sae_bucket():
 
 def handle_uploaded_file_sae_s3(title, f):
     """
-    handle the file uploaded from the UploadFileForm
-    :param f:
+    Handle the file uploaded from the UploadFileForm and upload to SAE BUCKET
+    :param title: The title of the file
+    :param f: The file
     :return:
     """
 
@@ -109,7 +113,7 @@ def hash_email_to_username_fool(email):
 def compare_created_early_to_late(a, b):
     """
     两个datetime比早晚， 从早到晚！！！
-    :param a: 包含created datetime string, like '2017-05-31T07:55:23.112844Z', UTC
+    :param a: 包含a['created'] has datetime string, like '2017-05-31T07:55:23.112844Z', UTC
     :param b:
     :return:
     """
@@ -118,9 +122,20 @@ def compare_created_early_to_late(a, b):
 
     # 从大到小, 从早到晚
     dtime = btime - atime # datetime.timedelta
-    return int(dtime.total_seconds())
+    return int(dtime.total_seconds()) >= 0
 
 
+def get_random_int_chars(y):
+    """
+    Get random string, contains [0-9a-zA-Z]
+    :param y: The length of the random characters
+    :return:
+    """
+    choices = string.letters
+    choices += string.digits
+    # print("choices {0}".format(choices))
+
+    return u"".join([random.choice(choices) for i in range(y)])
 
 
 # -------------------------------------------------
@@ -128,4 +143,4 @@ def compare_created_early_to_late(a, b):
 
 # if __name__ == "main":
 #     # print hash_file_name("20160607_190736.jpg")
-#     ''
+#     pass

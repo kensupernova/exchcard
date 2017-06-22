@@ -8,14 +8,14 @@ Exchange Postcard
 送的明信片越多，收到的明信片也越多。
 
 ### 新浪云配置
-index.wsgi ： 给新浪云指定WSGI application 
-config.yaml ： 配置部署在新浪云上面   
+index.wsgi ： 给新浪云指定WSGI application </br>
+config.yaml ： 配置部署在新浪云上面 </br>
 
 ### 本地运营
 运营环境python2.7
 后端框架：
  - Django v1.8.3
- - Django-Rest-Framework v3.3.2
+ - Django-Rest-Framework v3.3.2  </br>
 其他依赖包:
  - MySQL-python v1.2.5
  - requests v2.10.0

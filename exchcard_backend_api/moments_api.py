@@ -1,12 +1,10 @@
-#coding: utf-8
+# coding: utf-8
 import json
 import datetime
-import time
 
 from django.contrib.auth import get_user_model # If used custom user mode
 User = get_user_model()
 
-from django.db.models import Q
 from django.http import HttpResponse
 from django.http import JsonResponse
 
@@ -16,13 +14,9 @@ from exchcard_backend_api.serializers import SentCardActionSerializer, ReceiveCa
     UploadCardPhotoActionSerializer, DianZanSerializer
 from utils.utils import compare_created_early_to_late
 
-
-
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
 
 @api_view(["GET", "POST"])
@@ -58,13 +52,13 @@ def get_all_activities_of_my_followings(request):
         response_data = []
 
         for follow in followings:
-            print "{0} following {1}".format(follow.subject.email, follow.user_being_followed.email)
+            print ("{0} following {1}".format(follow.subject.email, follow.user_being_followed.email))
 
             user_being_followed = follow.user_being_followed
 
             try:
                 profile_being_followed = Profile.objects.get(profileuser=user_being_followed)
-            except Profile.DoesNotExists:
+            except Profile.DoesNotExists as e:
                 return JsonResponse({"details": "Profile dose not exists"})
 
             # 得到被关注用户的avatar photo
@@ -210,13 +204,13 @@ def get_all_activities_of_my_followings(request):
 
         # 正确地，把list, dict转成JSON
         return HttpResponse(json.dumps(sorted_response), content_type="application/json")
-        # return JsonResponse(sorted_response, safe=False)
+        # return JsonResponse(sorted_response, safe=False) # not-dict data, must safe=False
 
 
 def f(a, b):
     """
     比较两个时间的早晚
-    :param a: string in format '%Y-%m-%dT%H:%M:%S.%fZ'
+    :param a: a['created'] has datetime string in format '%Y-%m-%dT%H:%M:%S.%fZ'
     :param b:
     :return:
     """

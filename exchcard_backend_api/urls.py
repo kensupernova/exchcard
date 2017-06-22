@@ -1,12 +1,8 @@
-#coding: utf-8
+# coding: utf-8
 
 from django.conf.urls import url, include
-
 from rest_framework.urlpatterns import format_suffix_patterns
-
 from exchcard_backend_api import card_api, profile_api, address_api, user_api, upload_api, activity_api
-
-
 
 urlpatterns = format_suffix_patterns([
 
@@ -220,11 +216,11 @@ urlpatterns = format_suffix_patterns([
         name="sent-card-activity-list"),
 #------------------------------------------------------------
     ## 朋友圈
-    url(r"^moments/followings/activities/$", "exchcard_backend_api.moments_api.get_all_activities_of_my_followings",
+    url(r"^moments/followings/get-activities/$", "exchcard_backend_api.moments_api.get_all_activities_of_my_followings",
         name="get-all-activities-of-my-followings"),
 # ---------------------------------------------------------------
 #   某个动态得到点赞
-    url(r"^moments/activity/dianzan/toggle/$",
+    url(r"^moments/activity/toggle-dianzan/$",
             "exchcard_backend_api.activity_api.toggle_dianzan",
             name="toggle_dianzan"),
 

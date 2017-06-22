@@ -541,6 +541,7 @@ class Activity(models.Model):
 
 
 class Follow(models.Model):
+
     created = models.DateTimeField(auto_now_add=True)
     ## the user who make the follow
     subject = models.ForeignKey('XUser', related_name='follows_user_make', default=1, null=False)
@@ -563,6 +564,8 @@ class Follow(models.Model):
     def save(self, *args, **kwargs):
         # type: (object, object) -> object
         super(Follow, self).save(*args, **kwargs)
+
+    objects = FollowManager
 
 
 #------------------------------------------------------------------------

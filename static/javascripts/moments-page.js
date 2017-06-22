@@ -1,11 +1,11 @@
-(function(){
+$(function(){
   // USE JQUERY
   // 我关注用户的活动
   var logged_user_id = $("#logged-user-id-holder").text();
 
-  var getActivitiesOfFollowingUrl ="/exchcard/api/moments/followings/activities/";
+  var getActivitiesOfFollowingUrl ="/exchcard/api/moments/followings/get-activities/";
 
-  var getActivitiesOfFollowingRange ="/exchcard/api/moments/followings/activities/?start=0&end=25";
+  var getActivitiesOfFollowingRange ="/exchcard/api/moments/followings/get-activities/?start=0&end=25";
 
   addCSRFTokenBeforeAjax();
 
@@ -16,7 +16,12 @@
       // console.log(JSON.stringify(response));
       // console.log(JSON.stringify(response[0]));
       // console.log(JSON.stringify(response[1]));
-      console.log(JSON.stringify("Total actions of my followings " +response.length));
+      if(response instanceof Array && response.length > 0){
+        console.log(JSON.stringify("Total actions of my followings " +response.length));
+      } else{
+        return
+      }
+
 
 
       response.forEach(function (item) {
@@ -58,7 +63,7 @@
         //------------------------------------------
         // 发送ajax post 请求
 
-        var toggleDianzanUrl = "/exchcard/api/moments/activity/dianzan/toggle/";
+        var toggleDianzanUrl = "/exchcard/api/moments/activity/toggle-dianzan/";
         addCSRFTokenBeforeAjax();
 
         var request_data = {
@@ -262,4 +267,4 @@
 
   }
 
-})();
+});
