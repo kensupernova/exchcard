@@ -1,6 +1,5 @@
-Exchange Postcard
-明信片交流网
-====
+<h1>Exchange Postcard 明信片交流网</h1>
+
 ### 简介  
 
 一个明信片交流网站，陌生人之间交换明信片。只要通过本地注册或者微博注册，填好地址，就
@@ -12,11 +11,13 @@ index.wsgi ： 给新浪云指定WSGI application </br>
 config.yaml ： 配置部署在新浪云上面 </br>
 
 ### 本地运营
-运营环境python2.7
-后端框架：
+运营环境python2.7 </br>
+
+后端框架： </br>
  - Django v1.8.3
  - Django-Rest-Framework v3.3.2  </br>
-其他依赖包:
+
+其他依赖包: </br>
  - MySQL-python v1.2.5
  - requests v2.10.0
 
@@ -58,6 +59,9 @@ TODOS:
 2. 收到了私信
 
 ### TODOS: 邮箱找回秘密
+
+
+<p>在sublime中 Command + Option + O在浏览器中预览</p>
 
 
 
