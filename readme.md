@@ -8,7 +8,7 @@
 
 ### 新浪云配置
 index.wsgi ： 给新浪云指定WSGI application </br>
-config.yaml ： 配置部署在新浪云上面 </br>
+config.yaml ： 配置文件部署在新浪云上面 </br>
 
 ### 本地运营
 运营环境python2.7 </br>
@@ -61,7 +61,7 @@ TODOS:
 ### TODOS: 邮箱找回秘密
 
 
-<p>在sublime中 Command + Option + O在浏览器中预览</p>
+<p>在macOS sublime中 Command + Option + O 在浏览器中预览markdown效果</p>
 
 
 

@@ -232,6 +232,7 @@ class CommentManager(Manager):
         return obj
 
 
+#-----------------------------------------------------------------------------------------------------
 """
 数据模型model
 """
@@ -750,7 +751,7 @@ def mills2datetime(ms):
     return datetime.datetime.fromtimestamp(int(ms/1000))
 
 
-def datetime2milss(dt):
+def datetime2mills(dt):
     """
     convert datetime to mill seconds
     :param dt: datetime object

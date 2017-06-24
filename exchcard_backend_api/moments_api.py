@@ -217,7 +217,7 @@ def f(a, b):
     atime = datetime.datetime.strptime(a['created'], '%Y-%m-%dT%H:%M:%S.%fZ')
     btime = datetime.datetime.strptime(b['created'], '%Y-%m-%dT%H:%M:%S.%fZ')
 
-    # 从大到小
+    # 从大到小 -- 后面参数减前面参数
     # 从早到晚
     dtime = btime - atime  # datetime.timedelta
     return int(dtime.total_seconds())
